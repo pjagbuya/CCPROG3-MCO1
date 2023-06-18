@@ -27,7 +27,7 @@ public class VM_Slot {
 
     }
 
-    public void sellItem(int quantity)
+    public void sell(int quantity)
     {
 		double sum = 0;
 		int i = 0;

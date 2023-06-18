@@ -6,25 +6,22 @@ public class VM_Regular {
 		currentMoney = new Money();
 	}
 
-
-	public double returnChange(Money , Money moneyReceived) {
-		
-	}
-
-	public void sell() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println.("Hello Customer! What would you like to buy?");
-		
-		for( int i : slots[i]
-			slots[i].displayAllItems();
-			
-			
-			
-		sc = null;
+	/**
+	 * looks for the slot associated with a given item name, and tells that slot to sell a specified amount of that item
+	 *
+	 *
+	 */
+	public void sell(String name, int quantity) {
+		int i = 0;
+		while(i < slots.length && !(slots[i].getItemName().equalsIgnoreCase(name)))
+			i++;
+	
+		if(i < slots.length)
+			slot[i].sell(quantity);
 	}
 	
-	public void viewSummaryTransac() {
-		
+	public VM_Slot[] getSlots() {
+		return slots;
 	}
 	
 	public void setSlot(VM_Slot slot, int slotId) {
@@ -37,5 +34,4 @@ public class VM_Regular {
 
 	private VM_Slot[] slots;
 	private Money currentMoney;
-	private VM_StockedInfo stockedInfo;
 }
