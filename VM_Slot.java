@@ -27,13 +27,21 @@ public class VM_Slot {
 
     }
 
-
-    /**
-     * Thie method increments the number of items sold.
-     */
-    public void sellItem()
+    public void sellItem(int quantity)
     {
-        numItemSold++;
+		double sum = 0;
+		int i = 0;
+		int j = 0;
+		VM_Item currentItem = item;
+		while(i < quantity) {
+			sum += currentItem.getItemPrice();
+			currentItem = currentItem.getNextItem();
+			i++;
+		}
+		
+		item = currentItem;
+		
+        numItemSold += quantity;
     }
 
     /**
@@ -155,13 +163,14 @@ public class VM_Slot {
             System.out.println("Invalid value to add stock");
             return;
         }
+		
 
  
 
     }
 
     
-    // Item name of this slot
+    // Item of this slot
     private VM_Item item;
     /**The slot's item name*/
     private String slotItemName;
