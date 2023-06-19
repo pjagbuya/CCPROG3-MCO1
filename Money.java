@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 
 public class Money {
@@ -54,76 +55,50 @@ public class Money {
 		strToVal.put("Twenty Five Cents", 0.25);
 		strToVal.put("Five Cents", 0.05);
 		strToVal.put("One Cent", 0.01);
+
+		valToStr = new LinkedHashMap<Double, String>();
+		valToStr.put(1000.0, "One Thousand Bill");
+		valToStr.put(500.0, "Five Hundred Bill");
+		valToStr.put(200.0, "Two Hundred Bill");
+		valToStr.put(100.0, "One Hundred Bill");
+		valToStr.put(50.0, "Fifty Bill");
+		valToStr.put(20.0, "Twenty Bill");
+
+		valToStr.put(20.0, "Twenty Coin");
+		valToStr.put(10.0, "Ten Coin");
+		valToStr.put(5.0, "Five Coin");
+		valToStr.put(1.0, "One Coin");
+		valToStr.put(0.25, "Twenty Five Cents");
+		valToStr.put(0.05, "Five Cents");
+		valToStr.put(0.01, "One Cent");
+	}
+
+
+	public void addBillsOrCoins(double givenValue, int amt)
+	{
+		for(double tempVal : valToStr.keySet())
+		{
+			if(givenValue == tempVal)
+			{
+				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
+				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
+				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) + amt);
+			}
+			
+			
+		}
+
 	}
 	
 	public double getTotalMoney() {
 		double total = 0.0;
 		for( String i : denominations.keySet() )
 			total += strToVal.get(i)*denominations.get(i);
-		System.out.println("Total Reserves: " + total);
+		System.out.println("Total Reserves: " + FORMAT.format(total));
 		return total;
 	}
 	
 
-	
-	public boolean canGiveChange(double amt, LinkedHashMap<String, Integer> duplicateOfDenomMap) {
-		if(amt >= 1000.0 && denominations.get("One Thousand Bill") > 0) {
-			duplicateOfDenomMap.put("One Thousand Bill", duplicateOfDenomMap.get("One Thousand Bill") - 1);
-			return canGiveChange(amt-1000.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 500.0 && denominations.get("") > 0) {
-			duplicateOfDenomMap.put("Five Hundred Bill", duplicateOfDenomMap.get("Five Hundred Bill") - 1);
-			return canGiveChange(amt-500.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 200.0 && denominations.get("Two Hundred Bill") > 0) {
-			duplicateOfDenomMap.put("Two Hundred Bill", duplicateOfDenomMap.get("Two Hundred Bill") - 1);
-			return canGiveChange(amt-200.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 100.0 && denominations.get("One Hundred Bill") > 0) {
-			duplicateOfDenomMap.put("One Hundred Bill", duplicateOfDenomMap.get("One Hundred Bill") - 1);
-			return canGiveChange(amt-100.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 50.0 && denominations.get("Fifty Bill") > 0) {
-			duplicateOfDenomMap.put("Fifty Bill", duplicateOfDenomMap.get("Fifty Bill") - 1);
-			return canGiveChange(amt-50.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 20.0 && denominations.get("Twenty Bill") > 0) {
-			duplicateOfDenomMap.put("Twenty Bill", duplicateOfDenomMap.get("Twenty Bill") - 1);
-			return canGiveChange(amt-20.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 20.0 && denominations.get("Twenty Coin") > 0) {
-			duplicateOfDenomMap.put("Twenty Coin", duplicateOfDenomMap.get("Twenty Coin") - 1);
-			return canGiveChange(amt-20.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 10.0 && denominations.get("Ten Coin") > 0) {
-			duplicateOfDenomMap.put("Ten Coin", duplicateOfDenomMap.get("Ten Coin") - 1);
-			return canGiveChange(amt-10.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 5.0 && denominations.get("Five Coin") > 0) {
-			duplicateOfDenomMap.put("Five Coin", duplicateOfDenomMap.get("Five Coin") - 1);
-			return canGiveChange(amt-5.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 1.0 && denominations.get("One Coin") > 0) {
-			duplicateOfDenomMap.put("One Coin", duplicateOfDenomMap.get("One Coin") - 1);
-			return canGiveChange(amt-1.0, duplicateOfDenomMap);
-		}
-		else if(amt >= 0.25 && denominations.get("Twenty Five Cents") > 0) {
-			duplicateOfDenomMap.put("Twenty Five Cents", duplicateOfDenomMap.get("Twenty Five Cents") - 1);
-			return canGiveChange(amt-0.25, duplicateOfDenomMap);
-		}
-		else if(amt >= 0.05 && denominations.get("Five Cents") > 0) {
-			duplicateOfDenomMap.put("Five Cents", duplicateOfDenomMap.get("Five Cents") - 1);
-			return canGiveChange(amt-0.05, duplicateOfDenomMap);
-		}
-		else if(amt >= 0.01 && denominations.get("One Cent") > 0) {
-			duplicateOfDenomMap.put("One Cent", duplicateOfDenomMap.get("One Cent") - 1);
-			return canGiveChange(amt-0.01, duplicateOfDenomMap);
-		}
-		else if(amt == 0)
-			return true;
-		else
-			return false;
-	}
 	
 	public void acceptDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String i : this.denominations.keySet())
@@ -146,5 +121,7 @@ public class Money {
 	
 	
 	private LinkedHashMap<String, Integer> denominations;
-	public static LinkedHashMap<String, Double> strToVal;
+	public static LinkedHashMap<String, Double> strToVal;	//change back to priv
+	private static LinkedHashMap<Double, String> valToStr;
+	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 }

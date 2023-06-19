@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+
 /** The class VM_Item represents an item
   * that is built within a slot that is
   * inside the vending machine 
@@ -11,8 +13,7 @@ public class VM_Item {
     /**
      * This is a constructor that initializes an item's name,
      * price, and calories based on the given parameters. It also
-     * sets the number of items sold to 0 and the pointer to the next
-     * item as null.
+     * sets the number of items sold to 0.
      * 
      * @param name - string representation of the name of this item
      * @param price - price or cost of this item
@@ -23,25 +24,13 @@ public class VM_Item {
         itemName = name;
         itemPrice = price;
         itemCalories = calories;
-        nextItem = null;
         
         
     }
 
-
-
-
-    /**
-     * This method sets a pointer to the next item for this item
-     * 
-     * @param item another instance of an item made by this class
-     */
-    public void setNextItem(VM_Item item)
-    {
-        if(this.equals(item) && this.nextItem == null)
-            this.nextItem = item;
-
-    }
+    
+    
+ 
 
     /**
      * This method gets the name of this item.
@@ -73,15 +62,6 @@ public class VM_Item {
         return itemCalories;
     }
 
-    /**
-     * This method gets the next item of this item
-     * 
-     * @return reference to another instance of this item
-     */
-    public VM_Item getNextItem() 
-    {
-        return nextItem;
-    }
 
 
     
@@ -94,8 +74,9 @@ public class VM_Item {
      */
     @Override
     public String toString(){
+
         return "Name: " + itemName + "\n" +
-               "Price: Php " + itemPrice + "\n" +
+               "Price: Php " + FORMAT.format(itemPrice) + "\n" +
                "Calories: " + itemCalories + " cal" + "\n";
                
     }
@@ -135,6 +116,7 @@ public class VM_Item {
     private double itemPrice;
     /**The amount of calories in this item */
     private int itemCalories;
-    /**The reference for the next item to this */
-    private VM_Item nextItem;
+    /**Decimal format instance that the price will follow */
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
+
 }

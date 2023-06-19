@@ -6,8 +6,15 @@ import java.util.Map;
 	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java
  */
 
+/**
+ * Citations:
+ * https://ascii-generator.site/t/
+ */
+
 public class Main{
     public static void main(String[] args) {
+		MainDisplay mDisplay = new MainDisplay();
+		mDisplay.displayWelcome();
 		/*
         Main md = new Main();
         Scanner sc = new Scanner(System.in);
@@ -61,22 +68,35 @@ public class Main{
 		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
 		
 		// initialization of VM and how many slots it can hold
-		VM_Regular vm = new VM_Regular(2);
+		VM_Regular vm = new VM_Regular(2, 10);
+
+		VM_Item milk = new VM_Item("Milk", 27.00, 42);
+		VM_Item c2 = new VM_Item("C2", 20.00, 42);
 		
 		// initialization of slots and their contents
-		VM_Slot milkSlot = new VM_Slot(new VM_Item("Milk", 27.00, 42), 6);
-		VM_Slot c2Slot = new VM_Slot(new VM_Item("C2", 20.00, 42), 10);
-		milkSlot.addStock(3);
-		c2Slot.addStock(2);
+		// VM_Slot milkSlot = new VM_Slot(milk, 6);
+		// VM_Slot c2Slot = new VM_Slot(c2, 10);
+
+
+		// milkSlot.addItemStock(milkSlot, 3);
+		// c2Slot.addItemStock(c2Slot, 2);
+		vm.setSlot(milk, 3, 0);
+		vm.setSlot(c2, 3, 1);
 		
-		// saving slots into VM
-		vm.setSlot(milkSlot, 0);
-		vm.setSlot(c2Slot, 1);
+
 		
 		vm.displayAllItems();
 		
+		
+		System.out.println("Adding one more thousand bill");
+		vm.addBillsOrCoins(1000, 1);
+
+
 		// duplicating denomination hashmap of VM, while setting payment denominations to zero
 		currentMoneyDenom = vm.getDenominations();
+
+		
+
 		for(String i : currentMoneyDenom.keySet()) {
 			duplicate.put(i, currentMoneyDenom.get(i));
 			payment.put(i, 0);
@@ -85,6 +105,9 @@ public class Main{
 		// setting payment to 1 pc. of Fifty Bill
 		payment.put("One Hundred Bill", 1);
 		
+		
+		
+
 		//display duplicate of denomination hashmap of VM
 		for( Map.Entry m : duplicate.entrySet() ) {
 			System.out.println(m.getKey() + " " + m.getValue());
