@@ -23,11 +23,9 @@ public class VM_Slot {
         itemStock = 1;
         MAX = capacity;
         numItemSold = 0; 
-        
-
     }
 
-    public void sell(int quantity)
+    public void releaseStock(int quantity)
     {
 		int i = 0;
 		VM_Item currentItem = item;
@@ -48,6 +46,7 @@ public class VM_Slot {
 	}
 	
 	public double computePartialCost(int quantity) {
+		
 		int i = 0;
 		double sum = 0.0;
 		VM_Item currentItem = item;
@@ -56,6 +55,7 @@ public class VM_Slot {
 			currentItem = currentItem.getNextItem();
 			i++;
 		}
+		System.out.println("Partial cost: " + sum);
 		return sum;
 	}
 
@@ -108,13 +108,12 @@ public class VM_Slot {
     /**
      * Displays all item currently in slot
      */
-    public void dislpayAllItems(){
+    public void displayAllItems(){
         VM_Item itemCurrent;
         itemCurrent = item;
-        while(itemCurrent.getNextItem() != null){
-            System.out.println(itemCurrent);
+        while(itemCurrent != null){
+            System.out.println(itemCurrent.toString());
             itemCurrent = itemCurrent.getNextItem();
-
         }
     }
 
@@ -134,7 +133,7 @@ public class VM_Slot {
         if(itemStock > 0)
         {
             // check if the stock provided is too much for capacity
-            if(stock > MAX){
+            if(itemStock + stock > MAX){
                 System.out.print("Stocking has an excess of " + (stock -MAX) + " " + slotItemName );
 
                 //plurality of noun

@@ -1,7 +1,8 @@
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class VM_Regular {
-	public VM_Regular( int nOfSlots, Money money ) {
+	public VM_Regular( int nOfSlots ) {
 		slots = new VM_Slot[nOfSlots];
 		currentMoney = new Money();
 	}
@@ -11,22 +12,22 @@ public class VM_Regular {
 	 * has no input validation (use the hasEnoughStock() and hasEnoughChange() methods prior to this)
 	 *
 	 */
-	public void sell(String name, int quantity) {
-		int i = 0;
-		while(i < slots.length && !(slots[i].getItemName().equalsIgnoreCase(name)))
-			i++;
-	
-		if(i < slots.length)
-			slot[i].sell(quantity);
+	public void releaseStock(int[] quantities) {
+		int i;
+		for(i = 0; i < slots.length; i++)
+			slots[i].releaseStock(quantities[i]);
 	}
 	
 	public boolean hasEnoughStock(int[] quantities) {
 		int i = 0;
+		
 		boolean stockHasRequiredQuantities = true; // initially true
-		while(i < slots.length)
+		while(i < slots.length) {
 			// if the current slot does not hold the required quantity of its item
-			if( !(slot[i].hasEnoughStock(quantities[i])) )
+			if( !(slots[i].hasEnoughStock(quantities[i])) )
 				stockHasRequiredQuantities = false;
+			i++;
+		}
 		
 		return stockHasRequiredQuantities;
 	}
@@ -34,21 +35,34 @@ public class VM_Regular {
 	public double computeTotalCost(int[] quantities) {
 		int i = 0;
 		double totalCost = 0.0;
-		while(i < slots.length)
+		while(i < slots.length) {
 			totalCost += slots[i].computePartialCost(quantities[i]);
+			i++;
+		}
+		System.out.println("Total cost: " + totalCost);
 		return totalCost;
+	}
+	
+	public double getTotalOfMoneyReserves() {
+		return currentMoney.getTotalMoney();
 	}
 	
 	public boolean canGiveChange(double amt, HashMap<String, Integer> duplicateOfDenomMap) {
 		return currentMoney.canGiveChange(amt, duplicateOfDenomMap);
 	}
 	
-	public VM_Slot[] getSlots() {
-		return slots;
+	public void displayAllItems() {
+		int i;
+		for(i = 0; i < slots.length; i++)
+			slots[i].displayAllItems();
 	}
 	
 	public void setSlot(VM_Slot slot, int slotId) {
 		slots[slotId] = slot;
+	}
+	
+	public Money getCurrentMoney() {
+			return currentMoney;
 	}
 	
 
