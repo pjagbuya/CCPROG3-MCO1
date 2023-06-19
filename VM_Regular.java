@@ -8,7 +8,7 @@ public class VM_Regular {
 
 	/**
 	 * looks for the slot associated with a given item name, and tells that slot to sell a specified amount of that item
-	 *
+	 * has no input validation (use the hasEnoughStock() and hasEnoughChange() methods prior to this)
 	 *
 	 */
 	public void sell(String name, int quantity) {
@@ -20,6 +20,29 @@ public class VM_Regular {
 			slot[i].sell(quantity);
 	}
 	
+	public boolean hasEnoughStock(int[] quantities) {
+		int i = 0;
+		boolean stockHasRequiredQuantities = true; // initially true
+		while(i < slots.length)
+			// if the current slot does not hold the required quantity of its item
+			if( !(slot[i].hasEnoughStock(quantities[i])) )
+				stockHasRequiredQuantities = false;
+		
+		return stockHasRequiredQuantities;
+	}
+	
+	public double computeTotalCost(int[] quantities) {
+		int i = 0;
+		double totalCost = 0.0;
+		while(i < slots.length)
+			totalCost += slots[i].computePartialCost(quantities[i]);
+		return totalCost;
+	}
+	
+	public boolean canGiveChange(double amt, HashMap<String, Integer> duplicateOfDenomMap) {
+		return currentMoney.canGiveChange(amt, duplicateOfDenomMap);
+	}
+	
 	public VM_Slot[] getSlots() {
 		return slots;
 	}
@@ -27,9 +50,6 @@ public class VM_Regular {
 	public void setSlot(VM_Slot slot, int slotId) {
 		slots[slotId] = slot;
 	}
-
-	public void setSlot
-	
 	
 
 	private VM_Slot[] slots;

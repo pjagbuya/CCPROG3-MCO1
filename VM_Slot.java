@@ -29,20 +29,35 @@ public class VM_Slot {
 
     public void sell(int quantity)
     {
-		double sum = 0;
 		int i = 0;
-		int j = 0;
+		VM_Item currentItem = item;
+		while(i < quantity) {
+			currentItem = currentItem.getNextItem();
+			i++;
+		}
+		
+		item = currentItem;
+		itemStock -= quantity;
+        numItemSold += quantity;
+    }
+	
+	public boolean hasEnoughStock(int quantity) {
+		if(quantity >= 0 && quantity <= itemStock)
+			return true;			
+		return false;
+	}
+	
+	public double computePartialCost(int quantity) {
+		int i = 0;
+		double sum = 0.0;
 		VM_Item currentItem = item;
 		while(i < quantity) {
 			sum += currentItem.getItemPrice();
 			currentItem = currentItem.getNextItem();
 			i++;
 		}
-		
-		item = currentItem;
-		
-        numItemSold += quantity;
-    }
+		return sum;
+	}
 
     /**
      * This method returns the name of the slot
