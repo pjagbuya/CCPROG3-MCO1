@@ -52,18 +52,26 @@ public class Main{
 		
 		
 		
-		int[] quantities = new int[1];
+		int[] quantities = new int[2];
 		quantities[0] = 1;
+		quantities[1] = 3;
 		double paymentTotal = 0;
 		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> currentMoneyDenom = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
 		
-		VM_Regular vm = new VM_Regular(1);
-		VM_Slot milkSlot = new VM_Slot(new VM_Item("Milk", 27.00, 42), 6);
-		milkSlot.addStock(3);
+		// initialization of VM and how many slots it can hold
+		VM_Regular vm = new VM_Regular(2);
 		
+		// initialization of slots and their contents
+		VM_Slot milkSlot = new VM_Slot(new VM_Item("Milk", 27.00, 42), 6);
+		VM_Slot c2Slot = new VM_Slot(new VM_Item("C2", 20.00, 42), 10);
+		milkSlot.addStock(3);
+		c2Slot.addStock(2);
+		
+		// saving slots into VM
 		vm.setSlot(milkSlot, 0);
+		vm.setSlot(c2Slot, 1);
 		
 		vm.displayAllItems();
 		
@@ -75,7 +83,7 @@ public class Main{
 		}
 		
 		// setting payment to 1 pc. of Fifty Bill
-		payment.put("Fifty Bill", 1);
+		payment.put("One Hundred Bill", 1);
 		
 		//display duplicate of denomination hashmap of VM
 		for( Map.Entry m : duplicate.entrySet() ) {
@@ -87,6 +95,9 @@ public class Main{
 			paymentTotal += payment.get(i)*Money.strToVal.get(i);
 		}
 		
+		// calculating and displaying total cost of order
+		System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
+		
 		System.out.println("Payment Total: " + paymentTotal);
 		// checks if transaction is valid
 		if(	vm.hasEnoughStock(quantities) &&
@@ -94,13 +105,12 @@ public class Main{
 			vm.canGiveChange(paymentTotal - vm.computeTotalCost(quantities), duplicate) ) // user is assumed to insert a 50 peso bill
 		{
 			System.out.println("\nTRANSACTION PROCEEDS-------");
-			System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
 			vm.releaseStock(quantities);
 			vm.setDenominations(duplicate);
 			vm.addDenominations(payment);
 		}
 		else
-			System.out.println("CANNOT TRANSACT--------------\n");
+			System.out.println("\nCANNOT TRANSACT--------------");
 		
 		vm.displayAllItems();
 		

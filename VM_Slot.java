@@ -50,7 +50,7 @@ public class VM_Slot {
 		int i = 0;
 		double sum = 0.0;
 		VM_Item currentItem = item;
-		while(i < quantity) {
+		while(currentItem != null && i < quantity) {
 			sum += currentItem.getItemPrice();
 			currentItem = currentItem.getNextItem();
 			i++;
@@ -133,10 +133,10 @@ public class VM_Slot {
         {
             // check if the stock provided is too much for capacity
             if(itemStock + stock > MAX){
-                System.out.print("Stocking has an excess of " + (stock -MAX) + " " + slotItemName );
+                System.out.print("Stocking has an excess of " + (itemStock+stock-MAX) + " " + slotItemName );
 
                 //plurality of noun
-                if((stock - MAX) > 1){
+                if((itemStock+stock-MAX) > 1){
                     System.out.print("s");
                 }
                 System.out.println();
@@ -158,6 +158,7 @@ public class VM_Slot {
                 
                 // Sets next item with a new instance of an item
                 itemCurrent.setNextItem(new VM_Item(item.getItemName(), item.getItemPrice(), item.getItemCalories()));
+				itemStock++;
                 size--;
 
                 // loop is linked to another item
