@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class VM_Regular {
 	public VM_Regular( int nOfSlots ) {
@@ -39,7 +39,6 @@ public class VM_Regular {
 			totalCost += slots[i].computePartialCost(quantities[i]);
 			i++;
 		}
-		System.out.println("Total cost: " + totalCost);
 		return totalCost;
 	}
 	
@@ -47,7 +46,7 @@ public class VM_Regular {
 		return currentMoney.getTotalMoney();
 	}
 	
-	public boolean canGiveChange(double amt, HashMap<String, Integer> duplicateOfDenomMap) {
+	public boolean canGiveChange(double amt, LinkedHashMap<String, Integer> duplicateOfDenomMap) {
 		return currentMoney.canGiveChange(amt, duplicateOfDenomMap);
 	}
 	
@@ -61,8 +60,16 @@ public class VM_Regular {
 		slots[slotId] = slot;
 	}
 	
-	public Money getCurrentMoney() {
-			return currentMoney;
+	public LinkedHashMap<String, Integer> getDenominations() {
+		return currentMoney.getDenominations();
+	}
+	
+	public void addDenominations(LinkedHashMap<String, Integer> denominations) {
+		currentMoney.addDenominations(denominations);
+	}
+	
+	public void setDenominations(LinkedHashMap<String, Integer> denominations) {
+		currentMoney.setDenominations(denominations);
 	}
 	
 

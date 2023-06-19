@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /*
@@ -54,41 +54,61 @@ public class Main{
 		
 		int[] quantities = new int[1];
 		quantities[0] = 1;
-		HashMap<String, Integer> denominations = new HashMap<String, Integer>();
-		HashMap<String, Integer> currentMoney = new HashMap<String, Integer>();
+		double paymentTotal = 0;
+		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> currentMoneyDenom = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
 		
 		VM_Regular vm = new VM_Regular(1);
 		VM_Slot milkSlot = new VM_Slot(new VM_Item("Milk", 27.00, 42), 6);
+		milkSlot.addStock(3);
 		
 		vm.setSlot(milkSlot, 0);
 		
 		vm.displayAllItems();
 		
-		// duplicating denomination hashmap of VM
-		currentMoney = vm.getCurrentMoney().getDenominations();
-		for(String i : currentMoney.keySet()) {
-			denominations.put(i, currentMoney.get(i));
+		// duplicating denomination hashmap of VM, while setting payment denominations to zero
+		currentMoneyDenom = vm.getDenominations();
+		for(String i : currentMoneyDenom.keySet()) {
+			duplicate.put(i, currentMoneyDenom.get(i));
+			payment.put(i, 0);
 		}
 		
-		//display duplicate of denomination hashmap
-		for( Map.Entry m : denominations.entrySet() ) {
+		// setting payment to 1 pc. of Fifty Bill
+		payment.put("Fifty Bill", 1);
+		
+		//display duplicate of denomination hashmap of VM
+		for( Map.Entry m : duplicate.entrySet() ) {
 			System.out.println(m.getKey() + " " + m.getValue());
 		}
 		
+		//calculating payment total
+		for(String i : payment.keySet()){
+			paymentTotal += payment.get(i)*Money.strToVal.get(i);
+		}
+		
+		System.out.println("Payment Total: " + paymentTotal);
+		// checks if transaction is valid
 		if(	vm.hasEnoughStock(quantities) &&
 			(vm.getTotalOfMoneyReserves() - vm.computeTotalCost(quantities) >= 0) &&
-			vm.canGiveChange(50 - vm.computeTotalCost(quantities), denominations) )
+			vm.canGiveChange(paymentTotal - vm.computeTotalCost(quantities), duplicate) ) // user is assumed to insert a 50 peso bill
 		{
+			System.out.println("\nTRANSACTION PROCEEDS-------");
+			System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
 			vm.releaseStock(quantities);
-			//vm.getCurrentMoney().getDenominations() = denominations;
+			vm.setDenominations(duplicate);
+			vm.addDenominations(payment);
 		}
+		else
+			System.out.println("CANNOT TRANSACT--------------\n");
 		
 		vm.displayAllItems();
 		
 		//display duplicate of denomination hashmap
-		for( Map.Entry m : denominations.entrySet() ) {
+		for( Map.Entry m : vm.getDenominations().entrySet() ) {
 			System.out.println(m.getKey() + " " + m.getValue());
 		}
+		vm.getTotalOfMoneyReserves();
     }
 
 	/*

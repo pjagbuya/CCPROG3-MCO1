@@ -1,9 +1,9 @@
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Money {
 
 	public Money() {
-		denominations = new HashMap<String, Integer>();
+		denominations = new LinkedHashMap<String, Integer>();
 		
 		/*
 		denominations.put("One Thousand Bill", 0);
@@ -39,7 +39,7 @@ public class Money {
 		denominations.put("One Cent", 500);
 		
 		
-		strToVal = new HashMap<String, Double>();
+		strToVal = new LinkedHashMap<String, Double>();
 		strToVal.put("One Thousand Bill", 1000.0);
 		strToVal.put("Five Hundred Bill", 500.0);
 		strToVal.put("Two Hundred Bill", 200.0);
@@ -66,8 +66,7 @@ public class Money {
 	
 
 	
-	public boolean canGiveChange(double amt, HashMap<String, Integer> duplicateOfDenomMap) {
-		System.out.println("ENTERED MONEY'S CANGIVECHANGE");
+	public boolean canGiveChange(double amt, LinkedHashMap<String, Integer> duplicateOfDenomMap) {
 		if(amt >= 1000.0 && denominations.get("One Thousand Bill") > 0) {
 			duplicateOfDenomMap.put("One Thousand Bill", duplicateOfDenomMap.get("One Thousand Bill") - 1);
 			return canGiveChange(amt-1000.0, duplicateOfDenomMap);
@@ -126,28 +125,26 @@ public class Money {
 			return false;
 	}
 	
-	public HashMap<String, Integer> getDenominations() {
+	public void acceptDenominations(LinkedHashMap<String, Integer> denominations) {
+		for(String i : this.denominations.keySet())
+			this.denominations.put(i, this.denominations.get(i) + denominations.get(i));
+	}
+	
+	public LinkedHashMap<String, Integer> getDenominations() {
 		return denominations;
 	}
 	
+	public void addDenominations(LinkedHashMap<String, Integer> denominations) {
+		for(String i : denominations.keySet())
+			this.denominations.put(i , this.denominations.get(i) + denominations.get(i));
+	}
 	
-	private HashMap<String, Integer> denominations;
-	private static HashMap<String, Double> strToVal;
+	public void setDenominations(LinkedHashMap<String, Integer> denominations) {
+		for(String i : denominations.keySet())
+			this.denominations.put(i , denominations.get(i));
+	}
 	
-	/*
-	strToVal.put("One Thousand Bill", 1000.0);
-	strToVal.put("Five Hundred Bill", 500.0);
-	strToVal.put("Two Hundred Bill", 200.0);
-	strToVal.put("One Hundred Bill", 100.0);
-	strToVal.put("Fifty Bill", 50.0);
-	strToVal.put("Twenty Bill", 20.0);
-		
-	strToVal.put("Twenty Coin", 20.0);
-	strToVal.put("Ten Coin", 10.0);
-	strToVal.put("Five Coin", 5.0);
-	strToVal.put("One Coin", 1.0);
-	strToVal.put("Twenty Five Cents", 0.25);
-	strToVal.put("Five Cents", 0.05);
-	strToVal.put("One Cent", 0.01);
-	*/
+	
+	private LinkedHashMap<String, Integer> denominations;
+	public static LinkedHashMap<String, Double> strToVal;
 }

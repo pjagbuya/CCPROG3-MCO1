@@ -41,7 +41,7 @@ public class VM_Slot {
 	
 	public boolean hasEnoughStock(int quantity) {
 		if(quantity >= 0 && quantity <= itemStock)
-			return true;			
+			return true;
 		return false;
 	}
 	
@@ -55,7 +55,6 @@ public class VM_Slot {
 			currentItem = currentItem.getNextItem();
 			i++;
 		}
-		System.out.println("Partial cost: " + sum);
 		return sum;
 	}
 
