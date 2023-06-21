@@ -1,8 +1,40 @@
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
+import java.util.Scanner;
+import java.util.Map;
 
 public class Money {
 
+	public Money(boolean value)
+	{
+		this();
+		denominations.put("One Thousand Bill", 0);
+		denominations.put("Five Hundred Bill", 0);
+		denominations.put("Two Hundred Bill", 0);
+		denominations.put("One Hundred Bill", 0);
+		denominations.put("Fifty Bill", 0);
+		denominations.put("Twenty Bill", 0);
+		
+		denominations.put("Twenty Coin", 0);
+		denominations.put("Ten Coin", 0);
+		denominations.put("Five Coin", 0);
+		denominations.put("One Coin", 0);
+		denominations.put("Twenty Five Cents", 0);
+		denominations.put("Five Cents", 0);
+		denominations.put("One Cent", 0);
+		
+
+	}
+	public Money(Money givenMoney)
+	{
+		this();
+		LinkedHashMap<String, Integer> givenDenoms = givenMoney.getDenominations();
+		for(String tempDenom : givenDenoms.keySet())
+		{
+			denominations.put(tempDenom, denominations.get(tempDenom));
+		}
+
+	}
 	public Money() {
 		denominations = new LinkedHashMap<String, Integer>();
 		
@@ -73,8 +105,20 @@ public class Money {
 		valToStr.put(0.01, "One Cent");
 	}
 
+	public boolean isEmpty()
+	{
+		for(Map.Entry<String, Integer> tempEntry : denominations.entrySet())
+		{
+			if(tempEntry.getValue() > 0)
+			{
+				return false;
+			}
+		}
+		return true;
 
-	public void addBillsOrCoins(double givenValue, int amt)
+	}
+
+	public boolean addBillsOrCoins(double givenValue, int amt)
 	{
 		for(double tempVal : valToStr.keySet())
 		{
@@ -83,18 +127,68 @@ public class Money {
 				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
 				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
 				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) + amt);
+				return true;
 			}
 			
 			
 		}
+		return false;
 
 	}
+
+	public boolean subtractBillsOrCoins(double givenValue, int amt)
+	{
+		for(double tempVal : valToStr.keySet())
+		{
+			if(givenValue == tempVal)
+			{
+				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
+				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
+				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) - amt);
+				return true;
+			}
+			
+			
+		}
+		return false;
+
+	}
+	public boolean setBillsOrCoins(double givenValue, int amt)
+	{
+		for(double tempVal : valToStr.keySet())
+		{
+			if(givenValue == tempVal)
+			{
+				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
+				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
+				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)));
+				return true;
+			}
+			
+			
+		}
+		return false;
+
+	}
+	// public Money giveDifferenceMoney(Money given)
+	// {
+	// 	Money tempMoney = new Money(true);
+	// 	for(String tempKey : given.getDenominations().keySet())
+	// 	{
+	// 		if(given.getDenominations().get(tempKey) - target.getDenominations().get(tempKey) > 0)
+	// 			tempMoney.addBillsOrCoins(moneyStringToValue(tempKey), given.getDenominations().get(tempKey) - this.getDenominations().get(tempKey));
+	// 	}
+
+	// 	return tempMoney;
+		
+
+	// }
 	
 	public double getTotalMoney() {
 		double total = 0.0;
 		for( String i : denominations.keySet() )
 			total += strToVal.get(i)*denominations.get(i);
-		System.out.println("Total Reserves: " + FORMAT.format(total));
+		// System.out.println("Total Reserves: " + FORMAT.format(total));
 		return total;
 	}
 	
@@ -108,7 +202,10 @@ public class Money {
 	public LinkedHashMap<String, Integer> getDenominations() {
 		return denominations;
 	}
-	
+	public void addDenominations(Money money) {
+		for(String i : money.getDenominations().keySet())
+			this.denominations.put(i , this.denominations.get(i) + money.getDenominations().get(i));
+	}
 	public void addDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String i : denominations.keySet())
 			this.denominations.put(i , this.denominations.get(i) + denominations.get(i));
@@ -118,10 +215,32 @@ public class Money {
 		for(String i : denominations.keySet())
 			this.denominations.put(i , denominations.get(i));
 	}
+
+	public void promptDenomination()
+	{
+		Scanner sc = new Scanner(System.in);
+
+		int newValue;
+		for(String tempEntry : denominations.keySet()){
+            
+
+            System.out.print("How many " + tempEntry + ": ");
+            newValue = sc.nextInt();
+			sc.nextLine();
+            denominations.put(tempEntry, newValue);
+        }
+		sc.close();
+	}
+
+	public static double moneyStringToValue(String name)
+	{
+		return strToVal.get(name);
+	}
 	
 	
 	private LinkedHashMap<String, Integer> denominations;
 	public static LinkedHashMap<String, Double> strToVal;	//change back to priv
 	private static LinkedHashMap<Double, String> valToStr;
 	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
+
 }

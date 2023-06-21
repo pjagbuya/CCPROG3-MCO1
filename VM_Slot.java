@@ -40,6 +40,19 @@ public class VM_Slot {
         this(null, capacity);
     }
 
+    public boolean isFull()
+    {
+        if(slotItemStock == MAX)
+            return true;
+        return false;
+    }
+
+    public boolean isEmpty()
+    {
+        if(slotItemStock == 0)
+            return true;
+        return false;
+    }
 
     public void replaceStock(VM_Item givenItem, int stock)
     {
@@ -55,6 +68,8 @@ public class VM_Slot {
         if(hasEnoughStock(quantity))
         {
             slotItemStock -= quantity;
+            if(slotItemStock == 0)
+                item = null;
         }
         
         
@@ -66,6 +81,11 @@ public class VM_Slot {
         
 		return false;
 	}
+
+    public void setItemPrice(double price)
+    {
+        item.setItemPrice(price);
+    }
 	
 	public double computePartialCost(int quantity) {
         double sum;
@@ -138,7 +158,12 @@ public class VM_Slot {
     }
 
 
+    public void addItemStock(int stock)
+    {
+        if(item != null)
+            addItemStock(item, stock);
 
+    }
     /**
      * This method adds stock count of this slot
      * 
@@ -151,12 +176,12 @@ public class VM_Slot {
         if(givenItem == null && stock <= 0)
         {
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
+            
         }
         else if(stock + slotItemStock > MAX)
         {
             System.out.println("You have an excess of " + (MAX-stock) + givenItem.getItemName() + " while we were stocking.");
             slotItemStock = MAX;
-            return;
         }
 
         // Check if the slot was empty
@@ -174,6 +199,8 @@ public class VM_Slot {
         // if this slot already has an item, but has a different
         else
             warnReplace(givenItem, stock);
+        
+            
         
         
 

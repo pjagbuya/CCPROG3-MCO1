@@ -28,6 +28,13 @@ public class VM_Item {
         
     }
 
+
+    public void setItemPrice(double price)
+    {
+        if(price > 0)
+            itemPrice = price;
+    
+    }
     
     
  

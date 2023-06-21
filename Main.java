@@ -62,6 +62,12 @@ public class Main{
 		int[] quantities = new int[2];
 		quantities[0] = 1;
 		quantities[1] = 3;
+
+		Order orderPaul = new Order();
+		Money moneyPaul = new Money(true);	// boolean is for testing
+		moneyPaul.addBillsOrCoins(200, 1);
+		moneyPaul.addBillsOrCoins(50, 1);
+		
 		double paymentTotal = 0;
 		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> currentMoneyDenom = new LinkedHashMap<String, Integer>();
@@ -73,67 +79,109 @@ public class Main{
 		VM_Item milk = new VM_Item("Milk", 27.00, 42);
 		VM_Item c2 = new VM_Item("C2", 20.00, 42);
 		
+
+
 		// initialization of slots and their contents
 		// VM_Slot milkSlot = new VM_Slot(milk, 6);
 		// VM_Slot c2Slot = new VM_Slot(c2, 10);
 
 
 		// milkSlot.addItemStock(milkSlot, 3);
-		// c2Slot.addItemStock(c2Slot, 2);
+		// c2Slot.addItemStock(c2Slot, 2)
+		
+		// STOCKING
 		vm.setSlot(milk, 3, 0);
 		vm.setSlot(c2, 3, 1);
 		
 
+		// PAUL ORDERS
+		orderPaul.addOrder(vm.getSlot("Milk"), 1);
+		orderPaul.addOrder(vm.getSlot("C2"), 3);
 		
+
+		// Display all available items
 		vm.displayAllItems();
+
+
 		
 		
-		System.out.println("Adding one more thousand bill");
-		vm.addBillsOrCoins(1000, 1);
+
 
 
 		// duplicating denomination hashmap of VM, while setting payment denominations to zero
-		currentMoneyDenom = vm.getDenominations();
+		// currentMoneyDenom = vm.getDenominations();
 
 		
+		// // DENOMINATIONS FOR PAUL
+		// for(String i : currentMoneyDenom.keySet()) {
+		// 	duplicate.put(i, currentMoneyDenom.get(i));
+		// 	payment.put(i, 0);
+		// }
+		
+		// // setting payment to 1 pc. of Fifty Bill
+		// payment.put("One Hundred Bill", 1);
+		
+		
 
-		for(String i : currentMoneyDenom.keySet()) {
-			duplicate.put(i, currentMoneyDenom.get(i));
-			payment.put(i, 0);
-		}
-		
-		// setting payment to 1 pc. of Fifty Bill
-		payment.put("One Hundred Bill", 1);
-		
-		
-		
-
-		//display duplicate of denomination hashmap of VM
-		for( Map.Entry m : duplicate.entrySet() ) {
+		// //display duplicate of denomination hashmap of VM
+		System.out.println("Paul's money");
+		for( Map.Entry m : moneyPaul.getDenominations().entrySet() ) {
 			System.out.println(m.getKey() + " " + m.getValue());
+
 		}
+
+
 		
 		//calculating payment total
-		for(String i : payment.keySet()){
-			paymentTotal += payment.get(i)*Money.strToVal.get(i);
+		// for(String i : payment.keySet()){
+		// 	paymentTotal += payment.get(i)*Money.strToVal.get(i);
+		// }
+
+		System.out.println("VM money");
+		for( Map.Entry m : vm.getCurrentMoney().getDenominations().entrySet() ) {
+			System.out.println(m.getKey() + " " + m.getValue());
+
 		}
+		
 		
 		// calculating and displaying total cost of order
-		System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
+		// System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
+		System.out.println("Total Cost: " + orderPaul.getTotalCost() + "\n");
+
 		
-		System.out.println("Payment Total: " + paymentTotal);
+		System.out.println("Payment Total: " + moneyPaul.getTotalMoney());
 		// checks if transaction is valid
-		if(	vm.hasEnoughStock(quantities) &&
-			(vm.getTotalOfMoneyReserves() - vm.computeTotalCost(quantities) >= 0) &&
-			vm.canGiveChange(paymentTotal - vm.computeTotalCost(quantities), duplicate) ) // user is assumed to insert a 50 peso bill
+		vm.addDenominations(moneyPaul.getDenominations());
+		System.out.println("Total Reserves after this payment: " + (vm.getTotalOfMoneyReserves() - orderPaul.getTotalCost()));
+
+		
+		paymentTotal = moneyPaul.getTotalMoney();
+
+		LinkedHashMap<String, Integer> tempHashMap = moneyPaul.getDenominations();
+
+		if(	vm.hasEnoughStock(orderPaul) &&
+			( (vm.getTotalOfMoneyReserves() - orderPaul.getTotalCost()) >= 0)
+			 && vm.canGiveChange(orderPaul, moneyPaul) ) // user is assumed to insert a 250 peso total // a;so messed up
 		{
+			System.out.println("Paul's money is" +  paymentTotal);
 			System.out.println("\nTRANSACTION PROCEEDS-------");
-			vm.releaseStock(quantities);
-			vm.setDenominations(duplicate);
-			vm.addDenominations(payment);
+			// Vending machine 
+			System.out.println("Paul's money is" +  moneyPaul.getTotalMoney());
+			vm.acceptOrder(orderPaul, moneyPaul);
+			// vm.updateMoneyWithChange(orderPaul, moneyPaul);
+
+			
+			
+			
+
 		}
 		else
+		{
 			System.out.println("\nCANNOT TRANSACT--------------");
+			vm.subtractBillsOrCoins(moneyPaul);
+		}
+
+			
 		
 		vm.displayAllItems();
 		
@@ -141,7 +189,7 @@ public class Main{
 		for( Map.Entry m : vm.getDenominations().entrySet() ) {
 			System.out.println(m.getKey() + " " + m.getValue());
 		}
-		vm.getTotalOfMoneyReserves();
+		System.out.println("Total Reserves: " + vm.getTotalOfMoneyReserves());
     }
 
 	/*
