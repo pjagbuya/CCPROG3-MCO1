@@ -8,7 +8,8 @@ import java.text.DecimalFormat;
   * @author Vince Kenneth D. Rojo
   * @version 1.0
   */
-public class VM_Item {
+public class VM_Item 
+{
 
     /**
      * This is a constructor that initializes an item's name,
@@ -22,11 +23,29 @@ public class VM_Item {
     public VM_Item(String name, double price, int calories)
     {
         itemName = name;
-        itemPrice = price;
-        itemCalories = calories;
+
+        if(price > 0)
+        {
+            itemPrice = price;
+        }
+        else
+        {
+            itemName = "N/A";
+            itemPrice = 0;
+        }
+            
+        
+        if(itemCalories > 0)
+            itemCalories = calories;
+        else
+        {
+            itemName = "N/A";
+            itemCalories = 0;
+        }
         
         
     }
+
 
 
     public void setItemPrice(double price)
@@ -35,6 +54,7 @@ public class VM_Item {
             itemPrice = price;
     
     }
+
     
     
  
