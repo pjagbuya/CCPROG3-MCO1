@@ -1,28 +1,9 @@
-import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 
 public class Money {
 
 	public Money() {
 		denominations = new LinkedHashMap<String, Integer>();
-		
-		/*
-		denominations.put("One Thousand Bill", 0);
-		denominations.put("Five Hundred Bill", 0);
-		denominations.put("Two Hundred Bill", 0);
-		denominations.put("One Hundred Bill", 0);
-		denominations.put("Fifty Bill", 0);
-		denominations.put("Twenty Bill", 0);
-		
-		denominations.put("Twenty Coin", 0);
-		denominations.put("Ten Coin", 0);
-		denominations.put("Five Coin", 0);
-		denominations.put("One Coin", 0);
-		denominations.put("Twenty Five Cents", 0);
-		denominations.put("Five Cents", 0);
-		denominations.put("One Cent", 0);
-		*/
-		
 		
 		denominations.put("One Thousand Bill", 10);
 		denominations.put("Five Hundred Bill", 10);
@@ -73,7 +54,6 @@ public class Money {
 		valToStr.put(0.01, "One Cent");
 	}
 
-
 	public void addBillsOrCoins(double givenValue, int amt)
 	{
 		for(double tempVal : valToStr.keySet())
@@ -90,11 +70,28 @@ public class Money {
 
 	}
 	
+	public boolean subtractBillsOrCoins(double givenValue, int amt)
+	{
+		for(double tempVal : valToStr.keySet())
+		{
+			if(givenValue == tempVal)
+			{
+				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
+				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
+				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) - amt);
+				return true;
+			}
+			
+			
+		}
+		return false;
+
+	}
+	
 	public double getTotalMoney() {
 		double total = 0.0;
-		for( String i : denominations.keySet() )
-			total += strToVal.get(i)*denominations.get(i);
-		System.out.println("Total Reserves: " + FORMAT.format(total));
+		for( String s : denominations.keySet() )
+			total += strToVal.get(s)*denominations.get(s);
 		return total;
 	}
 	
@@ -105,13 +102,9 @@ public class Money {
 			this.denominations.put(i, this.denominations.get(i) + denominations.get(i));
 	}
 	
-	public LinkedHashMap<String, Integer> getDenominations() {
-		return denominations;
-	}
-	
-	public void addDenominations(LinkedHashMap<String, Integer> denominations) {
-		for(String i : denominations.keySet())
-			this.denominations.put(i , this.denominations.get(i) + denominations.get(i));
+	public void acceptDenominations(Money money) {
+		for(String i : money.getDenominations().keySet())
+			this.denominations.put(i , this.denominations.get(i) + money.getDenominations().get(i));
 	}
 	
 	public void setDenominations(LinkedHashMap<String, Integer> denominations) {
@@ -119,9 +112,16 @@ public class Money {
 			this.denominations.put(i , denominations.get(i));
 	}
 	
+	public LinkedHashMap<String, Integer> getDenominations() {
+		return denominations;
+	}
+	
+	public static LinkedHashMap<String, Double> getStrToVal() {
+		return strToVal;
+	}
+	
 	
 	private LinkedHashMap<String, Integer> denominations;
-	public static LinkedHashMap<String, Double> strToVal;	//change back to priv
+	private static LinkedHashMap<String, Double> strToVal;	//change back to priv
 	private static LinkedHashMap<Double, String> valToStr;
-	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 }

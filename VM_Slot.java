@@ -35,7 +35,8 @@ public class VM_Slot {
         else
             MAX = 10;
     }
-
+	
+	
     public VM_Slot(int capacity){
         this(null, capacity);
     }
@@ -69,15 +70,9 @@ public class VM_Slot {
 	
 	public double computePartialCost(int quantity) {
         double sum;
-
         sum = 0;
-		if(hasEnoughStock(quantity))
-        {  
-            
-            sum = item.getItemPrice() * quantity;
-            
-
-        }
+		
+        sum = item.getItemPrice() * quantity;
 
         return sum;
 
