@@ -1,6 +1,20 @@
 import java.util.HashMap;
+
+/** The class VM_Item represents an item
+  * that is built within a slot that is
+  * inside the vending machine 
+  *
+  * @author Paul Josef P. Agbuya
+  * @author Vince Kenneth D. Rojo
+  * @version 1.0
+  */
 public class Order
 {
+
+    /**
+     * This constructor creates an Order with initialization
+     * of an empty HashMap and totalCost of the Order to be 0
+     */
     public Order()
     {
         pendingOrder = new HashMap<String, Integer>();

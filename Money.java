@@ -2,7 +2,14 @@ import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 import java.util.Map;
-
+/** The class Money represents an item
+  * that is built within a slot that is
+  * inside the vending machine 
+  *
+  * @author Paul Josef P. Agbuya
+  * @author Vince Kenneth D. Rojo
+  * @version 1.0
+  */
 public class Money {
 
 	public Money(boolean value)

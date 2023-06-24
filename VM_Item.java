@@ -14,7 +14,9 @@ public class VM_Item
     /**
      * This is a constructor that initializes an item's name,
      * price, and calories based on the given parameters. It also
-     * sets the number of items sold to 0.
+     * sets the number of itemsSold to 0 if the value is not positive.
+     * Lastly, sets the number of calories to 0 if the given parameter
+     * calories is not a positive integer
      * 
      * @param name - string representation of the name of this item
      * @param price - price or cost of this item
@@ -47,7 +49,11 @@ public class VM_Item
     }
 
 
-
+    /**
+     * This method set the price of this item
+     * 
+     * @param price - the price of this item
+     */
     public void setItemPrice(double price)
     {
         if(price > 0)
