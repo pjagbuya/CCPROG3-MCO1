@@ -71,8 +71,21 @@ public class Main{
 		// slot initialization
 		VM_Item milk = new VM_Item("Milk", 27.00, 42);
 		VM_Item c2 = new VM_Item("C2", 20.00, 42);
+
 		vm.setSlot(milk, 3, 0);
 		vm.setSlot(c2, 3, 1);
+
+	
+	
+		VM_Draw vmArt = new VM_Draw(vm);								//added
+
+	
+		vmArt.drawAndSetVM();											//added
+		
+		if(vm.isThisValid())		// Check if all slots are filled	// added
+			vm.addToStockedInfo();	// save stock info					// added
+
+
 		
 		// display VM's initial stock
 		vm.displayAllItems();
@@ -83,7 +96,12 @@ public class Main{
 		
 		// run VM's in selling mode (simulates user buying from the VM)
 		vm.sellingOperation(duplicate, payment, change, order);
+
 		
+		vm.displayAllStockInfo();										//added
+
+		vmArt.updateVM(vm);												//added - updates to see if things are stocked or out of stock
+		vmArt.drawAndSetVM();											//added
 		
     }
 

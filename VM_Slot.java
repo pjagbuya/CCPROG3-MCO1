@@ -20,7 +20,7 @@ public class VM_Slot {
      */
     public VM_Slot(VM_Item givenItem, int capacity){
 
-
+        slotItemSold = 0;
         item = givenItem;
 
         if(givenItem != null)
@@ -36,8 +36,27 @@ public class VM_Slot {
             MAX = 10;
     }
 	
-	
-    public VM_Slot(int capacity){
+	public VM_Slot(VM_Slot copy)                // Added copiable constructor
+    {
+        slotItemSold = copy.getSlotItemSold();
+        item = copy.getItem();
+
+        if(item != null)
+            slotItemName = item.getItemName();
+        else
+            slotItemName = "N/A";
+
+        slotItemStock = copy.getSlotItemStock();
+
+        if(copy.getMAX() >= 10)
+            MAX = copy.getMAX();
+        else
+            MAX = 10;
+       
+    }
+
+    public VM_Slot(int capacity)
+    {
         this(null, capacity);
     }
 
@@ -56,6 +75,7 @@ public class VM_Slot {
         if(hasEnoughStock(quantity))
         {
             slotItemStock -= quantity;
+            slotItemSold += quantity;
         }
         
         
@@ -97,7 +117,13 @@ public class VM_Slot {
     public VM_Item getItem() {
         return item;
     }
-
+    /**
+     * This method gets the amount of items sold in this slot
+     * @return
+     */
+    public int getSlotItemSold() {
+        return slotItemSold;
+    }
     /**
      * This method gets the stock count of items in the slot
      * @return stock count of item in this slot
@@ -194,6 +220,8 @@ public class VM_Slot {
     }
     
     private VM_Item item;
+    /**Indicates the slot's item has been sold how many times*/
+    private int slotItemSold;
     /**The slot's item name*/
     private String slotItemName;
     /**The current item stock of this item */

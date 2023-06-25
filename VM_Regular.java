@@ -6,6 +6,8 @@ import java.text.DecimalFormat;
 
 public class VM_Regular {
 	public VM_Regular( int nOfSlots, int item_max) {
+		recordCurrInd = 0;								//added
+		stockedInfos = new ArrayList<VM_StockedInfo>();	// added
 		slots = new VM_Slot[nOfSlots];
 
 		for (int i = 0; i < nOfSlots; i++)
@@ -338,6 +340,17 @@ public class VM_Regular {
 		currentMoney.setDenominations(denominations);
 	}
 	
+
+
+
+	public VM_Slot[] getSlotsCopy()					// added
+	{
+		VM_Slot[] slotsCopy = new VM_Slot[slots.length];
+		for (int i = 0; i < slots.length; i++) {
+			slotsCopy[i] = new VM_Slot(slots[i]);  // using the copy constructor
+		}
+		return slotsCopy;
+	}
 	/**
 	 * getter, returns VM's slot array
 	 *
@@ -345,6 +358,17 @@ public class VM_Regular {
 	 */
 	public VM_Slot[] getSlots() {
 		return slots;
+	}
+
+	/**
+	 * getter, returns VM_Slot based on index
+	 *
+	 *
+	 */
+	public VM_Slot getSlot(int ind) {	// added
+		if(ind >= 0)
+			return slots[ind];
+		return null;
 	}
 
 	/**
@@ -452,6 +476,81 @@ public class VM_Regular {
 		return true;
 	}
 
+	public void addToStockedInfo() // added
+	{
+		VM_StockedInfo stockInfo = new VM_StockedInfo(this);
+		stockedInfos.add(stockInfo);
+		recordCurrInd += 1;
+
+	}
+
+	public void displayAllStockInfo()	// added
+	{
+		int i;	// index for slot start
+		boolean isThereNew;
+
+		isThereNew = false;
+		if(recordCurrInd > 0)
+		{
+			VM_StockedInfo tempStockInfo = stockedInfos.get(recordCurrInd-1);
+			LinkedHashMap<VM_Slot, Integer> slotAndStock = tempStockInfo.getItemSlotsAndStock();
+			i = 0;
+			System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", " Item Name ", "Item Prev Stock ", "Items Sold", " Items in Stock", "Profit Collected");
+			System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
+			for(Map.Entry<VM_Slot, Integer> tempEntry : slotAndStock.entrySet())
+			{
+				if( getSlot(i) != null &&																	// Checks if there is no slot
+					getSlot(i).getItem() != null && 														// Checks if the slot is empty
+				   tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
+				{
+
+					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",
+																						 (tempEntry.getKey().getSlotItemStock() - getSlot(i).getSlotItemStock()) + "", getSlot(i).getSlotItemStock(),
+																						"+" + "Php " + (getSlot(i).getSlotItemSold()*getSlot(i).getItem().getItemPrice() -
+																										tempEntry.getKey().getSlotItemSold()*tempEntry.getKey().getItem().getItemPrice()) );
+					System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
+				}
+				
+				else if(getSlot(i) != null &&																	// Checks if there is no slot
+						getSlot(i).getItem() != null && 														// Checks if the slot is empty
+						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
+					isThereNew = true;
+				i++;
+			}
+			if(isThereNew)
+			{
+				System.out.println();
+				System.out.println("NEWLY ADDED");
+				i = 0;
+				//checks new items
+
+				System.out.printf("\t| %20s | %20s | %11s  |\n", " Item Name ", " Items in Stock", "Profit Collected");
+				for(Map.Entry<VM_Slot, Integer> tempEntry : slotAndStock.entrySet())
+				{
+					if(getSlot(i) != null &&
+					getSlot(i).getItem() != null && 															// Checks if the slot is empty
+					!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
+					{
+
+						System.out.printf("\t| %20s | %20s | %11s  |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",
+																			tempEntry.getKey().getSlotItemSold() + "", getSlot(i).getSlotItemStock(),
+																			"+" + getSlot(i).getSlotItemStock()*getSlot(i).getItem().getItemPrice());
+						System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
+
+					}
+					i++;
+				}	
+
+			}
+
+			
+		}
+		
+	}
+
+
+
+
 	private VM_Slot[] slots;
 	private Money currentMoney;
 	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
@@ -459,4 +558,6 @@ public class VM_Regular {
 	private int recordCurrInd;
 	private static final int MIN_SLOTS = 8;
 	private static final int MIN_ITEMS = 10;
+
+	ArrayList<VM_StockedInfo> stockedInfos; // added
 }
