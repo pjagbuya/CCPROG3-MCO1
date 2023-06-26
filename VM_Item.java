@@ -75,7 +75,7 @@ public class VM_Item {
 
         return "Name: " + itemName + "\n" +
                "Price: Php " + FORMAT.format(itemPrice) + "\n" +
-               "Calories: " + itemCalories + " cal" + "\n";
+               "Calories: " + itemCalories + " kCal";
                
     }
 
@@ -107,6 +107,15 @@ public class VM_Item {
         
                
     }
+	
+	public boolean setPrice(double amt) {
+		if(amt > 0.5)
+			itemPrice = amt;
+		else
+			itemPrice = 0.5; // minimum price of an item is 50 Cents
+		
+		return true;
+	}
 
     /**This is the name of the item in the vending machine. */
     private String itemName;
