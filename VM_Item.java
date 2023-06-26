@@ -62,8 +62,6 @@ public class VM_Item {
         return itemCalories;
     }
 
-
-
     
 
     /**

@@ -18,22 +18,25 @@ public class VM_Slot {
      * @param item the item that this slot contains
      * @param capacity the capacity that this slot can hold
      */
-    public VM_Slot(VM_Item givenItem, int capacity){
+    public VM_Slot(int capacity){
 
-
-        item = givenItem;
+		/*
+        items[0] = givenItem;
 
         if(givenItem != null)
             slotItemName = givenItem.getItemName();
         else
             slotItemName = "N/A";
-
+		*/
+		
         slotItemStock = 0;
 
         if(capacity >= 10)
             MAX = capacity;
         else
             MAX = 10;
+		
+		items = new VM_Item[MAX];
     }
 	
 	
@@ -42,38 +45,57 @@ public class VM_Slot {
     }
 
 
-    public void replaceStock(VM_Item givenItem, int stock)
+    public void replaceStock(VM_Item[] givenItems)
     {
-        if(givenItem != null && stock > 0)
-            slotItemName = givenItem.getItemName();
-            item = givenItem;
-            slotItemStock = stock;
-        
+		int i;
+        if(givenItems != null && givenItems.length > 0) {
+            slotItemName = givenItems[0].getItemName();
+			for(i = 0; i < MAX; i++)
+				items[i] = null;
+			for(i = 0; i < givenItems.length; i++)
+				items[i] = givenItems[i];
+		
+			slotItemStock = givenItems.length;
+		}
     }
 
-    public void releaseStock(int quantity)
+	/**
+	 * No input validation
+	 *
+	 *
+	 */
+    public VM_Item[] releaseStock(int qty)
     {
-        if(hasEnoughStock(quantity))
-        {
-            slotItemStock -= quantity;
-        }
-        
-        
+		int i;
+		int j = 0;
+		VM_Item[] releasableItems = new VM_Item[qty];
+		
+        slotItemStock -= qty;
+		for(i = 0; i < qty; i++) {
+			releasableItems[i] = items[i];
+			items[i] = null;
+		}
+		while(i < MAX) {
+			items[j] = items[i];
+			items[i] = null;
+			i++;
+			j++;
+		}
+		slotItemStock -= qty;
+			
+		return releasableItems;
     }
 	
-	public boolean hasEnoughStock(int quantity) {
-		if(slotItemStock != 0 && quantity >= 0 && quantity <= slotItemStock)
+	public boolean hasEnoughStock(int qty) {
+		if(slotItemStock >= 0 && qty >= 0 && qty <= slotItemStock)
 			return true;
         
 		return false;
 	}
 	
-	public double computePartialCost(int quantity) {
-        double sum;
-        sum = 0;
-		
-        sum = item.getItemPrice() * quantity;
-
+	public double computePartialCost(int qty) {
+        double sum = 0;
+        sum = items[0].getItemPrice() * qty;
         return sum;
 
 	}
@@ -91,11 +113,11 @@ public class VM_Slot {
 
 
     /**
-     * This method gets the item that is sold
-     * @return the item that is being sold under ths slot
+     * This method gets the item array
+     * @return the array of items that are in this slot
      */
-    public VM_Item getItem() {
-        return item;
+    public VM_Item[] getItems() {
+        return items;
     }
 
     /**
@@ -114,19 +136,16 @@ public class VM_Slot {
         return MAX;
     }
 
-    // DELETE DIS BELOW
     /**
      * Displays all item currently in slot
      */
     public void displayAllItems(){
 
-        if (item != null)
+        if (slotItemStock > 0)
         {
-            System.out.println("Stock: " + slotItemStock);
-            System.out.println(item);
-            
+            System.out.println("Qty. In Stock: " + slotItemStock);
+            System.out.println(items[0]);   
         }
-            
         else
             System.out.println("No items in this slot");
 
@@ -137,38 +156,39 @@ public class VM_Slot {
     /**
      * This method adds stock count of this slot
      * 
-     * @param stock number of items to be added
+	 * @param givenItems the array of objects to be added
+     * @param qty number of items to be added
      */
-    public void addItemStock(VM_Item givenItem, int stock)
+    public void addItemStock(VM_Item[] givenItems, int qty)
     {
-       
+		int i;
+		int j = slotItemStock;
         
-        if(givenItem == null && stock <= 0)
-        {
+        if(givenItems == null && givenItems.length <= 0)
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
-        }
-        else if(stock + slotItemStock > MAX)
-        {
-            System.out.println("You have an excess of " + (MAX-stock) + givenItem.getItemName() + " while we were stocking.");
+        else if(givenItems.length + slotItemStock > MAX) {
+            System.out.println("You have an excess of " + (MAX-qty) + givenItems[0].getItemName() + " while we were stocking.");
             slotItemStock = MAX;
-            return;
         }
-
+		
+		// Skips conditional construct if restocker array is empty
+		if(givenItems == null || givenItems.length == 0);
         // Check if the slot was empty
-        if(item == null)
-            replaceStock(givenItem, stock);
-        
-
+        else if(items == null)
+            replaceStock(givenItems);
         // If the slot is not empty, then proceed to add the stock
-        else if(item != null && 
-                givenItem.getItemName().equalsIgnoreCase(slotItemName))
-        
-            slotItemStock += stock;
-        
-
+        else if(items != null && && givenItems[0].getItemName().equalsIgnoreCase(slotItemName))
+		{
+            slotItemStock += givenItems.length;
+			for(i = 0; i < givenItems.length; i++)
+			{
+				items[j] = givenItems[i];
+				j++;
+			}
+		}
         // if this slot already has an item, but has a different
         else
-            warnReplace(givenItem, stock);
+            warnReplace(givenItems);
         
         
 
@@ -176,24 +196,23 @@ public class VM_Slot {
 
    
 
-    private void warnReplace(VM_Item givenItem, int stock)
+    private void warnReplace(VM_Item[] givenItems)
     {
 
         Scanner sc = new Scanner(System.in);
 
         System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
-                            " with " + givenItem.getItemName() + ". (Y/N)");
+                            " with " + givenItems[0].getItemName() + ". (Y/N)");
         if(sc.nextLine().equalsIgnoreCase("Y"))
         {
-            System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
-            replaceStock(givenItem, stock);
-
+            System.out.println("Replaced " + slotItemName + " with " + givenItems[0].getItemName());
+            replaceStock(givenItems);
         }
 
         sc.close();
     }
     
-    private VM_Item item;
+    private VM_Item[] items;
     /**The slot's item name*/
     private String slotItemName;
     /**The current item stock of this item */

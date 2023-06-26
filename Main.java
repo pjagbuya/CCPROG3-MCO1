@@ -4,7 +4,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 /*
-	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java && javac MainDisplay.java && javac Order.java
+	javac Main.java && javac Money.java && javac VM_Slot.java
+	javac VM_Regular.java && javac VM_Item.java
+	javac MainDisplay.java && javac Order.java
+	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Lemon.java
+	javac Milk.java && javac Powder.java && javac Salt.java && javac Sugar.java
+	
  */
 
 /**
@@ -69,10 +74,10 @@ public class Main{
 		VM_Regular vm = new VM_Regular(2, 10);
 
 		// slot initialization
-		VM_Item milk = new VM_Item("Milk", 27.00, 42);
-		VM_Item c2 = new VM_Item("C2", 20.00, 42);
+		Milk milk = new Milk("Milk", 27.00, 42);
+		Lemon lemon = new Lemon("Lemon", 20.00, 42);
 		vm.setSlot(milk, 3, 0);
-		vm.setSlot(c2, 3, 1);
+		vm.setSlot(lemon, 3, 1);
 		
 		// display VM's initial stock
 		vm.displayAllItems();
@@ -83,6 +88,7 @@ public class Main{
 		
 		// run VM's in selling mode (simulates user buying from the VM)
 		vm.sellingOperation(duplicate, payment, change, order);
+		
 		
 		
     }

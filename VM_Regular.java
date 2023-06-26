@@ -17,14 +17,16 @@ public class VM_Regular {
 	}
 
 
-	// Double check for some unrecalled conditions
-	public void setSlot(VM_Item item, int stock, int ind)
+
+	public void addStock(VM_Item[] givenItems)
 	{
-		for (int i = 0; i < slots.length; i++)
-			if(ind == i && slots[i].getItem() == null)
-				slots[i].addItemStock(item, stock);
+		int i;
+		for (i = 0; i < slots.length; i++)
+			if(ind == i && slots[i].getItems() == null)
+				slots[i].addItemStock(item);
 		
 	}
+	
 
 	/**
 	 * Looks for a slot associated with a given item name, and "tells" that slot to "sell" its items a specified quantity
@@ -111,7 +113,7 @@ public class VM_Regular {
 		int j;
 		String itemName;
 		int itemQty;
-		
+		VM_Item[] releasedItems;
 		
 		// setting order
 		System.out.println("What would you like to order?");
@@ -186,7 +188,7 @@ public class VM_Regular {
 		for(String s : order.getPendingOrder().keySet())
 			for(i = 0; i < slots.length; i++)
 				if( s.equals( slots[i].getSlotItemName() ) ) {
-					calorieTotal = order.getPendingOrder().get(s)*slots[i].getItem().getItemCalories();
+					calorieTotal = order.getPendingOrder().get(s)*slots[i].getItems()[0].getItemCalories();
 					break;
 				}
 		
@@ -231,7 +233,7 @@ public class VM_Regular {
 			System.out.println("-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT");
 		}
 		
-		// decides whether to proceed with transaction
+		// decides whether to proceed with transaction or not
 		if( transactionIsValid )
 		{
 			System.out.println("\nTRANSACTION PROCEEDS--------------------------\n");
@@ -447,7 +449,7 @@ public class VM_Regular {
 	public boolean isThisValid()
 	{
 		for(VM_Slot tempSlot : slots)
-			if(tempSlot.getItem() == null || tempSlot.getSlotItemStock() == 0)
+			if(tempSlot.getItems() == null || tempSlot.getSlotItemStock() == 0)
 				return false;
 		return true;
 	}
