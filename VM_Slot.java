@@ -175,7 +175,8 @@ public class VM_Slot {
         }
         else if(stock + slotItemStock > MAX)
         {
-            System.out.println("You have an excess of " + (MAX-stock) + givenItem.getItemName() + " while we were stocking.");
+            System.out.println("You have an excess of " + (stock-MAX) + " " + givenItem.getItemName() + " while we were stocking.");
+            
             slotItemStock = MAX;
             return;
         }
