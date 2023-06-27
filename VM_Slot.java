@@ -33,10 +33,18 @@ public class VM_Slot {
     }
 	
 	
+
+
+	*/
+	
 	public VM_Slot(VM_Slot copy)
     {
         slotItemSold = copy.getSlotItemSold();
-        item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+		
+		if(copy.getItem() != null)
+			item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+		else
+			item = new VM_Item(copy.getSlotItemName(), 0, 0);
 
         if(item != null)
             slotItemName = item.getItemName();
@@ -50,14 +58,15 @@ public class VM_Slot {
         else
             MAX = 10;
        
+
+		
+
     }
 
 
     public void replaceStock(VM_Item givenItem, int qty)
-    {
-
-		
-		if(givenItem != null) 
+    {	
+        if(givenItem != null) 
         {
 			item = givenItem;
             if(slotItemStock+qty <= MAX)
@@ -66,22 +75,8 @@ public class VM_Slot {
                 slotItemStock = MAX;
 			slotItemName = new String(givenItem.getItemName());
 		}
-    }
-
-	/**
-	 * No input validation
-	 *
-	 *
-	 */
-    public void releaseStock(int qty)
-    {
-
-		
-        if(qty > 0 && hasEnoughStock(qty))
-        {
-            slotItemStock -= qty;
-            slotItemSold += qty;
-        }
+        
+        
     }
 	
 	public boolean hasEnoughStock(int qty) {
@@ -138,14 +133,15 @@ public class VM_Slot {
      * Displays all item currently in slot
      */
     public void displayAllItems(){
-
+		
+		
         if (slotItemStock > 0)
         {
-            System.out.println("\nQty: " + slotItemStock);
+            System.out.println("Qty: " + slotItemStock);
             System.out.println(item + "\n");   
         }
         else
-            System.out.println(slotItemName + " slot is empty.");
+            System.out.println(slotItemName + " slot is empty.\n");
 
     }
 
@@ -194,7 +190,9 @@ public class VM_Slot {
         
 
     }
-	
+		
+
+
 	public boolean addItemStock(int qty)
     {
 
@@ -219,8 +217,7 @@ public class VM_Slot {
 
    
 
-    private void warnReplace(VM_Item givenItem, 
-                             int qty)
+    private void warnReplace(VM_Item givenItem, int stock)
     {
 
         Scanner sc = new Scanner(System.in);
@@ -253,6 +250,9 @@ public class VM_Slot {
 	}
 	
 	
+	
+	
+
 	
     
     private VM_Item item;

@@ -1,7 +1,17 @@
 import java.util.LinkedHashMap;
 
+/** This class represents a vending machine's cash reserves, or maybe a person's wallet.
+  * Also contains methods and attributes for working with the "cash"
+  *
+  * @author Paul Josef P. Agbuya
+  * @author Vince Kenneth D. Rojo
+  */
 public class Money {
-
+	/**
+	 * Creates Money object and initializes all denominations to zero pieces. Also intializes strToVal and valToStr.
+	 * This program's denomination set is based on the current series of Philippine coins and banknotes.
+	 *
+	 */
 	public Money() {
 		denominations = new LinkedHashMap<String, Integer>();
 		
@@ -53,7 +63,13 @@ public class Money {
 		valToStr.put(0.05, "Five Cents");
 		valToStr.put(0.01, "One Cent");
 	}
-
+	
+	/**
+	 * Adds a specified number of coins/bills to the cash reserves
+	 * 
+	 * @param givenValue the double representation of the denomination
+	 * @param qty the indicator of how many pieces of the specified denomination should be added
+	 */
 	public void addBillsOrCoins(double givenValue, int qty)
 	{
 		for(double tempVal : valToStr.keySet())
@@ -67,6 +83,15 @@ public class Money {
 		}
 	}
 	
+	/**
+	 * Removes a specified number of coins/bills from the cash reserves
+	 * 
+	 * @param givenValue the double representation of the denomination
+	 * @param qty the indicator of how many pieces of the specified denomination should be removed
+	 * 
+	 * @return true if the specified denomination is part of the standard set of denominations
+	 *				and a the specified number of pieces of that denomination was removed from the cash reserves, false otherwise
+	 */
 	public boolean subtractBillsOrCoins(double givenValue, int qty)
 	{
 		for(double tempVal : valToStr.keySet())
@@ -85,6 +110,12 @@ public class Money {
 
 	}
 	
+	
+	/**
+	 * Computes for the total value of all cash reserves
+	 * 
+	 * @return the current total of all cash reserves
+	 **/
 	public double getTotalMoney() {
 		double total = 0.0;
 		for( String s : denominations.keySet() )
@@ -93,35 +124,67 @@ public class Money {
 	}
 	
 
-	
+	/**
+	 * Adds a specified set of denominations to the object's own set of denominations
+	 * 
+	 * @param denominations the list of coins/bills to add to the Money object's current denominaton set, and how many of each should be added
+	 **/
 	public void acceptDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String s : denominations.keySet())
 			this.denominations.put(s, this.denominations.get(s) + denominations.get(s));
 	}
 	
+	/**
+	 * Adds a specified set of denominations to the Money object's own set of denominations
+	 * 
+	 * @param money another instance of class Money
+	 **/
 	public void acceptDenominations(Money money) {
 		for(String s : money.getDenominations().keySet())
 			this.denominations.put(s , this.denominations.get(s) + money.getDenominations().get(s));
 	}
 	
+	/**
+	 * Uses the specified set of denominations to overwrite the Money object's own set of denominations 
+	 *
+	 * @param money another instance of class Money
+	 **/
 	public void setDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String s : denominations.keySet())
 			this.denominations.put(s , denominations.get(s));
 	}
 	
+	/**
+	 * getter method for denominations
+	 *
+	 * @return the Money object's current set of cash reserves
+	 **/
 	public LinkedHashMap<String, Integer> getDenominations() {
 		return denominations;
 	}
 	
+	/**
+	 * getter method for strToVal
+	 *
+	 * @return the strToVal hashmap of the Money class
+	 **/
 	public static LinkedHashMap<String, Double> getStrToVal() {
 		return strToVal;
 	}
 	
+	/**
+	 * getter method for valToStr
+	 *
+	 * @return the valToStr hashmap of the Money class
+	 **/
 	public static LinkedHashMap<Double, String> getValToStr() {
 		return valToStr;
 	}
 	
+	/** represents cash reserves, inluding the currently stored number of pieces of each denomination */
 	private LinkedHashMap<String, Integer> denominations;
-	private static LinkedHashMap<String, Double> strToVal;	//change back to priv
+	/** class hashmap for converting from the String to the double representation of a denomination */
+	private static LinkedHashMap<String, Double> strToVal;
+	/** class hashmap for converting from the double to the String representation of a denomination */
 	private static LinkedHashMap<Double, String> valToStr;
 }

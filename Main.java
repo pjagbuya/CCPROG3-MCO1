@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.util.LinkedHashMap;
 
-
 import java.util.InputMismatchException;
 
 /*
@@ -9,6 +8,7 @@ import java.util.InputMismatchException;
 	javac MainDisplay.java && javac Order.java
 	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Lemon.java
 	javac Milk.java && javac Powder.java && javac Salt.java && javac Sugar.java
+	javac Chicken.java && javac BBQ.java && javac Flour.java
 	
  */
 
@@ -31,6 +31,7 @@ public class Main{
 		int noOfItems; // no. of items PER SLOT
 		int qty;
 		double amt;
+		String vmName;
 		int i;
 		
 		
@@ -42,7 +43,6 @@ public class Main{
 		LinkedHashMap<Double, Integer> initialCash = null;
 		LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
 		VM_Draw vmDraw;
-
 		Order order = new Order();
 		
 		// setting the item types
@@ -51,12 +51,16 @@ public class Main{
 		possibleItems.put("CREAM", 0);
 		possibleItems.put("EGG", 0);
 		possibleItems.put("KANGKONG", 0);
-		possibleItems.put("FLOUR", 0);
 		possibleItems.put("MILK", 0);
-		possibleItems.put("BBQ", 0);
 		possibleItems.put("SALT", 0);
 		possibleItems.put("SUGAR", 0);
-		possibleItems.put("CHICKEN", 0);
+		
+		possibleItems.put("POWDER", 0); // delete
+		possibleItems.put("LEMON", 0); // delete
+		
+		possibleItems.put("CHICKEN", 0); // add
+		possibleItems.put("BBQ", 0); // add
+		possibleItems.put("FLOUR", 0); // add
 		
 
 		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
@@ -92,6 +96,8 @@ public class Main{
 						try
 						{
 							System.out.println("Please indicate: " );
+							System.out.print("Name\n>> ");
+							vmName = sc.next();
 							System.out.print("No. of slots (min. of 8)\n>> ");
 							noOfSlots = sc.nextInt();
 							System.out.print("Max. items per slot (min. of 10)\n>> ");
@@ -99,7 +105,7 @@ public class Main{
 							if(noOfSlots < VM_Regular.getMinSLOTS() || noOfItems < VM_Regular.getMaxITEMS())
 								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
 							else
-								vm = new VM_Regular("Paul", noOfSlots, noOfItems);
+								vm = new VM_Regular(vmName, noOfSlots, noOfItems);
 						}
 						catch (InputMismatchException e)
 						{
@@ -184,37 +190,7 @@ public class Main{
 					{
 						for( String s : initialStock.keySet() )
 						{	
-							if( s.equalsIgnoreCase("Cheese") )
-								vm.addItemStock(new Cheese("Cheese", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Cocoa") )
-								vm.addItemStock(new Cocoa("Cocoa", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Cream") )
-								vm.addItemStock(new Cream("Cream", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Egg") )
-								vm.addItemStock(new Egg("Egg", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Kangkong") )
-								vm.addItemStock(new Kangkong("Kangkong", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Flour") )
-								vm.addItemStock(new Flour("Flour", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Milk") )
-								vm.addItemStock(new Milk("Milk", 27.00, 42), initialStock.get(s), i);
-							
-							else if(s.equalsIgnoreCase("Bbq Powder") || s.equalsIgnoreCase("Bbq") )
-								vm.addItemStock(new BBQ("Bbq Powder", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Salt") )
-								vm.addItemStock(new Salt("Salt", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Sugar") )
-								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);
-							else if( s.equalsIgnoreCase("Chicken") )
-								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);						
+							vm.addItemStock(s, i, initialStock.get(s));
 							i++;
 						}
 					}
@@ -265,12 +241,13 @@ public class Main{
 					while(true)
 					{
 						System.out.print(	"[1] Restock Items\n" +
-											"[2] Replenish Money\n" +
-											"[3] Set Price\n" +
-											"[4] Collect Money\n" +
-											"[5] Order History\n" +
-											"[6] Stocked Information\n" +
-											"[7] Exit to Test A Vending Machine\n" +
+											"[2] Replace/Fill with Items\n" +
+											"[3] Replenish Money\n" +
+											"[4] Set Price\n" +
+											"[5] Collect Money\n" +
+											"[6] Order History\n" +
+											"[7] Stocked Information\n" +
+											"[8] Exit to Test A Vending Machine\n" +
 											">> ");
 						input = sc.next();
 						if(input.equalsIgnoreCase("1"))
@@ -279,18 +256,18 @@ public class Main{
 							vm.restockItems();
 						}
 						else if(input.equalsIgnoreCase("2"))
-							vm.replenishDenominations();
+							vm.replaceItemStock(possibleItems);
 						else if(input.equalsIgnoreCase("3"))
-							vm.repriceItems();
+							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("4"))
-							System.out.println("Show money");
-						else if(input.equalsIgnoreCase("5"))
-							vm.displayOrderHistory();
+							vm.repriceItems();
+						else if(input.equalsIgnoreCase("5"));
+							// PLEASE FILL IN
 						else if(input.equalsIgnoreCase("6"))
-						
-							vm.displayAllStockInfo();
-							
+							vm.displayOrderHistory();
 						else if(input.equalsIgnoreCase("7"))
+							vm.displayAllStockInfo();
+						else if(input.equalsIgnoreCase("8"))
 							break;
 						else;
 					}
