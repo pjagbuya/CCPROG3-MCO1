@@ -233,7 +233,7 @@ public class Main{
 			
 			/* Test a Vending Machine */   // assumes only Regular Vending Machine is available
 			if( vm != null )
-				System.out.println("VENDING MACHINE CREATION SUCCESSFUL!\n");
+				System.out.println("\nVENDING MACHINE CREATION SUCCESSFUL!\n");
 			if( vm != null )
 			while(true) 
 			{	
@@ -250,12 +250,13 @@ public class Main{
 					while(true)
 					{
 						System.out.print(	"[1] Restock Items\n" +
-											"[2] Replenish Money\n" +
-											"[3] Set Price\n" +
-											"[4] Collect Money\n" +
-											"[5] Order History\n" +
-											"[6] Stocked Information\n" +
-											"[7] Exit to Test A Vending Machine\n" +
+											"[2] Replace/Fill with Items\n" +
+											"[3] Replenish Money\n" +
+											"[4] Set Price\n" +
+											"[5] Collect Money\n" +
+											"[6] Order History\n" +
+											"[7] Stocked Information\n" +
+											"[8] Exit to Test A Vending Machine\n" +
 											">> ");
 						input = sc.next();
 						if(input.equalsIgnoreCase("1"))
@@ -263,17 +264,19 @@ public class Main{
 							vm.emptyOrderHistory();
 							vm.restockItems();
 						}
-						else if(input.equalsIgnoreCase("2"))
-							vm.replenishDenominations();
-						else if(input.equalsIgnoreCase("3"))
-							vm.repriceItems();
-						else if(input.equalsIgnoreCase("4"));
+						else if(input.equalsIgnoreCase("2"));
 							// PLEASE FILL IN
-						else if(input.equalsIgnoreCase("5"))
-							vm.displayOrderHistory();
+						else if(input.equalsIgnoreCase("3"))
+							vm.replenishDenominations();
+						else if(input.equalsIgnoreCase("4"))
+							vm.repriceItems();
+						else if(input.equalsIgnoreCase("5"));
+							// PLEASE FILL IN
 						else if(input.equalsIgnoreCase("6"))
-							vm.displayAllStockInfo();
+							vm.displayOrderHistory();
 						else if(input.equalsIgnoreCase("7"))
+							vm.displayAllStockInfo();
+						else if(input.equalsIgnoreCase("8"))
 							break;
 						else;
 					}

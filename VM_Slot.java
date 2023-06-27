@@ -169,10 +169,11 @@ public class VM_Slot {
      * Displays all item currently in slot
      */
     public void displayAllItems(){
-
+		
+		
         if (slotItemStock > 0)
         {
-            System.out.println("\nQty: " + slotItemStock);
+            System.out.println("Qty: " + slotItemStock);
             System.out.println(item + "\n");   
         }
         else
