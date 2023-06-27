@@ -6,7 +6,6 @@ public class VM_StockedInfo {
     
     public VM_StockedInfo(VM_Regular vmMachine)
     {
-
         int i;
         int stock;
 
@@ -32,18 +31,28 @@ public class VM_StockedInfo {
                 
         }
 
-
     }
 
     public Money getMoney() {
         return money;
     }
 
-
     public LinkedHashMap<VM_Slot, Integer> getItemSlotsAndStock() {
         return itemSlotsAndStock;
     }
 
+    // Move this to VM_Regular
+    // private void displayAllInfo()
+    // {
+    //     for(Map.Entry<String,Integer> tempNamesAndStock: itemNamesAndStock.entrySet())
+    //     {
+    //         System.out.printf("\t| %20s | %20s | %11s | %20s | %20s \n", " Item Name ", "Item Init Stock ", "Items Sold", " Items in Stock", "Profit Collected");
+    //         System.out.printf("\t| %20s | %20s | %11s | %20s | %20s \n", tempNamesAndStock.getKey(), tempNamesAndStock.getKey().toString());
+    //         System.out.printf("\t| %20s | %20s | %11s | %20s | %20s \n", tempNamesAndStock.getKey(), tempNamesAndStock.getKey().toString());
+    //     }
+    // }
+
     private LinkedHashMap<VM_Slot, Integer> itemSlotsAndStock;
+    
     private Money money;
 }
