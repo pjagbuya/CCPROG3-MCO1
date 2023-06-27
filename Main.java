@@ -188,45 +188,7 @@ public class Main{
 					{
 						for( String s : initialStock.keySet() )
 						{	
-							if( s.equalsIgnoreCase("Cheese") )
-								vm.addItemStock(new Cheese("Cheese", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Cocoa") )
-								vm.addItemStock(new Cocoa("Cocoa", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Cream") )
-								vm.addItemStock(new Cream("Cream", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Egg") )
-								vm.addItemStock(new Egg("Egg", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Kangkong") )
-								vm.addItemStock(new Kangkong("Kangkong", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Lemon") ) 
-								vm.addItemStock(new Lemon("Lemon", 20.00, 42), initialStock.get(s), i); // delete
-							
-							else if( s.equalsIgnoreCase("Milk") )
-								vm.addItemStock(new Milk("Milk", 27.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Powder") )
-								vm.addItemStock(new Powder("Powder", 20.00, 42), initialStock.get(s), i); // delete
-							
-							else if( s.equalsIgnoreCase("Salt") )
-								vm.addItemStock(new Salt("Salt", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Sugar") )
-								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);
-							
-							else if( s.equalsIgnoreCase("Chicken") )
-								vm.addItemStock(new Chicken("Chicken", 20.00, 42), initialStock.get(s), i); // add
-							
-							else if( s.equalsIgnoreCase("BBQ") )
-								vm.addItemStock(new BBQ("BBQ", 20.00, 42), initialStock.get(s), i); // add
-							
-							else if( s.equalsIgnoreCase("Flour") )
-								vm.addItemStock(new Flour("Flour", 20.00, 42), initialStock.get(s), i); // add
-						
+							vm.addItemStock(s, i, initialStock.get(s));
 							i++;
 						}
 					}
@@ -285,8 +247,8 @@ public class Main{
 							vm.emptyOrderHistory();
 							vm.restockItems();
 						}
-						else if(input.equalsIgnoreCase("2"));
-							// PLEASE FILL IN
+						else if(input.equalsIgnoreCase("2"))
+							vm.replaceItemStock(possibleItems);
 						else if(input.equalsIgnoreCase("3"))
 							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("4"))

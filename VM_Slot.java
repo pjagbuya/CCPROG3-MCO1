@@ -47,7 +47,11 @@ public class VM_Slot {
 	public VM_Slot(VM_Slot copy)
     {
         slotItemSold = copy.getSlotItemSold();
-        item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+		
+		if(copy.getItem() != null)
+			item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+		else
+			item = new VM_Item(copy.getSlotItemName(), 0, 0);
 
         if(item != null)
             slotItemName = item.getItemName();
@@ -177,7 +181,7 @@ public class VM_Slot {
             System.out.println(item + "\n");   
         }
         else
-            System.out.println(slotItemName + " slot is empty.");
+            System.out.println(slotItemName + " slot is empty.\n");
 
     }
 
@@ -196,7 +200,7 @@ public class VM_Slot {
         if(givenItem == null && qty <= 0)
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
         else if(qty + slotItemStock > MAX) {
-            System.out.println("You have an excess of " + (MAX-qty) + givenItem.getItemName() + " while we were stocking.");
+            System.out.println("You have an excess of " + (qty+slotItemStock-MAX) + " " + givenItem.getItemName() + " while we were stocking.");
             slotItemStock = MAX;
         }
 		
@@ -208,7 +212,7 @@ public class VM_Slot {
         // If the slot is not empty, then proceed to add the stock
         else if(givenItem.getItemName().equalsIgnoreCase(slotItemName))
             slotItemStock += qty;
-        // if this slot already has an item, but has a different
+        // if this slot already has an item, but has a different item
         else
             warnReplace(givenItem, qty);
         
@@ -251,7 +255,7 @@ public class VM_Slot {
             replaceStock(givenItem, qty);
         }
 
-        sc.close();
+        sc = null;
     }
 	
 	public boolean repriceItem(double amt) {

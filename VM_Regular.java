@@ -69,6 +69,102 @@ public class VM_Regular {
 			System.out.println("Slot Name Not Found -------------");
 	}
 	
+	/**
+	 * Adds more of a specified item to the appropriate slot
+	 *
+	 * @param s the name of the item to be added
+	 * @param i the index of the slot that will receive the additional items
+	 * @param qty the number indicating how many pieces of the specified item should be added
+	 */
+	public void addItemStock(String s, int i, int qty)
+	{
+		if( s.equalsIgnoreCase("Cheese") )
+			addItemStock(new Cheese("Cheese", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Cocoa") )
+			addItemStock(new Cocoa("Cocoa", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Cream") )
+			addItemStock(new Cream("Cream", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Egg") )
+			addItemStock(new Egg("Egg", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Kangkong") )
+			addItemStock(new Kangkong("Kangkong", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Lemon") ) 
+			addItemStock(new Lemon("Lemon", 20.00, 42), qty, i); // delete
+							
+		else if( s.equalsIgnoreCase("Milk") )
+			addItemStock(new Milk("Milk", 27.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Powder") )
+			addItemStock(new Powder("Powder", 20.00, 42), qty, i); // delete
+							
+		else if( s.equalsIgnoreCase("Salt") )
+			addItemStock(new Salt("Salt", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Sugar") )
+			addItemStock(new Sugar("Sugar", 20.00, 42), qty, i);
+							
+		else if( s.equalsIgnoreCase("Chicken") )
+			addItemStock(new Chicken("Chicken", 20.00, 42), qty, i);// add
+							
+		else if( s.equalsIgnoreCase("BBQ") )
+			addItemStock(new BBQ("BBQ", 20.00, 42), qty, i); // add
+							
+		else if( s.equalsIgnoreCase("Flour") )
+			addItemStock(new Flour("Flour", 20.00, 42), qty, i); // add		
+	}
+	
+	
+	/**
+	 * Provides for replacing the items in a slot, or for filling up a slot with a null name
+	 *
+	 * @param possibleItems	the list of all possible items in the program
+	 */
+	public void replaceItemStock(LinkedHashMap<String, Integer> possibleItems)
+	{
+		int i;
+		int qty;
+		Scanner sc = new Scanner(System.in);
+		String input;
+		
+		try
+		{
+			System.out.println("Replace Stock of Slot No: ");
+			i = sc.nextInt();
+			i--;
+			
+			if(i >= 0 && i < slots.length)
+			{
+				try
+				{
+					System.out.println("Replace with this: ");
+					input = sc.next();
+					qty = sc.nextInt();
+					if(possibleItems.get(input.toUpperCase()) != null && qty > 0)
+						addItemStock(input, i, qty);
+					else
+						System.out.println("-ERROR: NON-EXISTENT CLASS/INVALID QUANTITY");
+				}
+				catch (InputMismatchException e)
+				{
+					System.out.println("-ERROR: NON-INTEGER INPUT");
+				}
+			}
+			else
+				System.out.println("-ERROR: NON-INTEGER INPUT");
+		}
+		catch (InputMismatchException e)
+		{
+			System.out.println("-ERROR: SLOT NUMBER OUT OF BOUNDS");
+		}
+		
+		sc = null;
+	}
+	
 
 	/**
 	 * Looks for a slot associated with the specified item name, and "tells" that slot to "sell" a specified number of its item. Repeats for the other items in the order
@@ -159,6 +255,7 @@ public class VM_Regular {
 		String input;
 		double denom;
 		int qty;
+		int slotNum;
 		boolean orderConfirmed = true; // intially true
 		
 		/* order is made blank */
@@ -170,6 +267,7 @@ public class VM_Regular {
 		
 		
 		/* setting order */
+		/*
 		System.out.println();
 		do
 		{
@@ -193,7 +291,37 @@ public class VM_Regular {
 				}
 			}
 		} while ( !input.equalsIgnoreCase("Y") );
-		
+		*/
+		System.out.println();
+		do
+		{
+			System.out.print("What would you like to order?\n>> ");
+			input = sc.next();
+				
+			if( !input.equalsIgnoreCase("Y") )
+			{
+				try
+				{
+					qty = sc.nextInt();
+					slotNum = Integer.parseInt(input);
+					if( slotNum >= 1 && slotNum <= slots.length )
+						if(order.addOrder(slots[slotNum-1], qty))
+							System.out.println("-ADDED TO ORDER");
+						else
+							System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+					else
+						System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
+				}
+				catch (InputMismatchException e)
+				{
+					System.out.println("-ERROR: NON-INTEGER INPUT");
+				}
+				catch(NumberFormatException e)
+				{
+					System.out.println("-ERROR: NOT PARSABLE TO INT");
+				}
+			}
+		} while ( !input.equalsIgnoreCase("Y") );
 		
 		/* payment */
 		System.out.println();
@@ -223,7 +351,6 @@ public class VM_Regular {
 				}	
 			}
 		} while ( !input.equalsIgnoreCase("Y") );
-		
 		
 		
 		/* duplicating denomination hashmap of VM, while setting change denominations to zero */
@@ -323,7 +450,7 @@ public class VM_Regular {
 				System.out.println("\nTRANSACTION DISCONTINUED------------------------");
 			else if( !transactionIsValid )
 				System.out.println("\nTRANSACTION FAILS------------------------");
-			for( String s : change.keySet() )
+			for( String s : payment.keySet() )
 				change.put( s, payment.get(s) );
 			for( String s : payment.keySet() )
 				payment.put( s, 0 );
@@ -589,37 +716,37 @@ public class VM_Regular {
 		int qty;
 		Scanner sc = new Scanner(System.in);
 		String input;
+		int slotNum;
 		boolean anItemIsRestocked = false; // initially false
-		
-		System.out.println("Restock in the VM: ");
-		do
-		{
-			input = sc.next();
+
+
+		System.out.println("Restock item: ");
+		input = sc.next();
 			
-			if( !input.equalsIgnoreCase("Y") )
-			{
-				try
-				{
-					qty = sc.nextInt();
-					for(j = 0; j < slots.length; j++)
-						if( input.equals(slots[j].getSlotItemName()) ) {
-							if ( !anItemIsRestocked ) {
-								updateStockedInfos();
-								recordCurrInd++;
-								anItemIsRestocked = true;
-							}
-							slots[j].addItemStock(qty);
-							break;
-						}
-					if( j >= slots.length )
-						System.out.println("-ERROR: SLOTS DO NOT HOLD THIS ITEM. ENTER A DIFF. ITEM NAME");		
+		try
+		{
+			qty = sc.nextInt();
+			slotNum = Integer.parseInt(input);
+			if( slots[slotNum-1].getSlotItemName() != null ) {
+				if ( !anItemIsRestocked ) {
+						updateStockedInfos();
+						recordCurrInd++;
+						anItemIsRestocked = true;
 				}
-				catch (InputMismatchException e)
-				{
-					e.printStackTrace();
-				}
+				slots[slotNum-1].addItemStock(qty);
 			}
-		} while ( !input.equalsIgnoreCase("Y") );
+			else
+				System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
+		}
+		catch (InputMismatchException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NumberFormatException e)
+		{
+			e.printStackTrace();
+		}
+	
 	
 		
 		sc = null;
@@ -635,37 +762,39 @@ public class VM_Regular {
 		double amt;
 		Scanner sc = new Scanner(System.in);
 		String input;
-		boolean anItemIsRepriced = false; // initially false
+		boolean itemIsRepriced = false; // initially false
+		int slotNum;
+		
 		
 		System.out.println("Reprice item: ");
-		do
+		input = sc.next();
+			
+		try
 		{
-			input = sc.next();
-			if( !input.equalsIgnoreCase("Y") )
-			{
-				try
-				{
-					amt = sc.nextDouble();
-					for(j = 0; j < slots.length; j++)
-						if( input.equals(slots[j].getSlotItemName()) ) {
-							if( !anItemIsRepriced ) {
-								updateStockedInfos();
-								recordCurrInd++;
-								anItemIsRepriced = true;
-							}
-							slots[j].repriceItem(amt);
-							break;
-						}
-					if( j >= slots.length )
-						System.out.println("-ERROR: SLOTS DO NOT HOLD THIS ITEM. ENTER A DIFF. ITEM NAME");		
+			amt = sc.nextDouble();
+			slotNum = Integer.parseInt(input);
+			if(slotNum >= 1 && slotNum <= slots.length)
+				if( slots[slotNum-1].getSlotItemName() != null ) {
+					if( !itemIsRepriced ) {
+					updateStockedInfos();
+					recordCurrInd++;
+					itemIsRepriced = true;	
+					}
+					slots[slotNum-1].repriceItem(amt);
 				}
-				catch (NumberFormatException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		} while ( !input.equalsIgnoreCase("Y") );
-		
+				else
+					System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
+			else
+				System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
+		}	
+		catch (NumberFormatException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InputMismatchException e)
+		{
+			e.printStackTrace();
+		}
 		
 		sc = null;
 	}
@@ -679,7 +808,6 @@ public class VM_Regular {
 	public void displayOrderHistory() {
 		int i;
 		
-		System.out.println();
 		for(i = 0; i < orderHistory.size(); i++) {
 			System.out.println("\nORDER NO. " + (i+1));
 			for(String s : orderHistory.get(i).getPendingOrder().keySet())
