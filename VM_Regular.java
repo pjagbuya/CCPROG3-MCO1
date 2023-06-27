@@ -265,33 +265,6 @@ public class VM_Regular {
 		/* display VM's initial stock */
 		displayAllItems();
 		
-		
-		/* setting order */
-		/*
-		System.out.println();
-		do
-		{
-			System.out.print("What would you like to order?\n>> ");
-			input = sc.next();
-			
-			if( !input.equalsIgnoreCase("Y") )
-			{
-				try
-				{
-					qty = sc.nextInt();
-					for(j = 0; j < slots.length; j++)
-						if( input.equalsIgnoreCase(slots[j].getSlotItemName()) )
-							break;
-					if( j >= slots.length || !order.addOrder(slots[j], qty) )
-						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT EXIST. ENTER A DIFF. ITEM/QUANTITY");		
-				}
-				catch (InputMismatchException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		} while ( !input.equalsIgnoreCase("Y") );
-		*/
 		System.out.println();
 		do
 		{
