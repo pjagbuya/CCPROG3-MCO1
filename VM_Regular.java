@@ -23,7 +23,7 @@ public class VM_Regular {
 		if(nOfSlots >= 8)
 			slots = new VM_Slot[nOfSlots];
 		else
-			slots = new VM_Slot[8];
+			slots = new VM_Slot[MIN_SLOTS];
 		
 		for (int i = 0; i < nOfSlots; i++)
 		{
@@ -791,9 +791,54 @@ public class VM_Regular {
 			slots[i].setSlotItemSold(0); // resets no. of sold items per slot back to
 	}
 	
+	/**
+	 * getter for MIN_SLOTS
+	 *
+	 * @return minimum number of slots the VM must hold
+	 */
+	public static int getMinSLOTS()
+	{
+		return MIN_SLOTS;
+	}
+	
+	/**
+	 * getter for MAX_SLOTS
+	 *
+	 * @return maximum number of items each slot can hold
+	 */
+	public static int getMaxITEMS()
+	{
+		return MAX_ITEMS;
+	}
+	
+	/**
+	 * getter for VM's name
+	 *
+	 * @return the VM's name
+	 */
+	public String getName()
+	{
+		return name;
+	}
+	
+	/**
+	 * setter for VM's name
+	 *
+	 * @param the VM's new name
+	 */
+	public void setName(String name)
+	{
+		if(name != null && name.length() >= 1)
+			this.name = name;
+		else
+			this.name = new String("defaultName");
+	}
+	
 	
 	/** the array of VM slots */
 	private VM_Slot[] slots;
+	/** the VM's name */
+	private String name;
 	/** the VM's cash reserve */
 	private Money currentMoney;
 	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
@@ -805,6 +850,6 @@ public class VM_Regular {
 	private int recordCurrInd;
 	/** the minimum number of slots a machine must hold */
 	private static final int MIN_SLOTS = 8;
-	/** the minimum number of items a slot must hold */
-	private static final int MIN_ITEMS = 10;
+	/** the maximum number of items a slot can hold */
+	private static final int MAX_ITEMS = 10;
 }

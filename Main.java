@@ -29,6 +29,7 @@ public class Main{
 		int noOfItems; // no. of items PER SLOT
 		int qty;
 		double amt;
+		String vmName;
 		int i;
 		
 		
@@ -84,6 +85,8 @@ public class Main{
 						try
 						{
 							System.out.println("Please indicate: ");
+							System.out.print("Name\n>> ");
+							vmName = sc.next();
 							System.out.print("No. of slots (min. of 8)\n>> ");
 							noOfSlots = sc.nextInt();
 							System.out.print("Max. items per slot (min. of 10)\n>> ");
@@ -91,7 +94,10 @@ public class Main{
 							if(noOfSlots < 8 || noOfItems < 10)
 								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
 							else
+							{
 								vm = new VM_Regular(noOfSlots, noOfItems);
+								vm.setName(vmName);
+							}
 						}
 						catch (InputMismatchException e)
 						{
@@ -135,7 +141,7 @@ public class Main{
 						if(vm != null)
 						do
 						{
-		
+							
 							System.out.print("Specify initial cash reserves\n>> ");
 							input = sc.next();
 							if( !input.equalsIgnoreCase("Y") )
