@@ -300,7 +300,7 @@ public class VM_Draw {
 
                             // Spaces indicating an empty/blocked slot
                             spaceCnt = 0;
-                            while(spaceCnt < (BOX_WIDTH/2)+1+maxLenMarginPrice)
+                            while(spaceCnt <= (BOX_WIDTH/2)+1+maxLenMarginPrice)
                             {
                                 System.out.print(" ");
                                 spaceCnt++;

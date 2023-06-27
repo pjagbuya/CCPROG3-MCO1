@@ -32,10 +32,6 @@ public class Order
 
     }
 	
-	public void setTotalCost(double totalCost)
-    {  
-		totalCostOfOrder = totalCost;
-    }
 
     public void clearOrder()
     {
@@ -45,5 +41,6 @@ public class Order
 
 
     private LinkedHashMap<String, Integer> pendingOrder;
+    private int totalCaloriesOfOrder;
     private double totalCostOfOrder;
 }
