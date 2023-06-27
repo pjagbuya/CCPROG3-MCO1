@@ -1,13 +1,17 @@
-import java.util.Scanner;
+
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Map;
 import java.text.DecimalFormat;
 
 public class VM_Regular {
+
 	public VM_Regular( int nOfSlots, int item_max) {
 		recordCurrInd = 0;								//added
 		stockedInfos = new ArrayList<VM_StockedInfo>();	// added
+
 		slots = new VM_Slot[nOfSlots];
 
 		for (int i = 0; i < nOfSlots; i++)
@@ -27,6 +31,40 @@ public class VM_Regular {
 				slots[i].addItemStock(item, stock);
 		
 	}
+	
+	public boolean acceptOrder(Order order, Money money)
+	{
+		ArrayList<Integer> quantities;
+		int slotInd;
+		if(order.getPendingOrder() != null && order.getPendingOrder().size() > 0)
+		{
+			
+			quantities = new ArrayList<>(order.getPendingOrder().size());
+			for(String tempOrder : order.getPendingOrder().keySet())
+			{	
+				slotInd = findSlotInd(tempOrder);
+				if(slotInd >= 0)
+				{
+					return releaseStock(order.getPendingOrder().get(tempOrder), findSlotInd(tempOrder));
+				}
+			}
+
+			
+		}
+		return false;
+	}	
+	public void subtractBillsOrCoins(Money money)
+	{
+		Money tempMoney = new Money(money);
+
+		for(String tempString : money.getDenominations().keySet())
+		{
+			tempMoney.subtractBillsOrCoins(Money.moneyStringToValue(tempString), 
+					currentMoney.getDenominations().get(tempString) - money.getDenominations().get(tempString));
+			
+		}
+		currentMoney = tempMoney;
+
 
 	/**
 	 * Looks for a slot associated with a given item name, and "tells" that slot to "sell" its items a specified quantity
@@ -34,6 +72,7 @@ public class VM_Regular {
 	 * Has no input validation (use the hasEnoughStock() and hasEnoughChange() methods prior to this)
 	 *
 	 */
+
 	public void releaseStock(LinkedHashMap<String, Integer> order) {
 		int i;
 		for( String s : order.keySet() )
@@ -63,6 +102,7 @@ public class VM_Regular {
 					stockHasRequiredQuantities = false;
 					break;
 					}
+
 		
 		return stockHasRequiredQuantities;
 	}
@@ -84,6 +124,49 @@ public class VM_Regular {
 				}
 
 		return totalCost;
+	}
+
+	public int findSlotInd(String slotName)
+	{
+		VM_Slot temp;
+		int i;
+		if(slotName.length() > 0)
+		{
+			for(i = 0; i < slots.length; i++)
+				if(slots[i].getItem() != null)
+					if(slots[i].getSlotItemName().equalsIgnoreCase(slotName))
+						return i;
+		}
+		return -1;
+	}
+	public VM_Slot getSlot(String slotName)
+	{
+
+		VM_Slot temp;
+		temp = null;
+		if(slotName.length() > 0)
+		{
+			for(int i = 0; i < slots.length; i++)
+				if(slots[i].getItem() != null)
+					if(slots[i].getSlotItemName().equalsIgnoreCase(slotName))
+						return slots[i];
+		}
+		return temp;
+	}
+	public VM_Slot getSlot(int ind)
+	{
+
+		VM_Slot temp;
+		temp = null;
+		if(ind >= 0 && ind < slots.length)
+	
+			return slots[ind];
+		
+		return temp;
+	}
+
+	public Money getCurrentMoney() {
+		return currentMoney;
 	}
 	
 	/**
@@ -287,18 +370,15 @@ public class VM_Regular {
 		return currentMoney.getTotalMoney();
 	}
 	
-	/*
-	public boolean canGiveChange(double amt, LinkedHashMap<String, Integer> duplicateOfDenomMap) {
-		return execGiveChange(amt, duplicateOfDenomMap);
-	}
-	*/
+
 	
 	/**
 	 * prints item descriptions onto terminal
 	 *
 	 *
 	 */
-	public void displayAllItems() {
+	public void displayAllItems() 
+  {
 		int i;
 		for(i = 0; i < slots.length; i++)
 			slots[i].displayAllItems();
@@ -309,7 +389,8 @@ public class VM_Regular {
 	 *
 	 *
 	 */
-	public void addBillsOrCoins(double givenValue, int amt) {
+	public void addBillsOrCoins(double givenValue, int amt) 
+  {
 		currentMoney.addBillsOrCoins(givenValue, amt);
 	}
 	
@@ -330,6 +411,7 @@ public class VM_Regular {
 	public void acceptDenominations(LinkedHashMap<String, Integer> denominations) {
 		currentMoney.acceptDenominations(denominations);
 	}
+
 	
 	/**
 	 * tells currentMoney to replace its set of denominations with another set of denominations
@@ -459,8 +541,13 @@ public class VM_Regular {
 				return false;
 			}
 		}
+
 		return true;
 	}
+
+
+
+
 
 	/**
 	 * This method checks if each slot of the vending machine is filled with an item. If not

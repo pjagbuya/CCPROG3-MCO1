@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 /** The class VM_Draw represents a simple console based output
   * of what it looks to be on screen of the availability of items
@@ -233,10 +234,12 @@ public class VM_Draw {
                     } 
                     else 
                     {
+
                         System.out.print("-");
                     }
                     
                 }
+
                 // The between layers, index 1,2,3
                 else
                 {
@@ -327,6 +330,7 @@ public class VM_Draw {
                     else
                     {
                         
+
                         System.out.print(" ");
                     }
 
@@ -347,6 +351,7 @@ public class VM_Draw {
       
     }
 
+
     /**Labels of identified items in the vending machine */
     private ArrayList<String> stringLabels;
     /**Price labels of identified items in the vending machine*/
@@ -359,5 +364,6 @@ public class VM_Draw {
     private static final String DEFAULT_PRICE = "N/A";
     /**The margin of adjustment accounted for the price labels*/
     private int maxLenMarginPrice;
+
 
 }

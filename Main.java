@@ -58,7 +58,9 @@ public class Main{
         }
 		*/
 		
+
 		// all the hashmaps :>
+
 		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> change = new LinkedHashMap<String, Integer>();
@@ -71,6 +73,18 @@ public class Main{
 		// slot initialization
 		VM_Item milk = new VM_Item("Milk", 27.00, 42);
 		VM_Item c2 = new VM_Item("C2", 20.00, 42);
+
+
+
+		// initialization of slots and their contents
+		// VM_Slot milkSlot = new VM_Slot(milk, 6);
+		// VM_Slot c2Slot = new VM_Slot(c2, 10);
+
+
+		// milkSlot.addItemStock(milkSlot, 3);
+		// c2Slot.addItemStock(c2Slot, 2)
+		
+		// STOCKING
 
 		vm.setSlot(milk, 3, 0);
 		vm.setSlot(c2, 3, 1);
@@ -86,10 +100,18 @@ public class Main{
 			vm.addToStockedInfo();	// save stock info					// added
 
 
+		// PAUL ORDERS
+		orderPaul.addOrder(vm.getSlot("Milk"), 1);
+		orderPaul.addOrder(vm.getSlot("C2"), 3);
 		
-		// display VM's initial stock
+
+
+		// Display all available items
 		vm.displayAllItems();
+
+
 		
+
 		// testing the other method for adding VM's cash reserves
 		System.out.println("Adding one more One Thousand Bill...\n");
 		vm.addBillsOrCoins(1000, 1);
@@ -97,12 +119,18 @@ public class Main{
 		// run VM's in selling mode (simulates user buying from the VM)
 		vm.sellingOperation(duplicate, payment, change, order);
 
+
+		
+
 		
 		vm.displayAllStockInfo();										//added
+
 
 		vmArt.updateVM(vm);												//added - updates to see if things are stocked or out of stock
 		vmArt.drawAndSetVM();											//added
 		
+
+
     }
 
 	/*
