@@ -33,9 +33,6 @@ public class VM_Slot {
     }
 	
 	
-
-
-	*/
 	
 	public VM_Slot(VM_Slot copy)
     {
@@ -58,8 +55,6 @@ public class VM_Slot {
         else
             MAX = 10;
        
-
-		
 
     }
 
@@ -86,12 +81,25 @@ public class VM_Slot {
 		return false;
 	}
 	
-	public double computePartialCost(int qty) {
+	public double computePartialCost(int qty) 
+    {
         double sum = 0;
         sum = item.getItemPrice() * qty;
         return sum;
 
 	}
+
+
+    public void releaseStock(int qty)
+    {
+
+		
+        if(qty > 0 && hasEnoughStock(qty))
+        {
+            slotItemStock -= qty;
+            slotItemSold += qty;
+        }
+    }
 
     /**
      * This method returns the name of the slot
@@ -227,7 +235,7 @@ public class VM_Slot {
         if(sc.nextLine().equalsIgnoreCase("Y"))
         {
             System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
-            replaceStock(givenItem, qty);
+            replaceStock(givenItem, stock);
         }
 
         sc.close();
