@@ -73,7 +73,7 @@ public class VM_Item {
     @Override
     public String toString(){
 
-        return "Name: " + itemName + "\n" +
+        return "Name: " + itemName + " (\033[1;32m" + itemName.substring(0, 3) + "\033[0m)" + "\n" +
                "Price: Php " + FORMAT.format(itemPrice) + "\n" +
                "Calories: " + itemCalories + " kCal";
                

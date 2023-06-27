@@ -8,14 +8,19 @@ import java.util.InputMismatchException;
 public class VM_Regular {
 	public VM_Regular(String name, int nOfSlots, int item_max) {
 		this.name = name;
+
+
 		if(nOfSlots >= 8)
 			slots = new VM_Slot[nOfSlots];
 		else
-			slots = new VM_Slot[8];
+			slots = new VM_Slot[MIN_SLOTS];
 		
 		for (int i = 0; i < nOfSlots; i++)
 		{
-			slots[i] = new VM_Slot(item_max);
+			if(item_max >= 10)
+				slots[i] = new VM_Slot(item_max);
+			else
+				slots[i] = new VM_Slot(MAX_ITEMS);
 		}
 		currentMoney = new Money();
 		
@@ -126,13 +131,15 @@ public class VM_Regular {
 		int calorieTotal = 0;
 		boolean transactionIsValid = true; // initially true
 		boolean changeIsPossible;
+		boolean isValidQuantity;
 		int i;
 		int j;
 		String input;
 		double denom;
 		int qty;
 		boolean orderConfirmed = true; // intially true
-		
+		VM_Draw vmObjectDraw = new VM_Draw(this);
+
 		// order is made blank
 		order = new Order();
 		
@@ -143,8 +150,13 @@ public class VM_Regular {
 		
 		// setting order
 		System.out.println();
+
+		isValidQuantity = true;
 		do
 		{
+
+			vmObjectDraw.updateVM(this);
+			vmObjectDraw.drawAndSetVM();
 			System.out.print("What would you like to order?\n>> ");
 			input = sc.next();
 			
@@ -157,7 +169,11 @@ public class VM_Regular {
 						if( input.equalsIgnoreCase(slots[j].getSlotItemName()) )
 							break;
 					if( j >= slots.length || !order.addOrder(slots[j], qty) )
-						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT EXIST. ENTER A DIFF. ITEM/QUANTITY");		
+					{
+						isValidQuantity = false;
+						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT EXIST. ENTER A DIFF. ITEM/QUANTITY");	
+					}
+						
 				}
 				catch (InputMismatchException e)
 				{
@@ -183,15 +199,15 @@ public class VM_Regular {
 					if( Money.getValToStr().get(denom) != null )
 						payment.put(Money.getValToStr().get(denom), qty);
 					else
-						System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
+						System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
 				}
 				catch (NumberFormatException e)
 				{
-					e.printStackTrace();
+					System.out.println("\033[1;38;5;202mERROR! Choice misinput\033[0m");
 				}
 				catch (InputMismatchException e)
 				{
-					e.printStackTrace();
+					System.out.println("\033[1;38;5;202mERROR! Choice misinput\033[0m");
 				}	
 			}
 		} while ( !input.equalsIgnoreCase("Y") );
@@ -267,6 +283,11 @@ public class VM_Regular {
 		// checks whether transaction is valid
 		
 		System.out.println();
+		if(!isValidQuantity)
+		{
+			transactionIsValid = false;
+			System.out.println("-ERROR: INSUFFICIENT STOCK ORDER");
+		}
 		if( !hasEnoughStock(order.getPendingOrder()) ) {
 			transactionIsValid = false;
 			System.out.println("-ERROR: INSUFFICIENT STOCK");
@@ -374,9 +395,9 @@ public class VM_Regular {
 	{
 		return MIN_SLOTS;
 	}
-	public static int getMinITEMS()
+	public static int getMaxITEMS()
 	{
-		return MIN_ITEMS;
+		return MAX_ITEMS;
 	}
 	
 
@@ -394,7 +415,8 @@ public class VM_Regular {
 	public void displayAllItems() {
 		int i;
 		for(i = 0; i < slots.length; i++)
-			slots[i].displayAllItems();
+			if(slots[i] != null && slots[i].getItem() != null)
+				slots[i].displayAllItems();
 	}
 	
 	/**
@@ -451,6 +473,10 @@ public class VM_Regular {
 		if(ind >= 0)
 			return slots[ind];
 		return null;
+	}
+
+	public Money getCurrentMoney() {
+		return currentMoney;
 	}
 
 	/**
@@ -616,7 +642,7 @@ public class VM_Regular {
 					for(j = 0; j < slots.length; j++)
 						if( input.equals(slots[j].getSlotItemName()) ) {
 							if ( !anItemIsRestocked ) {
-								updateStockedInfos(this);
+								updateStockedInfos();
 								recordCurrInd++;
 								anItemIsRestocked = true;
 							}
@@ -656,7 +682,7 @@ public class VM_Regular {
 					for(j = 0; j < slots.length; j++)
 						if( input.equals(slots[j].getSlotItemName()) ) {
 							if( !anItemIsRepriced ) {
-								updateStockedInfos(this);
+								updateStockedInfos();
 								recordCurrInd++;
 								anItemIsRepriced = true;
 							}
@@ -714,8 +740,11 @@ public class VM_Regular {
 	{
 		int i;	// index for slot start
 		boolean isThereNew;
+		double profit;
+		String profitLabel;
 
 		isThereNew = false;
+		profit = 0;
 		if(recordCurrInd > 0)
 		{
 			VM_StockedInfo tempStockInfo = stockedInfos.get(recordCurrInd-1);
@@ -730,18 +759,47 @@ public class VM_Regular {
 				   tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
 				{
 
-					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",
-																						 /*(tempEntry.getKey().getSlotItemStock() - getSlot(i).getSlotItemStock())*/ getSlot(i).getSlotItemSold() + "", getSlot(i).getSlotItemStock(),
-																						"+" + "Php " + /*(getSlot(i).getSlotItemSold()*getSlot(i).getItem().getItemPrice() -
-																										tempEntry.getKey().getSlotItemSold()*tempEntry.getKey().getItem().getItemPrice())*/ getSlot(i).getItem().getItemPrice()*getSlot(i).getSlotItemSold());
+					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",					// Item name, stock previous
+																						 getSlot(i).getSlotItemSold() + "", getSlot(i).getSlotItemStock(),					// Sold, stock of current
+																						"+" + "Php " + getSlot(i).getItem().getItemPrice()*getSlot(i).getSlotItemSold());	// profit
 					System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
+					
+					profit += getSlot(i).getItem().getItemPrice()*getSlot(i).getSlotItemSold();
 				}
-				
+
+
 				else if(getSlot(i) != null &&																	// Checks if there is no slot
 						getSlot(i).getItem() != null && 														// Checks if the slot is empty
 						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
 					isThereNew = true;
+
+				profitLabel = profit + "";
+				if(profitLabel.substring(profitLabel.indexOf(".")).length() < 3)
+					profitLabel = profitLabel + "0";
+				
+				
+				System.out.printf("                                                                                           |Profit: \033[1;32mPHP %10s\033[0m|\n", profitLabel);
+				
 				i++;
+				System.out.printf("Prev Money: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
+
+				// For each entry in the Stock info, get every denomination and count
+				for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
+				{
+					String denomination = tempEntry2.getKey();
+					int count = tempEntry2.getValue();
+					System.out.println(denomination + ": " + count);
+				}
+				System.out.println("_____________________________________________________________________________________________________");
+
+				// For each entry in the stock info, get current money and add
+				System.out.printf("Current Money: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
+				for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
+				{
+					String denomination = tempEntry2.getKey();
+					int count = tempEntry2.getValue();
+					System.out.println(denomination + ": " + count);
+				}
 			}
 			if(isThereNew)
 			{
@@ -759,8 +817,7 @@ public class VM_Regular {
 					{
 
 						System.out.printf("\t| %20s | %20s | %11s  |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",
-																			tempEntry.getKey().getSlotItemSold() + "", getSlot(i).getSlotItemStock(),
-																			"+" + getSlot(i).getSlotItemStock()*getSlot(i).getItem().getItemPrice());
+																				getSlot(i).getSlotItemStock()*getSlot(i).getItem().getItemPrice());
 						System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 
 					}
@@ -768,6 +825,9 @@ public class VM_Regular {
 				}	
 
 			}
+
+			
+
 
 			
 		}
@@ -779,19 +839,24 @@ public class VM_Regular {
 	{
 		VM_Slot[] slotsCopy = new VM_Slot[slots.length];
 		for (int i = 0; i < slots.length; i++) {
-			slotsCopy[i] = new VM_Slot(slots[i]);  // using the copy constructor 
+			if(slots[i] != null && slots[i].getItem() != null)
+				slotsCopy[i] = new VM_Slot(slots[i]);  // using the copy constructor C
 		}
 		return slotsCopy;
 	}
+
 	
-	public void updateStockedInfos(VM_Regular vm) {
+	public void updateStockedInfos() {
 		int i;
 		
-		stockedInfos.add(new VM_StockedInfo(vm));
+		stockedInfos.add(new VM_StockedInfo(this));
 		
 		for(i = 0; i < slots.length; i++)
-			slots[i].setSlotItemSold(0); // resets no. of sold items per slot back to
+			if(slots[i] != null)
+				slots[i].setSlotItemSold(0); // resets no. of sold items per slot back to
+		recordCurrInd += 1;
 	}
+
 	
 	
 	private String name;
@@ -802,5 +867,5 @@ public class VM_Regular {
 	private ArrayList<Order> orderHistory;
 	private int recordCurrInd;
 	private static final int MIN_SLOTS = 8;
-	private static final int MIN_ITEMS = 10;
+	private static final int MAX_ITEMS = 10;
 }

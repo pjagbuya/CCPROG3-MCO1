@@ -8,8 +8,10 @@ public class VM_StockedInfo {
     {
         int i;
         int stock;
-
+        money = new Money();
+        money.acceptDenominations(vmMachine.getCurrentMoney());
         VM_Slot[] slots = vmMachine.getSlotsCopy();
+
         
         VM_Slot slot;
         itemSlotsAndStock = new LinkedHashMap<VM_Slot, Integer>(); 

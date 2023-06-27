@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+
+
 import java.util.InputMismatchException;
 
 /*
@@ -20,10 +20,12 @@ import java.util.InputMismatchException;
 public class Main{
     public static void main(String[] args) {
 		MainDisplay mDisplay = new MainDisplay();
+		Main mainHelp = new Main();
 		mDisplay.displayWelcome();
 		//md.displayChoices();
 		Scanner sc = new Scanner(System.in);
 		String input;
+		String userHelp;
 		VM_Regular vm = null;
 		int noOfSlots;
 		int noOfItems; // no. of items PER SLOT
@@ -39,6 +41,8 @@ public class Main{
 		LinkedHashMap<String, Integer> initialStock = null;
 		LinkedHashMap<Double, Integer> initialCash = null;
 		LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
+		VM_Draw vmDraw;
+
 		Order order = new Order();
 		
 		// setting the item types
@@ -52,8 +56,10 @@ public class Main{
 		possibleItems.put("BBQ", 0);
 		possibleItems.put("SALT", 0);
 		possibleItems.put("SUGAR", 0);
+		possibleItems.put("CHICKEN", 0);
 		
-		
+
+		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
 		while(true) 
 		{
 			System.out.print(	"[C] Create a New Vending Machine\n" +
@@ -69,8 +75,10 @@ public class Main{
 				input = sc.next();
 				if(input.equalsIgnoreCase("R"))
 				{
+					mainHelp.displayPossibleItems(possibleItems);
 					while(true)
 					{
+
 						// clearing away old vending machine
 						vm = null;
 						
@@ -83,12 +91,12 @@ public class Main{
 						/* Setting Regular VM's No. of Slots and Max No. of Items per Slot */
 						try
 						{
-							System.out.println("Please indicate: ");
+							System.out.println("Please indicate: " );
 							System.out.print("No. of slots (min. of 8)\n>> ");
 							noOfSlots = sc.nextInt();
 							System.out.print("Max. items per slot (min. of 10)\n>> ");
 							noOfItems = sc.nextInt();
-							if(noOfSlots < 8 || noOfItems < 10)
+							if(noOfSlots < VM_Regular.getMinSLOTS() || noOfItems < VM_Regular.getMaxITEMS())
 								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
 							else
 								vm = new VM_Regular("Paul", noOfSlots, noOfItems);
@@ -104,7 +112,7 @@ public class Main{
 						if(vm != null)
 						do
 						{
-							System.out.print("Specify initial stocks\n>> ");
+							System.out.print("Specify initial stocks, \033[1;32m<name> <number>\033[0m "+ userHelp + "\n>> ");
 							input = sc.next();
 							if( !input.equalsIgnoreCase("Y") )
 							{
@@ -136,7 +144,7 @@ public class Main{
 						do
 						{
 		
-							System.out.print("Specify initial cash reserves\n>> ");
+							System.out.print("Specify initial cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
 							input = sc.next();
 							if( !input.equalsIgnoreCase("Y") )
 							{
@@ -205,7 +213,8 @@ public class Main{
 							
 							else if( s.equalsIgnoreCase("Sugar") )
 								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);
-						
+							else if( s.equalsIgnoreCase("Chicken") )
+								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);						
 							i++;
 						}
 					}
@@ -233,7 +242,13 @@ public class Main{
 			
 			/* Test a Vending Machine */   // assumes only Regular Vending Machine is available
 			if( vm != null )
+			{
+				vmDraw = new VM_Draw(vm);
+				vmDraw.drawAndSetVM();
+				vm.updateStockedInfos();
 				System.out.println("VENDING MACHINE CREATION SUCCESSFUL!\n");
+			}
+				
 			if( vm != null )
 			while(true) 
 			{	
@@ -267,12 +282,14 @@ public class Main{
 							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("3"))
 							vm.repriceItems();
-						else if(input.equalsIgnoreCase("4"));
-							// PLEASE FILL IN
+						else if(input.equalsIgnoreCase("4"))
+							System.out.println("Show money");
 						else if(input.equalsIgnoreCase("5"))
 							vm.displayOrderHistory();
 						else if(input.equalsIgnoreCase("6"))
+						
 							vm.displayAllStockInfo();
+							
 						else if(input.equalsIgnoreCase("7"))
 							break;
 						else;
@@ -285,6 +302,7 @@ public class Main{
 		}
 		
 		
+
 		if(vm != null)
 		{
 			System.out.println("\nFINAL STOCKS: ");
@@ -294,19 +312,14 @@ public class Main{
 		sc.close();
     }
 
-	/*
-    public void displayChoices(){
-        Paint.turnOnYellow();
-        System.out.println("Choices:");
-        System.out.println("\t[1] Make Regular Vending Machine");
-        System.out.println("\t[2] Make Special Vending Machine");
-        System.out.println("\t[3] Test Vending Features");
-        System.out.println("\t[4] Test Maintenance Features");
-        System.out.println("\t[5] Exit");
-        System.out.println();
+	private void displayPossibleItems(LinkedHashMap<String, Integer> possibleItems)
+	{
+		System.out.println("Here are your available options to set an item to your vending Machine");
+		for(String stringTemp : possibleItems.keySet())
+		{
+			System.out.println("\033[1;33m" + stringTemp + "\033[0m");
+		}
 
-        Paint.turnOffColor();
-    }
-	*/
+	}
 }
 

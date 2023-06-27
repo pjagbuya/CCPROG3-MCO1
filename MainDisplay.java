@@ -9,7 +9,7 @@ public class MainDisplay {
         System.out.println("\t\t\t\t    +#+ +#+#+ +#+ +#+        +#+        +#+        +#+    +#+ +#+       +#+ +#+        ");
         System.out.println("\t\t\t\t     #+#+# #+#+#  #+#        #+#        #+#    #+# #+#    #+# #+#       #+# #+#        ");
         System.out.println("\t\t\t\t      ###   ###   ########## ##########  ########   ########  ###       ### ########## ");
-        Paint.turnOffColor();
+
         System.out.print("\033[0m");
 
         System.out.println();

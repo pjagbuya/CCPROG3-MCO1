@@ -20,20 +20,23 @@ public class VM_Draw {
         int i;
         int alternatingNum;
         String temp;
+
         double price;
         boolean isSizeAdjusted;
-
+        
 
         VM_Slot[] slots = vmMachine.getSlots(); // gets all the slots along with the status
         stringLabels = new ArrayList<String>(); 
         priceLabels = new ArrayList<String>();
-        System.out.println(slots.length);
+
 
 
         // The margin for adjustment in the drawing once exceeding the minimum height and width
         maxLenMarginPrice = 0;
         alternatingNum = 0;
         isSizeAdjusted = false;
+
+        
         for(i = 0; i < slots.length; i++)
         {
 
@@ -130,10 +133,10 @@ public class VM_Draw {
 
             // priceLabels update colors
             temp = priceLabels.get(i) ;
-            priceLabels.set(i, "\033[1;33m" + temp + "\033[0m");    // Colors green
+            priceLabels.set(i, "\033[1;33m" + temp + "\033[0m");    // Colors yellow 
 
             temp = stringLabels.get(i);
-            stringLabels.set(i, "\033[1;32m" + temp + "\033[0m");   // Colors yellow
+            stringLabels.set(i, "\033[1;32m" + temp + "\033[0m");   // Colors green
 
             // Increment for the next price label to check
             i++;  
@@ -160,29 +163,33 @@ public class VM_Draw {
 
         // Checks downwards of all items
         for (i = 0; i < slots.length; i++)
-        {   
+        {
+            if(slots[i] != null && slots[i].getItem() != null)
+            {
+                // Checks for the substring of three letters of the slot's item name, two letters if not possible
+                if(slots[i].getSlotItemName().length() >= 3)
+                    subName = slots[i].getSlotItemName().substring(0, 3);
+                else
+                    subName = slots[i].getSlotItemName().substring(0, 2);
+                
+
+                // If slot is empty or no stock, indicate red text
+                if((slots[i].getSlotItemStock() == 0 || slots[i].getItem() == null) && 
+                    stringLabels.get(i).equalsIgnoreCase(subName))
+                
+                    // Highlights item as red
+                    stringLabels.set(i, stringLabels.get(i).replace("\033[1;31m", "\033[1;32m"));
+                    
+                // If slot is replaced and has stock, indicate new green text
+                else if(!stringLabels.get(i).equalsIgnoreCase(subName) && slots[i].getSlotItemStock() > 0)
+                {
+                    // Changes the item
+                    stringLabels.set(i, "\033[1;32m" + subName + "\033[0m");
+                }
+            }
 
         
-            // Checks for the substring of three letters of the slot's item name, two letters if not possible
-            if(slots[i].getSlotItemName().length() >= 3)
-                subName = slots[i].getSlotItemName().substring(0, 3);
-            else
-                subName = slots[i].getSlotItemName().substring(0, 2);
-            
-
-            // If slot is empty or no stock, indicate red text
-            if((slots[i].getSlotItemStock() == 0 || slots[i].getItem() == null) && 
-                stringLabels.get(i).equalsIgnoreCase(subName))
-            
-                // Highlights item as red
-                stringLabels.set(i, stringLabels.get(i).replace("\033[1;32m", "\033[1;31m"));
-                
-            // If slot is replaced and has stock, indicate new green text
-            else if(!stringLabels.get(i).equalsIgnoreCase(subName) && slots[i].getSlotItemStock() > 0)
-            {
-                // Changes the item
-                stringLabels.set(i, "\033[1;33m" + subName + "\033[0m");
-            }
+ 
             
         }
     }

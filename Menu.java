@@ -59,7 +59,7 @@ public class Menu
     {
         Scanner sc = new Scanner(System.in);
         boolean isMakingVM;
-        boolean isFillingSlots;
+
 
         VM_Regular vmMachine;
         
@@ -82,7 +82,7 @@ public class Menu
             slotCap = sc.nextInt();
             sc.nextLine();          // remove newlines
 
-            System.out.printf("How many items at most per slot \033[1;36m(>= %d)\033[0m: ", VM_Regular.getMinITEMS());
+            System.out.printf("How many items at most per slot \033[1;36m(>= %d)\033[0m: ", VM_Regular.getMaxITEMS());
             itemCap = sc.nextInt();
             sc.nextLine();
 
@@ -90,12 +90,12 @@ public class Menu
 
             isMakingVM = false;
 
-            if(itemCap < VM_Regular.getMinITEMS() || slotCap < 2) // swap 2 with VM_Regular.getMinSLOTS()
+            if(itemCap < VM_Regular.getMaxITEMS() || slotCap < 2) // swap 2 with VM_Regular.getMinSLOTS()
             {
                 slotCap = VM_Regular.getMinSLOTS();
-                itemCap = VM_Regular.getMinITEMS();
+                itemCap = VM_Regular.getMaxITEMS();
                 System.out.printf("Overwriting your set slots and items cap, slot capacity to \033[1;36m%d\033[0m and item capacity of slots to \033[1;36m%d\033[0m\n", 
-                                    VM_Regular.getMinSLOTS(), VM_Regular.getMinITEMS());
+                                    VM_Regular.getMinSLOTS(), VM_Regular.getMaxITEMS());
                 System.out.print("Do you want to redo making this regular vending machine (Y/N): ");
                 userInputYN = sc.nextLine();
                 
