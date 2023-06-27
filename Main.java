@@ -1,9 +1,10 @@
 import java.util.Scanner;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /*
-	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java
+	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java && javac MainDisplay.java && javac Order.java
  */
 
 /**
@@ -57,28 +58,22 @@ public class Main{
         }
 		*/
 		
-		
-		
-		int[] quantities = new int[2];
-		quantities[0] = 1;
-		quantities[1] = 3;
 
-		Order orderPaul = new Order();
-		Money moneyPaul = new Money(true);	// boolean is for testing
-		moneyPaul.addBillsOrCoins(200, 1);
-		moneyPaul.addBillsOrCoins(50, 1);
-		
-		double paymentTotal = 0;
+		// all the hashmaps :>
+
 		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> currentMoneyDenom = new LinkedHashMap<String, Integer>();
 		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> change = new LinkedHashMap<String, Integer>();
+		//LinkedHashMap<String, Integer> order = new LinkedHashMap<String, Integer>();
+		Order order = new Order();
 		
 		// initialization of VM and how many slots it can hold
 		VM_Regular vm = new VM_Regular(2, 10);
 
+		// slot initialization
 		VM_Item milk = new VM_Item("Milk", 27.00, 42);
 		VM_Item c2 = new VM_Item("C2", 20.00, 42);
-		
+
 
 
 		// initialization of slots and their contents
@@ -90,106 +85,52 @@ public class Main{
 		// c2Slot.addItemStock(c2Slot, 2)
 		
 		// STOCKING
+
 		vm.setSlot(milk, 3, 0);
 		vm.setSlot(c2, 3, 1);
+
+	
+	
+		VM_Draw vmArt = new VM_Draw(vm);								//added
+
+	
+		vmArt.drawAndSetVM();											//added
 		
+		if(vm.isThisValid())		// Check if all slots are filled	// added
+			vm.addToStockedInfo();	// save stock info					// added
+
 
 		// PAUL ORDERS
 		orderPaul.addOrder(vm.getSlot("Milk"), 1);
 		orderPaul.addOrder(vm.getSlot("C2"), 3);
 		
 
+
 		// Display all available items
 		vm.displayAllItems();
 
 
 		
+
+		// testing the other method for adding VM's cash reserves
+		System.out.println("Adding one more One Thousand Bill...\n");
+		vm.addBillsOrCoins(1000, 1);
 		
-
-
-
-		// duplicating denomination hashmap of VM, while setting payment denominations to zero
-		// currentMoneyDenom = vm.getDenominations();
-
-		
-		// // DENOMINATIONS FOR PAUL
-		// for(String i : currentMoneyDenom.keySet()) {
-		// 	duplicate.put(i, currentMoneyDenom.get(i));
-		// 	payment.put(i, 0);
-		// }
-		
-		// // setting payment to 1 pc. of Fifty Bill
-		// payment.put("One Hundred Bill", 1);
-		
-		
-
-		// //display duplicate of denomination hashmap of VM
-		System.out.println("Paul's money");
-		for( Map.Entry m : moneyPaul.getDenominations().entrySet() ) {
-			System.out.println(m.getKey() + " " + m.getValue());
-
-		}
+		// run VM's in selling mode (simulates user buying from the VM)
+		vm.sellingOperation(duplicate, payment, change, order);
 
 
 		
-		//calculating payment total
-		// for(String i : payment.keySet()){
-		// 	paymentTotal += payment.get(i)*Money.strToVal.get(i);
-		// }
-
-		System.out.println("VM money");
-		for( Map.Entry m : vm.getCurrentMoney().getDenominations().entrySet() ) {
-			System.out.println(m.getKey() + " " + m.getValue());
-
-		}
-		
-		
-		// calculating and displaying total cost of order
-		// System.out.println("Total Cost: " + vm.computeTotalCost(quantities) + "\n");
-		System.out.println("Total Cost: " + orderPaul.getTotalCost() + "\n");
 
 		
-		System.out.println("Payment Total: " + moneyPaul.getTotalMoney());
-		// checks if transaction is valid
-		vm.addDenominations(moneyPaul.getDenominations());
-		System.out.println("Total Reserves after this payment: " + (vm.getTotalOfMoneyReserves() - orderPaul.getTotalCost()));
+		vm.displayAllStockInfo();										//added
 
+
+		vmArt.updateVM(vm);												//added - updates to see if things are stocked or out of stock
+		vmArt.drawAndSetVM();											//added
 		
-		paymentTotal = moneyPaul.getTotalMoney();
 
-		LinkedHashMap<String, Integer> tempHashMap = moneyPaul.getDenominations();
 
-		if(	vm.hasEnoughStock(orderPaul) &&
-			( (vm.getTotalOfMoneyReserves() - orderPaul.getTotalCost()) >= 0)
-			 && vm.canGiveChange(orderPaul, moneyPaul) ) // user is assumed to insert a 250 peso total // a;so messed up
-		{
-			System.out.println("Paul's money is" +  paymentTotal);
-			System.out.println("\nTRANSACTION PROCEEDS-------");
-			// Vending machine 
-			System.out.println("Paul's money is" +  moneyPaul.getTotalMoney());
-			vm.acceptOrder(orderPaul, moneyPaul);
-			// vm.updateMoneyWithChange(orderPaul, moneyPaul);
-
-			
-			
-			
-
-		}
-		else
-		{
-			System.out.println("\nCANNOT TRANSACT--------------");
-			vm.subtractBillsOrCoins(moneyPaul);
-		}
-
-			
-		
-		vm.displayAllItems();
-		
-		//display duplicate of denomination hashmap
-		for( Map.Entry m : vm.getDenominations().entrySet() ) {
-			System.out.println(m.getKey() + " " + m.getValue());
-		}
-		System.out.println("Total Reserves: " + vm.getTotalOfMoneyReserves());
     }
 
 	/*

@@ -1,4 +1,7 @@
-import java.util.HashMap;
+
+import java.util.LinkedHashMap;
+
+
 
 /** The class VM_Item represents an item
   * that is built within a slot that is
@@ -17,7 +20,8 @@ public class Order
      */
     public Order()
     {
-        pendingOrder = new HashMap<String, Integer>();
+        pendingOrder = new LinkedHashMap<String, Integer>();
+
         totalCostOfOrder = 0;
 
     }
@@ -25,10 +29,9 @@ public class Order
     public boolean addOrder(VM_Slot slot, int itemQty)
     {
         if(slot == null)
-        {
+
             return false;
-        }
-        else if( slot.isEmpty() || itemQty > slot.getSlotItemStock() || itemQty <= 0)
+        else if( slot.getSlotItemStock() == 0 || itemQty > slot.getSlotItemStock() || itemQty <= 0)
             return false;
 
         else
@@ -40,7 +43,8 @@ public class Order
 
     }
 
-    public HashMap<String, Integer> getPendingOrder() {
+    public LinkedHashMap<String, Integer> getPendingOrder() {
+
         return pendingOrder;
     }
 
@@ -50,6 +54,7 @@ public class Order
 
     }
 
+
     public void clearOrder()
     {
         pendingOrder.clear();
@@ -57,6 +62,8 @@ public class Order
     }
 
 
-    private HashMap<String, Integer> pendingOrder;
+
+    private LinkedHashMap<String, Integer> pendingOrder;
+    private int totalCaloriesOfOrder;
     private double totalCostOfOrder;
 }

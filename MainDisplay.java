@@ -1,4 +1,10 @@
+/**
+ * This class represent an output for console screen with usage of ascii art
+ * 
+ */
+
 public class MainDisplay {
+
 
     public void displayWelcome(){
         System.out.print("\033[1;33m");
