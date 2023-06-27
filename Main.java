@@ -9,6 +9,7 @@ import java.util.InputMismatchException;
 	javac MainDisplay.java && javac Order.java
 	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Lemon.java
 	javac Milk.java && javac Powder.java && javac Salt.java && javac Sugar.java
+	javac Chicken.java && javac BBQ.java && javac Flour.java
 	
  */
 
@@ -48,11 +49,16 @@ public class Main{
 		possibleItems.put("CREAM", 0);
 		possibleItems.put("EGG", 0);
 		possibleItems.put("KANGKONG", 0);
-		possibleItems.put("LEMON", 0);
 		possibleItems.put("MILK", 0);
-		possibleItems.put("POWDER", 0);
 		possibleItems.put("SALT", 0);
 		possibleItems.put("SUGAR", 0);
+		
+		possibleItems.put("POWDER", 0); // delete
+		possibleItems.put("LEMON", 0); // delete
+		
+		possibleItems.put("CHICKEN", 0); // add
+		possibleItems.put("BBQ", 0); // add
+		possibleItems.put("FLOUR", 0); // add
 		
 		
 		while(true) 
@@ -197,20 +203,29 @@ public class Main{
 							else if( s.equalsIgnoreCase("Kangkong") )
 								vm.addItemStock(new Kangkong("Kangkong", 20.00, 42), initialStock.get(s), i);
 							
-							else if( s.equalsIgnoreCase("Lemon") )
-								vm.addItemStock(new Lemon("Lemon", 20.00, 42), initialStock.get(s), i);
+							else if( s.equalsIgnoreCase("Lemon") ) 
+								vm.addItemStock(new Lemon("Lemon", 20.00, 42), initialStock.get(s), i); // delete
 							
 							else if( s.equalsIgnoreCase("Milk") )
 								vm.addItemStock(new Milk("Milk", 27.00, 42), initialStock.get(s), i);
 							
 							else if( s.equalsIgnoreCase("Powder") )
-								vm.addItemStock(new Powder("Powder", 20.00, 42), initialStock.get(s), i);
+								vm.addItemStock(new Powder("Powder", 20.00, 42), initialStock.get(s), i); // delete
 							
 							else if( s.equalsIgnoreCase("Salt") )
 								vm.addItemStock(new Salt("Salt", 20.00, 42), initialStock.get(s), i);
 							
 							else if( s.equalsIgnoreCase("Sugar") )
 								vm.addItemStock(new Sugar("Sugar", 20.00, 42), initialStock.get(s), i);
+							
+							else if( s.equalsIgnoreCase("Chicken") )
+								vm.addItemStock(new Chicken("Chicken", 20.00, 42), initialStock.get(s), i); // add
+							
+							else if( s.equalsIgnoreCase("BBQ") )
+								vm.addItemStock(new BBQ("BBQ", 20.00, 42), initialStock.get(s), i); // add
+							
+							else if( s.equalsIgnoreCase("Flour") )
+								vm.addItemStock(new Flour("Flour", 20.00, 42), initialStock.get(s), i); // add
 						
 							i++;
 						}
