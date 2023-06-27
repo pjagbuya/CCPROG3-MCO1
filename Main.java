@@ -47,9 +47,9 @@ public class Main{
 		possibleItems.put("CREAM", 0);
 		possibleItems.put("EGG", 0);
 		possibleItems.put("KANGKONG", 0);
-		possibleItems.put("LEMON", 0);
+		possibleItems.put("FLOUR", 0);
 		possibleItems.put("MILK", 0);
-		possibleItems.put("POWDER", 0);
+		possibleItems.put("BBQ", 0);
 		possibleItems.put("SALT", 0);
 		possibleItems.put("SUGAR", 0);
 		
@@ -91,7 +91,7 @@ public class Main{
 							if(noOfSlots < 8 || noOfItems < 10)
 								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
 							else
-								vm = new VM_Regular(noOfSlots, noOfItems);
+								vm = new VM_Regular("Paul", noOfSlots, noOfItems);
 						}
 						catch (InputMismatchException e)
 						{
@@ -191,14 +191,14 @@ public class Main{
 							else if( s.equalsIgnoreCase("Kangkong") )
 								vm.addItemStock(new Kangkong("Kangkong", 20.00, 42), initialStock.get(s), i);
 							
-							else if( s.equalsIgnoreCase("Lemon") )
-								vm.addItemStock(new Lemon("Lemon", 20.00, 42), initialStock.get(s), i);
+							else if( s.equalsIgnoreCase("Flour") )
+								vm.addItemStock(new Flour("Flour", 20.00, 42), initialStock.get(s), i);
 							
 							else if( s.equalsIgnoreCase("Milk") )
 								vm.addItemStock(new Milk("Milk", 27.00, 42), initialStock.get(s), i);
 							
-							else if( s.equalsIgnoreCase("Powder") )
-								vm.addItemStock(new Powder("Powder", 20.00, 42), initialStock.get(s), i);
+							else if(s.equalsIgnoreCase("Bbq Powder") || s.equalsIgnoreCase("Bbq") )
+								vm.addItemStock(new BBQ("Bbq Powder", 20.00, 42), initialStock.get(s), i);
 							
 							else if( s.equalsIgnoreCase("Salt") )
 								vm.addItemStock(new Salt("Salt", 20.00, 42), initialStock.get(s), i);

@@ -6,7 +6,8 @@ import java.text.DecimalFormat;
 import java.util.InputMismatchException;
 
 public class VM_Regular {
-	public VM_Regular( int nOfSlots, int item_max) {
+	public VM_Regular(String name, int nOfSlots, int item_max) {
+		this.name = name;
 		if(nOfSlots >= 8)
 			slots = new VM_Slot[nOfSlots];
 		else
@@ -22,7 +23,6 @@ public class VM_Regular {
 		stockedInfos = new ArrayList<VM_StockedInfo>();
 		recordCurrInd = 0;
 	}
-
 
 
 	public void addItemStock(VM_Item givenItem, int qty, int i)
@@ -363,11 +363,23 @@ public class VM_Regular {
 	public double getTotalOfMoneyReserves() {
 		return currentMoney.getTotalMoney();
 	}
-	
+	public String getName()
+	{
+		return name;
+	}
 	public void emptyOrderHistory() {
 		orderHistory = new ArrayList<Order>();
 	}
+	public static int getMinSLOTS()
+	{
+		return MIN_SLOTS;
+	}
+	public static int getMinITEMS()
+	{
+		return MIN_ITEMS;
+	}
 	
+
 	/*
 	public boolean canGiveChange(double amt, LinkedHashMap<String, Integer> duplicateOfDenomMap) {
 		return execGiveChange(amt, duplicateOfDenomMap);
@@ -782,7 +794,7 @@ public class VM_Regular {
 	}
 	
 	
-
+	private String name;
 	private VM_Slot[] slots;
 	private Money currentMoney;
 	private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
