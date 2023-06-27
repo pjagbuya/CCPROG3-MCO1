@@ -308,7 +308,10 @@ public class VM_Regular {
 						if(order.addOrder(slots[slotNum-1], qty))
 							System.out.println("-ADDED TO ORDER");
 						else
+						{
+							order.getPendingOrder().remove(slots[slotNum-1]);
 							System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+						}
 					else
 						System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
 				}
@@ -722,7 +725,9 @@ public class VM_Regular {
 
 		System.out.println("Restock item: ");
 		input = sc.next();
-			
+		
+		if(!input.equalsIgnoreCase("Y"))
+		while(true)
 		try
 		{
 			qty = sc.nextInt();
