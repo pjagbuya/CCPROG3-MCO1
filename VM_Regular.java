@@ -280,35 +280,6 @@ public class VM_Regular {
 		System.out.println();
 
 		isValidQuantity = true;
-		do
-		{
-
-			vmObjectDraw.updateVM(this);
-			vmObjectDraw.drawAndSetVM();
-			System.out.print("What would you like to order?\n>> ");
-			input = sc.next();
-			
-			if( !input.equalsIgnoreCase("Y") )
-			{
-				try
-				{
-					qty = sc.nextInt();
-					for(j = 0; j < slots.length; j++)
-						if( input.equalsIgnoreCase(slots[j].getSlotItemName()) )
-							break;
-					if( j >= slots.length || !order.addOrder(slots[j], qty) )
-					{
-						isValidQuantity = false;
-						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT EXIST. ENTER A DIFF. ITEM/QUANTITY");	
-					}
-						
-				}
-				catch (InputMismatchException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		} while ( !input.equalsIgnoreCase("Y") );
 
 		System.out.println();
 		do
@@ -326,7 +297,11 @@ public class VM_Regular {
 						if(order.addOrder(slots[slotNum-1], qty))
 							System.out.println("-ADDED TO ORDER");
 						else
+						{
 							System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+
+						}
+							
 					else
 						System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
 				}

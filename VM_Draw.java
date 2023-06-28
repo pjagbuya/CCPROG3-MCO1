@@ -22,7 +22,7 @@ public class VM_Draw {
         String temp;
 
         double price;
-        boolean isSizeAdjusted;
+     
         
 
         VM_Slot[] slots = vmMachine.getSlots(); // gets all the slots along with the status
@@ -33,8 +33,7 @@ public class VM_Draw {
 
         // The margin for adjustment in the drawing once exceeding the minimum height and width
         maxLenMarginPrice = 0;
-        alternatingNum = 0;
-        isSizeAdjusted = false;
+
 
         
         for(i = 0; i < slots.length; i++)
@@ -54,30 +53,7 @@ public class VM_Draw {
                 // Get the price and turn it to string
                 price = slots[i].getItem().getItemPrice();
                 priceLabels.add(i, price + "");
-
-                
-                // Check the string size of the price
-                temp = priceLabels.get(i);
-
-                // Check if the substring only have two characters, Ex: 20.0, substring ".0" is selected, thus if block executes
-                if(temp.substring(temp.indexOf('.')).length() < 3 )
-                    priceLabels.set(i, temp + "0");
-                
-                // update the tempholder of string
-                temp = priceLabels.get(i);
-
-
-                // If size of the string is greater than 5 (which is (BOX_WIDTH/2)), updates for the minimum size is activated
-                // Sets the margin to take into account for other items and allocate enough space adjustment
-                // Only updates maxLenMarginPrice if it finds a bigger number that has a longer string
-                if(temp.length() > (BOX_WIDTH/2) + 1 && 
-                   temp.length()-((BOX_WIDTH/2) + 1) > maxLenMarginPrice)
-                {
-                    isSizeAdjusted = true;
-                    maxLenMarginPrice = temp.length()-((BOX_WIDTH/2) + 1);
-
-                }
-                    
+                setupPriceLabels(i);
                 
 
             }
@@ -97,44 +73,13 @@ public class VM_Draw {
             
    
         }
-        
-        i = 0;
         // Reassess all the pricelabels and configure their size and string
+        formatPriceLabels();
+        i = 0;
+        
         while(i < priceLabels.size())
         {
-            temp = priceLabels.get(i);
-            alternatingNum = 0;
-            /*  For this case, our expression (BOX_WIDTH/2) + 1 gives us 5, adding maxLenMarginPrice gives us back
-                The .length() of the price label that has the longest string.
-                
-                While loop keeps looping until the length of the selected priceLabel string of temp is at least equal 
-                to the priceLabel with the longest string
-            */
-            while(temp.length() < (BOX_WIDTH/2) + 1 + maxLenMarginPrice)
-            {
-                // An alternating pattern of putting space left and right of the text
-                if(alternatingNum%2 == 0)
-                {
-                    priceLabels.set(i," " + temp);
-                    temp = priceLabels.get(i);
-                }
-                else
-                {
-                    priceLabels.set(i, temp + " ");
-                    temp = priceLabels.get(i); 
-                }
-                alternatingNum++;
-
-            }
-            // For cases when maxLenMargin is just 1 or 0, just add a space
-            if(maxLenMarginPrice <= 1)
-                priceLabels.set(i, temp + " ");
-
-
-            // priceLabels update colors
-            temp = priceLabels.get(i) ;
-            priceLabels.set(i, "\033[1;33m" + temp + "\033[0m");    // Colors yellow 
-
+           
             temp = stringLabels.get(i);
             stringLabels.set(i, "\033[1;32m" + temp + "\033[0m");   // Colors green
 
@@ -159,7 +104,9 @@ public class VM_Draw {
     {
         VM_Slot[] slots = vmMachine.getSlots();
         String subName;
+        String temp;
         int i;
+        int alternatingNum;
 
         // Checks downwards of all items
         for (i = 0; i < slots.length; i++)
@@ -176,22 +123,44 @@ public class VM_Draw {
                 // If slot is empty or no stock, indicate red text
                 if((slots[i].getSlotItemStock() == 0 || slots[i].getItem() == null) && 
                     stringLabels.get(i).equalsIgnoreCase(subName))
-                
+                {
+
                     // Highlights item as red
-                    stringLabels.set(i, stringLabels.get(i).replace("\033[1;31m", "\033[1;32m"));
+                    stringLabels.set(i, stringLabels.get(i).replace("\033[1;32m", "\033[1;31m"));
+    
+
+                    
+                }
+  
                     
                 // If slot is replaced and has stock, indicate new green text
-                else if(!stringLabels.get(i).equalsIgnoreCase(subName) && slots[i].getSlotItemStock() > 0)
+                else if(!stringLabels.get(i).equalsIgnoreCase(subName) && slots[i].getSlotItemStock() > 0 && slots[i].getItem() != null)
                 {
                     // Changes the item
                     stringLabels.set(i, "\033[1;32m" + subName + "\033[0m");
+                    priceLabels.set(i, slots[i].getItem().getItemPrice() + "");
+                    setupPriceLabels(i);
+                    
+
+
                 }
+            }
+            if(slots[i] == null || slots[i].getItem() == null || slots[i].getSlotItemStock() == 0)
+            {
+                if(stringLabels.get(i) != null)
+                    stringLabels.set(i, stringLabels.get(i).replace("\033[1;32m", "\033[1;31m"));
             }
 
         
  
             
         }
+
+        // Formats the price labels to fit in within the Vending machine drawing
+        formatPriceLabels();
+        
+    
+
     }
 
     /**
@@ -203,7 +172,8 @@ public class VM_Draw {
         int priceInd;
         int spaceCnt;
         int slotInd;
-     
+        int tempLength;
+        String temp;
 
         stringInd = 0;
         priceInd = 0;
@@ -291,13 +261,13 @@ public class VM_Draw {
 
                     // Starting at after the first space
                     else if(i % 5 == 3 && j % (BOX_WIDTH+maxLenMarginPrice) == 2)
-                    {   
+                    {   temp = null;
                         if(priceInd < priceLabels.size())
                         {
                             
-                            
+
                             System.out.print(priceLabels.get(priceInd));
-                            
+
 
                             
                             priceInd++;
@@ -307,7 +277,7 @@ public class VM_Draw {
 
                             // Spaces indicating an empty/blocked slot
                             spaceCnt = 0;
-                            while(spaceCnt <= (BOX_WIDTH/2)+1+maxLenMarginPrice)
+                            while(spaceCnt < (BOX_WIDTH/2) + 1 + maxLenMarginPrice)
                             {
                                 System.out.print(" ");
                                 spaceCnt++;
@@ -316,9 +286,9 @@ public class VM_Draw {
 
                                 
                         }
-                        
+
                         // This is the size of the price label added
-                        j += (BOX_WIDTH+maxLenMarginPrice)/2 +1;
+                        j += (BOX_WIDTH + maxLenMarginPrice)/2+1;
 
                         // Cases where Java starts using in E when representing big integers
                         if((BOX_WIDTH+maxLenMarginPrice) >= 13)
@@ -352,6 +322,102 @@ public class VM_Draw {
         }
 
       
+    }
+
+    private void setupPriceLabels(int ind)
+    {
+        int i;
+        String temp;
+
+        i = ind;
+        
+        
+        
+
+                
+        // Check the string size of the price
+        temp = priceLabels.get(i);
+
+        // Check if the substring only have two characters, Ex: 20.0, substring ".0" is selected, thus if block executes
+        if(temp.substring(temp.indexOf('.')).length() < 3 )
+            priceLabels.set(i, temp + "0");
+        
+        // update the tempholder of string
+        temp = priceLabels.get(i);
+
+
+        // If size of the string is greater than 5 (which is (BOX_WIDTH/2)), updates for the minimum size is activated
+        // Sets the margin to take into account for other items and allocate enough space adjustment
+        // Only updates maxLenMarginPrice if it finds a bigger number that has a longer string
+        if(temp.length() > (BOX_WIDTH/2) + 1 && 
+            temp.length()-((BOX_WIDTH/2) + 1) > maxLenMarginPrice)
+        {
+
+            maxLenMarginPrice = temp.length()-((BOX_WIDTH/2) + 1);
+
+        }
+    }
+
+    private void formatPriceLabels()
+    {
+
+        int i;
+        int alternatingNum;
+        String temp;
+
+        i = 0;
+        // Reassess all the pricelabels and configure their size and string
+        while(i < priceLabels.size())
+        {
+            
+            temp = priceLabels.get(i);
+
+            // Revert changes to N/A label to reapply pattern of spaces needed
+            if (temp.contains("N/A"))
+                priceLabels.set(i, " N/A ");
+            else
+                priceLabels.set(i, priceLabels.get(i).replaceAll(" ", ""));
+
+            temp = priceLabels.get(i);
+            alternatingNum = 0;
+            /*  For this case, our expression (BOX_WIDTH/2) + 1 gives us 5, adding maxLenMarginPrice gives us back
+                The .length() of the price label that has the longest string.
+                
+                While loop keeps looping until the length of the selected priceLabel string of temp is at least equal 
+                to the priceLabel with the longest string
+            */
+            while(temp.length() < (BOX_WIDTH/2) + 1 + maxLenMarginPrice)
+            {
+                // An alternating pattern of putting space left and right of the text
+                if(alternatingNum%2 == 0)
+                {
+                    priceLabels.set(i," " + temp);
+                    temp = priceLabels.get(i);
+                }
+                else
+                {
+                    priceLabels.set(i, temp + " ");
+                    temp = priceLabels.get(i); 
+                }
+                alternatingNum++;
+
+            }
+
+            // For cases when maxLenMargin is just 1 or 0, just add a space
+            if(maxLenMarginPrice <= 1 )
+                priceLabels.set(i, temp + " ");
+            
+
+
+
+            // priceLabels update colors
+            temp = priceLabels.get(i) ;
+            priceLabels.set(i, "\033[1;33m" + temp + "\033[0m");    // Colors yellow 
+
+
+            // Increment for the next price label to check
+            i++;  
+        }
     }
 
     /**Labels of identified items in the vending machine */

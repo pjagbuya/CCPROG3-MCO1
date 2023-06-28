@@ -64,6 +64,7 @@ public class Main{
 		
 
 		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
+		vmDraw = null;
 		while(true) 
 		{
 			System.out.print(	"[C] Create a New Vending Machine\n" +
@@ -221,7 +222,6 @@ public class Main{
 			{
 				vmDraw = new VM_Draw(vm);
 				vmDraw.drawAndSetVM();
-				vm.updateStockedInfos();
 				System.out.println("VENDING MACHINE CREATION SUCCESSFUL!\n");
 			}
 				
@@ -234,6 +234,12 @@ public class Main{
 				
 				if(input.equalsIgnoreCase("V"))
 				{
+					if(vmDraw != null)
+					{
+						vmDraw.updateVM(vm);
+						vmDraw.drawAndSetVM();
+					}	
+				
 					vm.sellingOperation(duplicate, payment, change, order);
 				}
 				else if(input.equalsIgnoreCase("M"))
