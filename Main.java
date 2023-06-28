@@ -26,14 +26,16 @@ public class Main{
 		Scanner sc = new Scanner(System.in);
 		String input;
 		String userHelp;
+		String inputQty;
+		String vmName;
 		VM_Regular vm = null;
 		int noOfSlots;
 		int noOfItems; // no. of items PER SLOT
 		int qty;
 		double amt;
-		String vmName;
+
 		int i;
-		
+
 		
 		// all the hashmaps :>
 		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
@@ -96,12 +98,12 @@ public class Main{
 						/* Setting Regular VM's No. of Slots and Max No. of Items per Slot */
 						try
 						{
-							System.out.println("Please indicate: " );
-							System.out.print("Name\n>> ");
+							System.out.println("\033[1;33mPlease indicate the details below: \033[0m" );
+							System.out.print("Name of this regular vending machine: \n>> ");
 							vmName = sc.next();
-							System.out.print("No. of slots (min. of 8)\n>> ");
+							System.out.print("No. of slots (\033[1;36mmin. of 8\033[0m)\n>> ");
 							noOfSlots = sc.nextInt();
-							System.out.print("Max. items per slot (min. of 10)\n>> ");
+							System.out.print("Max. items per slot (\033[1;36mmin. of 10\033[0m)\n>> ");
 							noOfItems = sc.nextInt();
 							if(noOfSlots < VM_Regular.getMinSLOTS() || noOfItems < VM_Regular.getMaxITEMS())
 								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
@@ -117,66 +119,65 @@ public class Main{
 						
 						/* Setting Initial Stocks */
 						if(vm != null)
-						do
+						while(true)
 						{
-							System.out.print("Specify initial stocks, \033[1;32m<name> <number>\033[0m "+ userHelp + "\n>> ");
-							input = sc.next();
-							if( !input.equalsIgnoreCase("Y") )
+							try
 							{
-								try
-								{
-									qty = sc.nextInt();
-									if(qty >= 0)
-									{
-										if( possibleItems.get( input.toUpperCase() ) != null )
-										{
-											initialStock.put(input, qty);
-										}
-										else
-											System.out.println("-ERROR: UNKNOWN ITEM CLASS");		
-									}
+								System.out.print("Specify initial stocks, \033[1;32m<name> <number>\033[0m "+ userHelp + "\n>> ");
+								input = sc.next();
+								if( input.equalsIgnoreCase("Y") )
+									break;
+								inputQty = sc.next();
+									
+								
+								qty = Integer.parseInt(inputQty);
+								
+								if(qty >= 0)
+									if( possibleItems.get( input.toUpperCase() ) != null )
+										initialStock.put(input, qty);
 									else
-										System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
-								}
-								catch (InputMismatchException e)
-								{
-									System.out.println("-ERROR: NON-INTEGER INPUT");
-								}
+										System.out.println("\033[1;38;5;202m-ERROR: UNKNOWN ITEM CLASS\033[0m");		
+								else
+									System.out.println("\033[1;38;5;202m-ERROR: NEGATIVE QUANTITIES NOT ALLOWED\033[0m");		
 							}
-						} while ( !input.equalsIgnoreCase("Y") );
+							catch(NumberFormatException e)
+							{
+								System.out.println("\033[1;38;5;202m-ERROR: NON-DOUBLE INPUT\033[0m");
+							}
+						}
 						
 						
 						/* Setting Initial Cash Reserves */
 						if(vm != null)
-						do
+						while(true)
 						{
 		
-							System.out.print("Specify initial cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
-							input = sc.next();
-							if( !input.equalsIgnoreCase("Y") )
+
+							try
 							{
-								try
-								{
-									amt = Double.parseDouble(input);
-									qty = sc.nextInt();
-									if(qty >= 0)
-										if( Money.getValToStr().get(amt) != null )
-											initialCash.put(amt, qty);		
-										else
-											System.out.println("-ERROR: INVALID DENOMINATION");		
+								System.out.print("Specify initial cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
+								input = sc.next();
+								if( input.equalsIgnoreCase("Y") )
+									break;
+								inputQty = sc.next();
+								
+								
+								amt = Double.parseDouble(input);
+								qty = Integer.parseInt(inputQty);
+								
+								if(qty >= 0)
+									if( Money.getValToStr().get(amt) != null )
+										initialCash.put(amt, qty);		
 									else
-										System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
-								}
-								catch (InputMismatchException e)
-								{
-									System.out.println("-ERROR: NON-INTEGER INPUT");
-								}
-								catch(NumberFormatException e)
-								{
-									System.out.println("-ERROR: NON-DOUBLE INPUT");
-								}
+										System.out.println("\033[1;38;5;202m-ERROR: INVALID DENOMINATION\033[0m");		
+								else
+									System.out.println("\033[1;38;5;202m-ERROR: NEGATIVE QUANTITIES NOT ALLOWED\033[0m");		
 							}
-						} while ( !input.equalsIgnoreCase("Y") );
+							catch(NumberFormatException e)
+							{
+								System.out.println("\033[1;38;5;202m-ERROR: NON-DOUBLE INPUT\033[0m");
+							}
+						}
 						
 						
 						// final check for exiting while-loop
@@ -207,7 +208,7 @@ public class Main{
 				else if(input.equalsIgnoreCase("S"))
 					System.out.println("SPECIAL VENDING MACHINE UNAVAILABLE :<");
 				else
-					System.out.println("-ERROR: CHOOSE A VALID VENDING MACHINE TYPE");
+					System.out.println("\033[1;38;5;202m-ERROR: CHOOSE A VALID VENDING MACHINE TYPE\033[0m");
 			}
 			else if(input.equalsIgnoreCase("E"))
 				break;
@@ -222,7 +223,8 @@ public class Main{
 			{
 				vmDraw = new VM_Draw(vm);
 				vmDraw.drawAndSetVM();
-				System.out.println("VENDING MACHINE CREATION SUCCESSFUL!\n");
+				vm.updateStockedInfos();
+				System.out.println("\033[1;32mVENDING MACHINE CREATION SUCCESSFUL!\033[0m\n");
 			}
 				
 			if( vm != null )
@@ -246,14 +248,14 @@ public class Main{
 				{
 					while(true)
 					{
-						System.out.print(	"[1] Restock Items\n" +
-											"[2] Replace/Fill with Items\n" +
-											"[3] Replenish Money\n" +
-											"[4] Set Price\n" +
-											"[5] Collect Money\n" +
-											"[6] Order History\n" +
-											"[7] Stocked Information\n" +
-											"[8] Exit to Test A Vending Machine\n" +
+						System.out.print(	"\t\033[1;36m[1]\033[0m Restock Items\n" +
+											"\t\033[1;36m[2]\033[0m Replace/Fill with Items\n" +
+											"\t\033[1;36m[3]\033[0m Replenish Money\n" +
+											"\t\033[1;36m[4]\033[0m Set Price\n" +
+											"\t\033[1;36m[5]\033[0m Collect Money\n" +
+											"\t\033[1;36m[6]\033[0m Order History\n" +
+											"\t\033[1;36m[7]\033[0m Stocked Information\n" +
+											"\t\033[1;36m[8]\033[0m Exit to Test A Vending Machine\n" +
 											">> ");
 						input = sc.next();
 						if(input.equalsIgnoreCase("1"))

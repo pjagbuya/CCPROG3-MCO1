@@ -138,37 +138,51 @@ public class VM_Regular {
 		int qty;
 		Scanner sc = new Scanner(System.in);
 		String input;
+		boolean stockIsReplaced = false; // initially false
+		boolean isCorrectInput;
 		
+		isCorrectInput = false;
+		while(true)
 		try
 		{
-			System.out.println("Replace Stock of Slot No: ");
-			i = sc.nextInt();
-			i--;
-			
-			if(i >= 0 && i < slots.length)
+
+			System.out.println("Replace/Fill in with this (use item name): ");
+			input = sc.next();
+			if(input.equalsIgnoreCase("Y"))
 			{
-				try
-				{
-					System.out.println("Replace with this: ");
-					input = sc.next();
-					qty = sc.nextInt();
-					if(possibleItems.get(input.toUpperCase()) != null && qty > 0)
-						addItemStock(input, i, qty);
-					else
-						System.out.println("-ERROR: NON-EXISTENT CLASS/INVALID QUANTITY");
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("-ERROR: NON-INTEGER INPUT");
-				}
+				isCorrectInput = true;
+				break;
+			}
+				
+			qty = sc.nextInt();
+
+			System.out.println("in Stock of Slot No: ");
+			i = sc.nextInt();
+			if((i+"").equalsIgnoreCase("y"))
+			
+			if(possibleItems.get(input.toUpperCase()) != null && qty > 0)
+			{
+				updateStockedInfos();
+				
+				stockIsReplaced = true;
+				addItemStock(input, i-1, qty);
+
+
 			}
 			else
-				System.out.println("-ERROR: NON-INTEGER INPUT");
+			{
+				if (!isCorrectInput);
+					System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
+			}
+				
 		}
 		catch (InputMismatchException e)
 		{
-			System.out.println("-ERROR: SLOT NUMBER OUT OF BOUNDS");
+			
+				System.out.println("-ERROR: NON-INTEGER INPUT");
 		}
+		
+
 		
 		sc = null;
 	}
@@ -258,14 +272,17 @@ public class VM_Regular {
 		int calorieTotal = 0;
 		boolean transactionIsValid = true; // initially true
 		boolean changeIsPossible;
-		boolean isValidQuantity;
+
 		int i;
 		int j;
 		String input;
+		String inputQty;
 		double denom;
 		int qty;
 		int slotNum;
 		boolean orderConfirmed = true; // intially true
+	
+
 		VM_Draw vmObjectDraw = new VM_Draw(this);
 
 		// order is made blank
@@ -279,71 +296,76 @@ public class VM_Regular {
 		// setting order
 		System.out.println();
 
-		isValidQuantity = true;
 
+
+		/* order request */
 		System.out.println();
-		do
-		{
-			System.out.print("What would you like to order?\n>> ");
-			input = sc.next();
-				
-			if( !input.equalsIgnoreCase("Y") )
-			{
-				try
-				{
-					qty = sc.nextInt();
-					slotNum = Integer.parseInt(input);
-					if( slotNum >= 1 && slotNum <= slots.length )
-						if(order.addOrder(slots[slotNum-1], qty))
-							System.out.println("-ADDED TO ORDER");
-						else
-						{
-							System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
 
-						}
-							
+	
+
+		while(true)
+		{
+			try
+			{
+				System.out.print("What would you like to order?\n>> ");
+				input = sc.next();
+				if( input.equalsIgnoreCase("Y") )
+					break;
+				inputQty = sc.next();
+					
+				
+				slotNum = Integer.parseInt(input);
+				qty = Integer.parseInt(inputQty);
+				
+				if( slotNum >= 1 && slotNum <= slots.length )
+					if(order.addOrder(slots[slotNum-1], qty))
+					{
+						System.out.println("-ADDED TO ORDER");
+
+					}
+						
 					else
-						System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("-ERROR: NON-INTEGER INPUT");
-				}
-				catch(NumberFormatException e)
-				{
-					System.out.println("-ERROR: NOT PARSABLE TO INT");
-				}
+					{
+						order.getPendingOrder().remove(slots[slotNum-1]);
+
+						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+					}
+				else
+					System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
 			}
-		} while ( !input.equalsIgnoreCase("Y") );
+			catch(NumberFormatException e)
+			{
+				System.out.println("-ERROR: NOT PARSABLE TO INT, Please enter slot number");
+			}
+	
+		}
 		
 		/* payment */
 		System.out.println();
-		do
+		while(true)
 		{
-			System.out.print("Insert payment\n>> ");
-			input = sc.next();
-			
-			if( !input.equalsIgnoreCase("Y") ) {
-				try
-				{
-					qty = sc.nextInt();
-					denom = Double.parseDouble(input);
+			try
+			{
+				System.out.print("Insert payment\n>> ");
+				input = sc.next();
+				if( input.equalsIgnoreCase("Y") )
+					break;
+				inputQty = sc.next();
+				
+				
+				denom = Double.parseDouble(input);
+				qty = Integer.parseInt(inputQty);
 					
-					if( Money.getValToStr().get(denom) != null )
-						payment.put(Money.getValToStr().get(denom), qty);
-					else
-						System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
-				}
-				catch (NumberFormatException e)
-				{
-					System.out.println("\033[1;38;5;202mERROR! Choice misinput\033[0m");
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("\033[1;38;5;202mERROR! Choice misinput\033[0m");
-				}	
+				if( Money.getValToStr().get(denom) != null )
+					payment.put(Money.getValToStr().get(denom), qty);
+				else
+					System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
 			}
-		} while ( !input.equalsIgnoreCase("Y") );
+			catch (NumberFormatException e)
+			{
+				e.printStackTrace();
+			}
+		}
 		
 		
 		/* duplicating denomination hashmap of VM, while setting change denominations to zero */
@@ -406,11 +428,7 @@ public class VM_Regular {
 		/* checks whether transaction is valid */
 		
 		System.out.println();
-		if(!isValidQuantity)
-		{
-			transactionIsValid = false;
-			System.out.println("-ERROR: INSUFFICIENT STOCK ORDER");
-		}
+
 		if( !hasEnoughStock(order.getPendingOrder()) ) {
 			transactionIsValid = false;
 			System.out.println("-ERROR: INSUFFICIENT STOCK");
@@ -681,35 +699,34 @@ public class VM_Regular {
 	 */
 	public void replenishDenominations() {
 		Scanner sc = new Scanner(System.in);
-		String input;
+		String input = null;
+		String inputQty = null;
 		double denom;
 		int qty;
-		//inserting payment
+		
+		/* inserting  bills/coins */
 		do
 		{
-			System.out.print("Replenish Denominations: ");
-			input = sc.next();
-			
-			if( !input.equalsIgnoreCase("Y") )
+			try
 			{
-				try
-				{
-					qty = sc.nextInt();
-					denom = Double.parseDouble(input);
+				System.out.print("Replenish Denominations: ");
+				input = sc.next();
+				if(input.equalsIgnoreCase("Y"))
+					break;
+				inputQty = sc.next();
+				
+				
+				qty = Integer.parseInt(inputQty);
+				denom = Double.parseDouble(input);
 						
-					if( Money.getValToStr().get(denom) != null )
+				if( Money.getValToStr().get(denom) != null )
 						addBillsOrCoins(denom, qty);
-					else
-						System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
-					}
-				catch (NumberFormatException e)
-				{
-					e.printStackTrace();
-				}
-				catch (InputMismatchException e)
-				{
-					e.printStackTrace();
-				}	
+				else
+					System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
+			}
+			catch (NumberFormatException e)
+			{
+				e.printStackTrace();
 			}
 		} while ( !input.equalsIgnoreCase("Y") );
 		
@@ -722,42 +739,42 @@ public class VM_Regular {
 	 *
 	 */
 	public void restockItems() {
-		int j;
+		
 		int qty;
 		Scanner sc = new Scanner(System.in);
 		String input;
+		String inputQty;
 		int slotNum;
 		boolean anItemIsRestocked = false; // initially false
 
 
-		System.out.println("Restock item: ");
-		input = sc.next();
-			
-		try
-		{
-			qty = sc.nextInt();
-			slotNum = Integer.parseInt(input);
-			if( slots[slotNum-1].getSlotItemName() != null ) {
-				if ( !anItemIsRestocked ) {
-						updateStockedInfos();
-						recordCurrInd++;
-						anItemIsRestocked = true;
+		while(true)
+			try
+			{
+				System.out.println("Restock item: ");
+				input = sc.next();
+				if(input.equalsIgnoreCase("Y"))
+					break;
+				inputQty = sc.next();
+				
+				
+				slotNum = Integer.parseInt(input);
+				qty = Integer.parseInt(inputQty);
+				
+				if( slots[slotNum-1].getSlotItemName() != null ) {
+					if ( !anItemIsRestocked ) {
+							updateStockedInfos();
+							anItemIsRestocked = true;
+					}
+					slots[slotNum-1].addItemStock(qty);
 				}
-				slots[slotNum-1].addItemStock(qty);
+				else
+					System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
 			}
-			else
-				System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
-		}
-		catch (InputMismatchException e)
-		{
-			e.printStackTrace();
-		}
-		catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		}
-	
-	
+			catch (NumberFormatException e)
+			{
+				e.printStackTrace();
+			}
 		
 		sc = null;
 	}
@@ -772,22 +789,28 @@ public class VM_Regular {
 		double amt;
 		Scanner sc = new Scanner(System.in);
 		String input;
+		String inputAmt;
 		boolean itemIsRepriced = false; // initially false
 		int slotNum;
 		
-		
-		System.out.println("Reprice item: ");
-		input = sc.next();
-			
+
+		while(true)
 		try
 		{
-			amt = sc.nextDouble();
+			System.out.println("Reprice item: ");
+			input = sc.next();
+			if(input.equalsIgnoreCase("Y"))
+				break;
+			inputAmt = sc.next();
+		
+			
 			slotNum = Integer.parseInt(input);
+			amt = Double.parseDouble(inputAmt);
+			
 			if(slotNum >= 1 && slotNum <= slots.length)
 				if( slots[slotNum-1].getSlotItemName() != null ) {
 					if( !itemIsRepriced ) {
-					updateStockedInfos();
-					recordCurrInd++;
+
 					itemIsRepriced = true;	
 					}
 					slots[slotNum-1].repriceItem(amt);
@@ -844,33 +867,39 @@ public class VM_Regular {
 		double profit;
 		String profitLabel;
 
+		VM_StockedInfo tempStockInfo;
+		LinkedHashMap<VM_Slot, Integer> slotAndStock;
+
 		isThereNew = false;
 		profit = 0;
-		if(recordCurrInd > 0)
+		if(recordCurrInd > 0 && !(stockedInfos.get(recordCurrInd-1).isEmptyData()))
 		{
-			VM_StockedInfo tempStockInfo = stockedInfos.get(recordCurrInd-1);
-			LinkedHashMap<VM_Slot, Integer> slotAndStock = tempStockInfo.getItemSlotsAndStock();
+			tempStockInfo = stockedInfos.get(recordCurrInd-1);
+			slotAndStock = tempStockInfo.getItemSlotsAndStock();
 			i = 0;
+			
 			System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", " Item Name ", "Item Prev Stock ", "Items Sold", " Items in Stock", "Profit Collected");
 			System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 			for(Map.Entry<VM_Slot, Integer> tempEntry : slotAndStock.entrySet())
 			{
 				if( getSlot(i) != null &&																	// Checks if there is no slot
-					getSlot(i).getItem() != null && 														// Checks if the slot is empty
-				   tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
+					getSlot(i).getItem() != null &&  														// Checks if the slot is empty
+					tempEntry.getKey().getSlotItemName()	!= null &&	
+				   	tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
 				{
 
 					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",					// Item name, stock previous
 																						 getSlot(i).getSlotItemSold() + "", getSlot(i).getSlotItemStock(),					// Sold, stock of current
-																						"+" + "Php " + getSlot(i).getItem().getItemPrice()*getSlot(i).getSlotItemSold());	// profit
+																						"+" + "Php " + getSlot(i).getStoredProfit());										// profit
 					System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 					
-					profit += getSlot(i).getItem().getItemPrice()*getSlot(i).getSlotItemSold();
+					profit += getSlot(i).getStoredProfit();
 				}
 
 
 				else if(getSlot(i) != null &&																	// Checks if there is no slot
 						getSlot(i).getItem() != null && 														// Checks if the slot is empty
+						tempEntry.getKey().getSlotItemName()	!= null &&
 						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
 					isThereNew = true;
 
@@ -915,6 +944,7 @@ public class VM_Regular {
 				{
 					if(getSlot(i) != null &&
 					getSlot(i).getItem() != null && 															// Checks if the slot is empty
+					tempEntry.getKey().getSlotItemName() != null &&
 					!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
 					{
 
@@ -927,6 +957,12 @@ public class VM_Regular {
 				}	
 
 			}
+
+			
+		}
+		else
+		{
+			System.out.println("There are no stocked Info updated!");
 
 			
 		}
@@ -958,7 +994,14 @@ public class VM_Regular {
 		
 		for(i = 0; i < slots.length; i++)
 			if(slots[i] != null)
-				slots[i].setSlotItemSold(0); // resets no. of sold items per slot back to
+			{
+				// Clear all storedProfit 
+				slots[i].clearStoredProfit();
+
+				// resets no. of sold items per slot back to
+				slots[i].setSlotItemSold(0); 
+			}
+				
 		recordCurrInd += 1;
 	}
 
