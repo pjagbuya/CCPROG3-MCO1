@@ -255,6 +255,7 @@ public class VM_Regular {
 		int i;
 		int j;
 		String input;
+		String inputQty;
 		double denom;
 		int qty;
 		int slotNum;
@@ -267,68 +268,66 @@ public class VM_Regular {
 		/* display VM's initial stock */
 		displayAllItems();
 		
+		/* order request */
 		System.out.println();
-		do
+		while(true)
 		{
-			System.out.print("What would you like to order?\n>> ");
-			input = sc.next();
-				
-			if( !input.equalsIgnoreCase("Y") )
+			try
 			{
-				try
-				{
-					qty = sc.nextInt();
-					slotNum = Integer.parseInt(input);
-					if( slotNum >= 1 && slotNum <= slots.length )
-						if(order.addOrder(slots[slotNum-1], qty))
-							System.out.println("-ADDED TO ORDER");
-						else
-						{
-							order.getPendingOrder().remove(slots[slotNum-1]);
-							System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
-						}
+				System.out.print("What would you like to order?\n>> ");
+				input = sc.next();
+				if( input.equalsIgnoreCase("Y") )
+					break;
+				inputQty = sc.next();
+					
+				
+				slotNum = Integer.parseInt(input);
+				qty = Integer.parseInt(inputQty);
+				
+				if( slotNum >= 1 && slotNum <= slots.length )
+					if(order.addOrder(slots[slotNum-1], qty))
+						System.out.println("-ADDED TO ORDER");
 					else
-						System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("-ERROR: NON-INTEGER INPUT");
-				}
-				catch(NumberFormatException e)
-				{
-					System.out.println("-ERROR: NOT PARSABLE TO INT");
-				}
+					{
+						order.getPendingOrder().remove(slots[slotNum-1]);
+						System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+					}
+				else
+					System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
 			}
-		} while ( !input.equalsIgnoreCase("Y") );
+			catch(NumberFormatException e)
+			{
+				System.out.println("-ERROR: NOT PARSABLE TO INT");
+			}
+	
+		}
 		
 		/* payment */
 		System.out.println();
-		do
+		while(true)
 		{
-			System.out.print("Insert payment\n>> ");
-			input = sc.next();
-			
-			if( !input.equalsIgnoreCase("Y") ) {
-				try
-				{
-					qty = sc.nextInt();
-					denom = Double.parseDouble(input);
+			try
+			{
+				System.out.print("Insert payment\n>> ");
+				input = sc.next();
+				if( input.equalsIgnoreCase("Y") )
+					break;
+				inputQty = sc.next();
+				
+				
+				denom = Double.parseDouble(input);
+				qty = Integer.parseInt(inputQty);
 					
-					if( Money.getValToStr().get(denom) != null )
-						payment.put(Money.getValToStr().get(denom), qty);
-					else
-						System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
-				}
-				catch (NumberFormatException e)
-				{
-					e.printStackTrace();
-				}
-				catch (InputMismatchException e)
-				{
-					e.printStackTrace();
-				}	
+				if( Money.getValToStr().get(denom) != null )
+					payment.put(Money.getValToStr().get(denom), qty);
+				else
+					System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
 			}
-		} while ( !input.equalsIgnoreCase("Y") );
+			catch (NumberFormatException e)
+			{
+				e.printStackTrace();
+			}
+		}
 		
 		
 		/* duplicating denomination hashmap of VM, while setting change denominations to zero */
@@ -661,10 +660,11 @@ public class VM_Regular {
 			{
 				System.out.print("Replenish Denominations: ");
 				input = sc.next();
-				inputQty = sc.next();
-				
 				if(input.equalsIgnoreCase("Y"))
 					break;
+				inputQty = sc.next();
+				
+				
 				qty = Integer.parseInt(inputQty);
 				denom = Double.parseDouble(input);
 						
@@ -702,10 +702,11 @@ public class VM_Regular {
 			{
 				System.out.println("Restock item: ");
 				input = sc.next();
-				inputQty = sc.next();
-				
 				if(input.equalsIgnoreCase("Y"))
 					break;
+				inputQty = sc.next();
+				
+				
 				slotNum = Integer.parseInt(input);
 				qty = Integer.parseInt(inputQty);
 				
@@ -748,10 +749,11 @@ public class VM_Regular {
 		{
 			System.out.println("Reprice item: ");
 			input = sc.next();
-			inputAmt = sc.next();
-		
 			if(input.equalsIgnoreCase("Y"))
 				break;
+			inputAmt = sc.next();
+		
+			
 			slotNum = Integer.parseInt(input);
 			amt = Double.parseDouble(inputAmt);
 			

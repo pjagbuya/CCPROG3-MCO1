@@ -25,6 +25,7 @@ public class Main{
 		//md.displayChoices();
 		Scanner sc = new Scanner(System.in);
 		String input;
+		String inputQty;
 		VM_Regular vm = null;
 		int noOfSlots;
 		int noOfItems; // no. of items PER SLOT
@@ -114,66 +115,63 @@ public class Main{
 						
 						/* Setting Initial Stocks */
 						if(vm != null)
-						do
+						while(true)
 						{
-							System.out.print("Specify initial stocks\n>> ");
-							input = sc.next();
-							if( !input.equalsIgnoreCase("Y") )
+							try
 							{
-								try
-								{
-									qty = sc.nextInt();
-									if(qty >= 0)
-									{
-										if( possibleItems.get( input.toUpperCase() ) != null )
-										{
-											initialStock.put(input, qty);
-										}
-										else
-											System.out.println("-ERROR: UNKNOWN ITEM CLASS");		
-									}
+								System.out.print("Specify initial stocks\n>> ");
+								input = sc.next();
+								if( input.equalsIgnoreCase("Y") )
+									break;
+								inputQty = sc.next();
+									
+								
+								qty = Integer.parseInt(inputQty);
+								
+								if(qty >= 0)
+									if( possibleItems.get( input.toUpperCase() ) != null )
+										initialStock.put(input, qty);
 									else
-										System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
-								}
-								catch (InputMismatchException e)
-								{
-									System.out.println("-ERROR: NON-INTEGER INPUT");
-								}
+										System.out.println("-ERROR: UNKNOWN ITEM CLASS");		
+								else
+									System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
 							}
-						} while ( !input.equalsIgnoreCase("Y") );
+							catch(NumberFormatException e)
+							{
+								System.out.println("-ERROR: NON-DOUBLE INPUT");
+							}
+						}
 						
 						
 						/* Setting Initial Cash Reserves */
 						if(vm != null)
-						do
+						while(true)
 						{
-							
-							System.out.print("Specify initial cash reserves\n>> ");
-							input = sc.next();
-							if( !input.equalsIgnoreCase("Y") )
+							try
 							{
-								try
-								{
-									amt = Double.parseDouble(input);
-									qty = sc.nextInt();
-									if(qty >= 0)
-										if( Money.getValToStr().get(amt) != null )
-											initialCash.put(amt, qty);		
-										else
-											System.out.println("-ERROR: INVALID DENOMINATION");		
+								System.out.print("Specify initial cash reserves\n>> ");
+								input = sc.next();
+								if( input.equalsIgnoreCase("Y") )
+									break;
+								inputQty = sc.next();
+								
+								
+								amt = Double.parseDouble(input);
+								qty = Integer.parseInt(inputQty);
+								
+								if(qty >= 0)
+									if( Money.getValToStr().get(amt) != null )
+										initialCash.put(amt, qty);		
 									else
-										System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
-								}
-								catch (InputMismatchException e)
-								{
-									System.out.println("-ERROR: NON-INTEGER INPUT");
-								}
-								catch(NumberFormatException e)
-								{
-									System.out.println("-ERROR: NON-DOUBLE INPUT");
-								}
+										System.out.println("-ERROR: INVALID DENOMINATION");		
+								else
+									System.out.println("-ERROR: NEGATIVE QUANTITIES NOT ALLOWED");		
 							}
-						} while ( !input.equalsIgnoreCase("Y") );
+							catch(NumberFormatException e)
+							{
+								System.out.println("-ERROR: NON-DOUBLE INPUT");
+							}
+						}
 						
 						
 						// final check for exiting while-loop
