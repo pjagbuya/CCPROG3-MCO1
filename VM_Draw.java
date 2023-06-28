@@ -165,6 +165,8 @@ public class VM_Draw {
 
     /**
      * This method prints and displays the ASCII art of the vending machine to be displayed on the screen
+     * with respected to the positions of the items in the slots[] of the Vending Machine Object
+     * 
      */
     public void drawAndSetVM()
     {
@@ -172,8 +174,9 @@ public class VM_Draw {
         int priceInd;
         int spaceCnt;
         int slotInd;
-        int tempLength;
-        String temp;
+        int slotAllowance;
+        int i;
+        int j;
 
         stringInd = 0;
         priceInd = 0;
@@ -188,17 +191,20 @@ public class VM_Draw {
         System.out.println("Prices in \033[1;33mPhp\033[0m");
         System.out.println("Out of stock means \033[1;31mRED\033[0m");
         System.out.println("In stock means \033[1;32mGREEN\033[0m");
+
+
         
+        slotAllowance = 0;
         // Below would consist a five layer patterned ASCII art
         // Draws based on the amount of labels, 3 labels gives one row, 6 labels gives an additional row, and so on
-        for (int i = 0; i < (int)(Math.ceil(stringLabels.size()/3.0))*BOX_HEIGHT; i++) 
+        for ( i = 0; i < (int)(Math.ceil(stringLabels.size()/3.0))*BOX_HEIGHT; i++) 
         {
 
 
             // Each additional margin to be adjusted is deemed to be added to the box width
-            for (int j = 0; j < 3*(BOX_WIDTH+maxLenMarginPrice); j++) 
+            for (j = 0; j < 3*(BOX_WIDTH+maxLenMarginPrice); j++) 
             {
-                
+
                 // Slects first and last rows
                 if( i % 5 == 0 || i % 5 == 4)
                 {
@@ -248,27 +254,64 @@ public class VM_Draw {
                     // The center layer is selected
                     else if(i % 5 == 2 && j % (BOX_WIDTH+maxLenMarginPrice) == (BOX_WIDTH+maxLenMarginPrice)/2)
                     {
+                        
                         // Print the slot number
                         if(slotInd < stringLabels.size())
-                            System.out.print(slotInd+1);
+                        {
+                            // Check if the label is greater than or less than
+                            if ((slotInd+1 + "").length() >= 2)     // When slot label length count increases
+                            {
+                                System.out.print((slotInd+1 + ""));
+                                j += 1;                             // Move on to the next space
+
+                                
+                            }
+                            else
+                            {
+                                System.out.print(slotInd+1);
+               
+                               
+                            }
+                            
+                            slotInd++;
+
+                        }   
+                           
                         else
-                            System.out.print(" ");
-
-                        // Increment for next slot number
-                        slotInd++;
-                        
-                    }
-
-                    // Starting at after the first space
-                    else if(i % 5 == 3 && j % (BOX_WIDTH+maxLenMarginPrice) == 2)
-                    {   temp = null;
-                        if(priceInd < priceLabels.size())
                         {
                             
+                            System.out.print(" ");
+   
+
+                            
+                        }
+
+
+                        
+                    }
+  
+                    // Starting at after the first space
+                    else if(i % 5 == 3 && j % (BOX_WIDTH+maxLenMarginPrice) == 2)
+                    {   
+                        
+   
+                        if(priceInd < priceLabels.size())
+                        {
+                    
 
                             System.out.print(priceLabels.get(priceInd));
 
+                            // This is the size of the price label added, adds the space it consumes
+                            j += (BOX_WIDTH + maxLenMarginPrice)/2+1;
 
+                            // Cases where Java starts using in E when representing big integers
+                            if((BOX_WIDTH+maxLenMarginPrice) >= 13)
+                            {
+                                if((BOX_WIDTH+maxLenMarginPrice) - 13 >= 2)
+                                    j += 2;
+                                else
+                                    j += (BOX_WIDTH+maxLenMarginPrice) - 13;
+                            }
                             
                             priceInd++;
                         }
@@ -277,9 +320,13 @@ public class VM_Draw {
 
                             // Spaces indicating an empty/blocked slot
                             spaceCnt = 0;
+                            System.out.print(" ");
                             while(spaceCnt < (BOX_WIDTH/2) + 1 + maxLenMarginPrice)
                             {
                                 System.out.print(" ");
+
+                                // Increment to the amount of spaces occuring
+                                j += 1;
                                 spaceCnt++;
                             }
 
@@ -287,24 +334,16 @@ public class VM_Draw {
                                 
                         }
 
-                        // This is the size of the price label added
-                        j += (BOX_WIDTH + maxLenMarginPrice)/2+1;
 
-                        // Cases where Java starts using in E when representing big integers
-                        if((BOX_WIDTH+maxLenMarginPrice) >= 13)
-                        {
-                            if((BOX_WIDTH+maxLenMarginPrice) - 13 >= 2)
-                                j += 2;
-                            else
-                                j += (BOX_WIDTH+maxLenMarginPrice) - 13;
-                        }
     
 
                     }
                     else
                     {
-                        
+  
                         System.out.print(" ");
+                        // Increment for next slot number
+                        
                     }
 
 
@@ -317,13 +356,19 @@ public class VM_Draw {
                 
                 
             }
-
+  
             System.out.println();
         }
 
       
     }
 
+
+    /**
+     * This helper method helps setup the price labels to be appropriately display on the protoype Vending Machine Drawing
+     * 
+     * @param ind index of price label to be assessed
+     */
     private void setupPriceLabels(int ind)
     {
         int i;
@@ -358,6 +403,10 @@ public class VM_Draw {
         }
     }
 
+    /**
+     * This helper method helps format price labels to be as long as the longest price label available
+     * 
+     */
     private void formatPriceLabels()
     {
 

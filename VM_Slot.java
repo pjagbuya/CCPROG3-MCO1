@@ -20,6 +20,7 @@ public class VM_Slot {
      */
     public VM_Slot(int capacity){
 
+        storedProfit = 0;
         slotItemName = null;
         item = null;
 		
@@ -37,6 +38,7 @@ public class VM_Slot {
 	public VM_Slot(VM_Slot copy)
     {
         slotItemSold = copy.getSlotItemSold();
+        storedProfit = copy.getStoredProfit();
 		
 		if(copy.getItem() != null)
 			item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
@@ -94,9 +96,10 @@ public class VM_Slot {
     {
 
 		
-        if(qty > 0 && hasEnoughStock(qty))
+        if(qty > 0 && hasEnoughStock(qty) && item != null)
         {
             slotItemStock -= qty;
+            storedProfit += item.getItemPrice()*qty;
             slotItemSold += qty;
         }
     }
@@ -200,13 +203,15 @@ public class VM_Slot {
     }
 		
 
-
+    /**
+     * This method adds the quantity of items towards this slot only if the slot had initial
+     */
 	public boolean addItemStock(int qty)
     {
 
         Scanner sc = new Scanner(System.in);
 
-        if(qty <= 0)
+        if(qty <= 0 || item == null)
 		{
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
 			return false;
@@ -252,11 +257,22 @@ public class VM_Slot {
     public int getSlotItemSold() {
         return slotItemSold;
     }
+
 	
-	public void setSlotItemSold(int slotItemSold) {
+	public void setSlotItemSold(int slotItemSold) 
+    {
 			this.slotItemSold = slotItemSold;
 	}
+
+    public double getStoredProfit()
+    {
+        return storedProfit;
+    }
 	
+    public void clearStoredProfit()
+    {
+        storedProfit = 0;
+    }
 	
 	
 	
@@ -269,6 +285,8 @@ public class VM_Slot {
     private String slotItemName;
     /**The current item stock of this item */
     private int slotItemStock;
+    /**Profit that this slot has collected */
+    private double storedProfit;
     // Max capacity of item in this slot
     private final int MAX;
     
