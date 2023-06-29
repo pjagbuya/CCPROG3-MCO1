@@ -92,6 +92,8 @@ public class Order
     }
 
 
+	/* the list of item types in the order, and the desired quantity of each */
     private LinkedHashMap<String, Integer> pendingOrder;
+	/* total cost of all items in the order, based on their selling prices */
     private double totalCostOfOrder;
 }
