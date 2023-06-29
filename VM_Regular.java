@@ -142,52 +142,46 @@ public class VM_Regular {
 		int qty;
 		Scanner sc = new Scanner(System.in);
 		String input;
+		String inputQty;
+		String inputSlotNum;
 		boolean stockIsReplaced = false; // initially false
-		boolean isCorrectInput;
 		
-		isCorrectInput = false;
 		while(true)
 		try
 		{
-
-			System.out.println("Replace/Fill in with this (use item name): ");
+			/* asking for item(s) to add */
+			System.out.println("Replace/Fill in with these: ");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
-			{
-				isCorrectInput = true;
 				break;
-			}
-				
-			qty = sc.nextInt();
-
+			inputQty = sc.next();
+			
+			/* asking for which slot to replace/fill in */
 			System.out.println("in Stock of Slot No: ");
-			i = sc.nextInt();
-			if((i+"").equalsIgnoreCase("y"))
+			inputSlotNum = sc.next();
+			
+			
+			qty = Integer.parseInt(inputQty);
+			i = Integer.parseInt(inputSlotNum);
+			
 			
 			if(Main.getPossibleItems().get(input.toUpperCase()) != null && qty > 0)
 			{
-				updateStockedInfos();
-				
 				stockIsReplaced = true;
 				addItemStock(input, i-1, qty);
-
-
 			}
 			else
-			{
-				if (!isCorrectInput);
-					System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
-			}
+				System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
 				
 		}
-		catch (InputMismatchException e)
+		catch(NumberFormatException e)
 		{
-			
-				System.out.println("-ERROR: NON-INTEGER INPUT");
+			System.out.println("\033[1;38;5;202m-ERROR: INPUT MUST BE <DOUBLE> <INTEGER>\033[0m");
 		}
 		
-
 		
+		if(stockIsReplaced)
+			updateStockedInfos();
 		sc = null;
 	}
 	
