@@ -162,7 +162,7 @@ public class Money {
 	/**
 	 * Gets cash reserves
 	 *
-	 * @return the Money object's current set of cash reserves
+	 * @return the current set of cash reserves by denomination
 	 **/
 	public LinkedHashMap<String, Integer> getDenominations() {
 		return denominations;
