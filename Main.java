@@ -6,8 +6,8 @@ import java.util.InputMismatchException;
 /*
 	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java && javac VM_StockedInfo.java
 	javac MainDisplay.java && javac Order.java && javac VM_Draw.java
-	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Lemon.java
-	javac Milk.java && javac Powder.java && javac Salt.java && javac Sugar.java
+	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Cornstarch.java
+	javac Milk.java && javac Tofu.java && javac Salt.java && javac Sugar.java
 	javac Chicken.java && javac BBQ.java && javac Flour.java
 	
  */
@@ -23,37 +23,14 @@ import java.util.InputMismatchException;
  *
  */
 public class Main{
-    public static void main(String[] args) {
-		MainDisplay mDisplay = new MainDisplay();
-		Main mainHelp = new Main();
-		mDisplay.displayWelcome();
-		//md.displayChoices();
-		Scanner sc = new Scanner(System.in);
-		String input;
-		String userHelp;
-		String inputQty;
-		String vmName;
-		VM_Regular vm = null;
-		int noOfSlots;
-		int noOfItems; // no. of items PER SLOT
-		int qty;
-		double amt;
-
-		int i;
-
-		
-		/* hashmaps, might remove or keep in MCO2 */
-		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> change = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> initialStock = null;
-		LinkedHashMap<Double, Integer> initialCash = null;
-		LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
-		VM_Draw vmDraw;
-		Order order = new Order();
-		
-		
-		/* setting the item types */
+	
+	
+	/**
+	 * Determines all possible items in the program
+	 *
+	 */
+	public Main()
+	{
 		possibleItems.put("CHEESE", 0);
 		possibleItems.put("COCOA", 0);
 		possibleItems.put("CREAM", 0);
@@ -67,9 +44,43 @@ public class Main{
 		possibleItems.put("CHICKEN", 0);
 		possibleItems.put("BBQ", 0);
 		possibleItems.put("FLOUR", 0);
-		
-
+	}
+	
+	
+	/**
+	 * Main method
+	 *
+	 * @param args ...
+	 */
+    public static void main(String[] args) {
+		MainDisplay mDisplay = new MainDisplay();
+		Main mainHelp = new Main();
+		mDisplay.displayWelcome();
+		Scanner sc = new Scanner(System.in);
+		String input;
+		String userHelp;
+		String inputQty;
+		String vmName;
+		VM_Regular vm = null;
+		int noOfSlots;
+		int noOfItems; // no. of items PER SLOT
+		int qty;
+		double amt;
+		int i;
 		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
+
+		
+		/* hashmaps, might remove or keep in MCO2 */
+		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> change = new LinkedHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> initialStock = null;
+		LinkedHashMap<Double, Integer> initialCash = null;
+		
+		VM_Draw vmDraw;
+		Order order = new Order();
+
+		//userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
 		vmDraw = null;
 		while(true) 
 		{
@@ -86,7 +97,7 @@ public class Main{
 				input = sc.next();
 				if(input.equalsIgnoreCase("R"))
 				{
-					mainHelp.displayPossibleItems(possibleItems);
+					mainHelp.displayPossibleItems();
 					while(true)
 					{
 						/* clearing away old vending machine */
@@ -259,13 +270,13 @@ public class Main{
 							vm.restockItems();
 						}
 						else if(input.equalsIgnoreCase("2"))
-							vm.replaceItemStock(possibleItems);
+							vm.replaceItemStock();
 						else if(input.equalsIgnoreCase("3"))
 							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("4"))
 							vm.repriceItems();
-						else if(input.equalsIgnoreCase("5"));
-							// PLEASE FILL IN
+						else if(input.equalsIgnoreCase("5"))
+							vm.collectCashReserves();
 						else if(input.equalsIgnoreCase("6"))
 							vm.displayOrderHistory();
 						else if(input.equalsIgnoreCase("7"))
@@ -303,9 +314,8 @@ public class Main{
 	/**
 	 * Lists all items available in the program
 	 *
-	 * @param possibleItems list of items available in the program
 	 */
-	private void displayPossibleItems(LinkedHashMap<String, Integer> possibleItems)
+	private void displayPossibleItems()
 	{
 		System.out.println("Here are your available options to set an item to your vending Machine");
 		for(String stringTemp : possibleItems.keySet())
@@ -314,5 +324,23 @@ public class Main{
 		}
 
 	}
+	
+	
+	/**
+	 * Gets the list of all item subclasses available in the program
+	 *
+	 * @return the list of all possible items
+	 */
+	public static LinkedHashMap<String, Integer> getPossibleItems()
+	{
+		return possibleItems;
+	}
+	
+	
+	
+	/* the prompt for user to use "Y" when they want to proceed to next section */
+	private String userHelp;
+	/* a list of all possible items in the program */
+	private static LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
 }
 
