@@ -12,7 +12,7 @@ public class VM_Slot {
 
 
     /**
-     * Initializes a slot's item and capacity.
+     * Initializes a slot's item and capacity
      * Every slot can contain only one actual copy of the item it is set to hold
      * 
      * @param capacity the maximum no. of items that this slot can hold
@@ -91,6 +91,7 @@ public class VM_Slot {
      * Checks whether this slot contains the desired number of its item or more
      * 
      * @param qty the desired number of pieces of the item
+	 * @return true if slot contain the desired quantity of items, false otherwise
      */
 	public boolean hasEnoughStock(int qty) {
 		if(slotItemStock >= 0 && qty >= 0 && qty <= slotItemStock)
@@ -105,6 +106,7 @@ public class VM_Slot {
      * contributed by the desired number of items from this slot
      * 
      * @param qty the desired quantity of items
+	 * @return the total cost of desired number of items from this slot
      */
 	public double computePartialCost(int qty) 
     {
@@ -203,7 +205,7 @@ public class VM_Slot {
      * but sets the stock count and replaces the currently held item
      * with givenItem if the two items have different names.
      * 
-	 * @param givenItems the given type of item to be added
+	 * @param givenItem the given type of item to be added
      * @param qty the quantity of objects
      */
     public void addItemStock(VM_Item givenItem, 
@@ -339,7 +341,7 @@ public class VM_Slot {
 	 * Gets the amount of profit generated
 	 * by this slot since last restocking
 	 *
-	 *
+	 * @return the profit made by the slot thus far
 	 */
     public double getStoredProfit()
     {

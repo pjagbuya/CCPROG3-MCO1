@@ -21,8 +21,9 @@ public class VM_Regular {
 	 * Creates VM_Regular object and inititializes the array of slots,
 	 * the array list containing order history, and stock information
 	 *
-	 * @param nOfSlots the maximum number of slots that VM slots will be allowed to contain
-	 * @param itemMax the maximum number of items that VM slots will be allowed to contain
+	 * @param name the name of the vending machine
+	 * @param nOfSlots the number of slots in VM
+	 * @param item_max the maximum capacity of each slot in VM
 	 */
 	public VM_Regular(String name, int nOfSlots, int item_max) {
 		this.name = name;
@@ -103,14 +104,14 @@ public class VM_Regular {
 		else if( s.equalsIgnoreCase("Kangkong") )
 			addItemStock(new Kangkong("Kangkong", 20.00, 42), qty, i);
 							
-		else if( s.equalsIgnoreCase("Lemon") ) 
-			addItemStock(new Lemon("Lemon", 20.00, 42), qty, i); // delete
+		else if( s.equalsIgnoreCase("Cornstarch") ) 
+			addItemStock(new Cornstarch("Cornstarch", 20.00, 42), qty, i); // delete
 							
 		else if( s.equalsIgnoreCase("Milk") )
 			addItemStock(new Milk("Milk", 27.00, 42), qty, i);
 							
-		else if( s.equalsIgnoreCase("Powder") )
-			addItemStock(new Powder("Powder", 20.00, 42), qty, i); // delete
+		else if( s.equalsIgnoreCase("Tofu") )
+			addItemStock(new Tofu("Tofu", 20.00, 42), qty, i); // delete
 							
 		else if( s.equalsIgnoreCase("Salt") )
 			addItemStock(new Salt("Salt", 20.00, 42), qty, i);
@@ -590,7 +591,7 @@ public class VM_Regular {
 	/**
 	 * Gets a slot specified by its index
 	 *
-	 * @param the index of the slot to be returned
+	 * @param ind the index of the slot to be returned
 	 * @return the desired slot
 	 */
 	public VM_Slot getSlot(int ind) {
@@ -1052,7 +1053,7 @@ public class VM_Regular {
 	/**
 	 * Sets VM's name
 	 *
-	 * @param the VM's new name
+	 * @param name the VM's new name
 	 */
 	public void setName(String name)
 	{

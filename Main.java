@@ -62,13 +62,11 @@ public class Main{
 		possibleItems.put("MILK", 0);
 		possibleItems.put("SALT", 0);
 		possibleItems.put("SUGAR", 0);
-		
-		possibleItems.put("POWDER", 0); // delete
-		possibleItems.put("LEMON", 0); // delete
-		
-		possibleItems.put("CHICKEN", 0); // add
-		possibleItems.put("BBQ", 0); // add
-		possibleItems.put("FLOUR", 0); // add
+		possibleItems.put("CORNSTARCH", 0);
+		possibleItems.put("TOFU", 0);
+		possibleItems.put("CHICKEN", 0);
+		possibleItems.put("BBQ", 0);
+		possibleItems.put("FLOUR", 0);
 		
 
 		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";

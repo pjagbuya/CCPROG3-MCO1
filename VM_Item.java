@@ -2,7 +2,7 @@ import java.text.DecimalFormat;
 
 
 /** The class VM_Item represents an item
-  * to be placed inside the vending machine 
+  * to be placed inside VM
   *
   * @author Paul Josef P. Agbuya
   * @author Vince Kenneth D. Rojo
