@@ -44,6 +44,8 @@ public class VM_Regular {
 		orderHistory = new ArrayList<Order>();
 		stockedInfos = new ArrayList<VM_StockedInfo>();
 		recordCurrInd = 0;
+		
+		userHelp = new String("(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)");
 	}
 
 
@@ -133,9 +135,8 @@ public class VM_Regular {
 	/**
 	 * Provides for replacing the items in a slot, or for filling up a slot with a null name
 	 *
-	 * @param possibleItems	the list of all possible items in the program
 	 */
-	public void replaceItemStock(LinkedHashMap<String, Integer> possibleItems)
+	public void replaceItemStock()
 	{
 		int i;
 		int qty;
@@ -163,7 +164,7 @@ public class VM_Regular {
 			i = sc.nextInt();
 			if((i+"").equalsIgnoreCase("y"))
 			
-			if(possibleItems.get(input.toUpperCase()) != null && qty > 0)
+			if(Main.getPossibleItems().get(input.toUpperCase()) != null && qty > 0)
 			{
 				updateStockedInfos();
 				
@@ -1064,6 +1065,72 @@ public class VM_Regular {
 	}
 	
 	
+	/**
+	 * Provides for simple collection of cash reserves from VM
+	 *
+	 */
+	public void collectCashReserves()
+	{
+		String input;
+		String inputQty;
+		double denom;
+		int qty;
+		Scanner sc = new Scanner(System.in);
+		LinkedHashMap<String, Integer> reserves = currentMoney.getDenominations();
+		boolean canSubtract;
+		
+		
+		while(true)
+		{
+			/* Displays denominations currently in cash reserves */
+			System.out.println("\nDENOMINATIONS IN STOCK:");
+			for( Map.Entry m : reserves.entrySet() )
+				System.out.println( m.getValue() + " pc(s). " + m.getKey() );
+		
+			/* asks user to collect denominations from VM */
+			while(true)
+			try
+			{
+				canSubtract = true; // initially true
+				System.out.print("\nSubtract from cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
+				input = sc.next();
+				if(input.equalsIgnoreCase("Y"))
+					break;
+				inputQty = sc.next();
+				
+				denom = Double.parseDouble(input);
+				qty = Integer.parseInt(inputQty);
+				
+				/* input validation */ 	
+				if( Money.getValToStr().get(denom) == null ) {																		/* if denomination does not exist in the standard set */
+					System.out.println("\033[1;38;5;202m-ERROR: INVALID DENOMINATION\033[0m");
+					canSubtract = false;
+				} if( qty < 0 ) {																									/* if no. of pieces to subtract is negative */
+					System.out.println("\033[1;38;5;202m-ERROR: NEGATIVE SUBTRACTION NOT ALLOWED\033[0m");
+					canSubtract = false;
+				} if( Money.getValToStr().get(denom) != null && reserves.get(Money.getValToStr().get(denom)) - qty < 0 ) {			/* if VM cannot release that number of pieces of the denomination */
+					System.out.println("\033[1;38;5;202m-ERROR: SUBTRACTION RESULTS IN NEGATIVE DENOMINATIONS\033[0m");
+					canSubtract = false;
+				}
+				
+				if( canSubtract )
+				{
+					reserves.put( Money.getValToStr().get(denom), reserves.get(Money.getValToStr().get(denom)) - qty );
+					System.out.println("SUCCESSFULLY SUBTRACTED");
+				}
+			}
+			catch(NumberFormatException e)
+			{
+				System.out.println("\033[1;38;5;202m-ERROR: INPUT MUST BE <DOUBLE> <INTEGER>\033[0m");
+			}
+			
+			if(input.equalsIgnoreCase("Y"))
+				break;
+		}
+		
+	}
+	
+	
 	/** the array of VM slots */
 	private VM_Slot[] slots;
 	/** the VM's name */
@@ -1081,4 +1148,6 @@ public class VM_Regular {
 	private static final int MIN_SLOTS = 8;
 	/** the maximum number of items a slot can hold */
 	private static final int MAX_ITEMS = 10;
+	/** the prompt for user to use "Y" when they want to proceed to next section */
+	private String userHelp;
 }
