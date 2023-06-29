@@ -1,8 +1,8 @@
 import java.text.DecimalFormat;
 
+
 /** The class VM_Item represents an item
-  * that is built within a slot that is
-  * inside the vending machine 
+  * to be placed inside the vending machine 
   *
   * @author Paul Josef P. Agbuya
   * @author Vince Kenneth D. Rojo
@@ -29,11 +29,8 @@ public class VM_Item {
     }
 
     
-    
- 
-
     /**
-     * This method gets the name of this item.
+     * Gets the name of this item
      * 
      * @return the string representation of this item's name
      */
@@ -43,9 +40,9 @@ public class VM_Item {
     }
 
     /**
-     * This method gets the price of this item
+     * Gets the price of this item
      * 
-     * @return the price that represents the cost of this item.
+     * @return the price of this item as a floating-point double
      */
     public double getItemPrice() 
     {
@@ -53,9 +50,9 @@ public class VM_Item {
     }
 
     /**
-     * This method gets the number of calories of this item.
+     * Gets the number of calories in this item
      * 
-     * @return the amount of calories from this item
+     * @return the amount of calories in this item
      */
     public int getItemCalories() 
     {
@@ -65,10 +62,10 @@ public class VM_Item {
     
 
     /**
-     * This method overrides the toString() method to return name, price,
+     * Overrides the toString() method to return name, price,
      * and calories of this item with proper formating
      * 
-     * @return String representing info of name, price, and calories, of this item
+     * @return the String containing name, price, and no. of calories in this item
      */
     @Override
     public String toString(){
@@ -80,12 +77,13 @@ public class VM_Item {
     }
 
     /**
-     * This method overrides the equals method to return true
-     * if this item, not referring to itself, has the same name, price,
-     * and calories of another item. Otherwise it returns false.
+     * Overrides the equals method
+	 * to return true if this item, not referring to itself,
+	 * has the same name, price, and calories as the given item.
      * 
-     * @return true if this item, not referring to itself, has the same name, price, 
-     *         and calories of another item. Otherwise it returns false
+     * @return true if this item, not referring to itself,
+	 *				has the same name, price, and no. of calories as another item,
+	 *				false otherwise
      */
     @Override
     public boolean equals(Object item)
@@ -108,6 +106,15 @@ public class VM_Item {
                
     }
 	
+	
+	/**
+     * Sets the price of this item
+     * 
+     * @param amt the new price to be assigned to this item
+     * @return true always, since the item price will
+	 *				always be set to a valid value,
+	 *				even when it differs from amt
+     */
 	public boolean setPrice(double amt) {
 		if(amt > 0.5)
 			itemPrice = amt;
@@ -117,13 +124,13 @@ public class VM_Item {
 		return true;
 	}
 
-    /**This is the name of the item in the vending machine. */
+    /** name of the item */
     private String itemName;
-    /**Price of the item*/
+	/** price of the item, per piece */
     private double itemPrice;
-    /**The amount of calories in this item */
+    /** the amount of calories in this item */
     private int itemCalories;
-    /**Decimal format instance that the price will follow */
+    /** Decimal format instance that prices will follow */
     private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
 
 }

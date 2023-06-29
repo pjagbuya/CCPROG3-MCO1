@@ -1,15 +1,17 @@
 import java.util.LinkedHashMap;
 
-/** This class represents a vending machine's cash reserves, or maybe a person's wallet.
+/** This class represents a vending machine's cash reserves.
   * Also contains methods and attributes for working with the "cash"
+  * This program's denomination set is based
+  * on the current series of Philippine coins and banknotes.
   *
   * @author Paul Josef P. Agbuya
   * @author Vince Kenneth D. Rojo
   */
 public class Money {
 	/**
-	 * Creates Money object and initializes all denominations to zero pieces. Also intializes strToVal and valToStr.
-	 * This program's denomination set is based on the current series of Philippine coins and banknotes.
+	 * Creates Money object and initializes all denominations to zero pieces.
+	 * Also intializes strToVal and valToStr.
 	 *
 	 */
 	public Money() {
@@ -87,10 +89,13 @@ public class Money {
 	 * Removes a specified number of coins/bills from the cash reserves
 	 * 
 	 * @param givenValue the double representation of the denomination
-	 * @param qty the indicator of how many pieces of the specified denomination should be removed
+	 * @param qty the indicator of how many pieces of the specified denomination
+				  should be removed
 	 * 
-	 * @return true if the specified denomination is part of the standard set of denominations
-	 *				and a the specified number of pieces of that denomination was removed from the cash reserves, false otherwise
+	 * @return true if 1.) the specified denomination is part of the standard set,
+					and 2.) the specified number of pieces of that denomination
+					was removed from the cash reserves,
+					false otherwise
 	 */
 	public boolean subtractBillsOrCoins(double givenValue, int qty)
 	{
@@ -127,7 +132,7 @@ public class Money {
 	/**
 	 * Adds a specified set of denominations to the object's own set of denominations
 	 * 
-	 * @param denominations the list of coins/bills to add to the Money object's current denominaton set, and how many of each should be added
+	 * @param denominations the list of bills and coins to add to the cash reserves
 	 **/
 	public void acceptDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String s : denominations.keySet())
@@ -135,7 +140,7 @@ public class Money {
 	}
 	
 	/**
-	 * Adds a specified set of denominations to the Money object's own set of denominations
+	 * Adds a specified set of denominations to the cash reserves
 	 * 
 	 * @param money another instance of class Money
 	 **/
@@ -145,9 +150,9 @@ public class Money {
 	}
 	
 	/**
-	 * Uses the specified set of denominations to overwrite the Money object's own set of denominations 
+	 * Overwrite the cash reserves
 	 *
-	 * @param money another instance of class Money
+	 * @param denominations a list of new denominations
 	 **/
 	public void setDenominations(LinkedHashMap<String, Integer> denominations) {
 		for(String s : denominations.keySet())
@@ -155,7 +160,7 @@ public class Money {
 	}
 	
 	/**
-	 * getter method for denominations
+	 * Gets denominations
 	 *
 	 * @return the Money object's current set of cash reserves
 	 **/
@@ -164,7 +169,7 @@ public class Money {
 	}
 	
 	/**
-	 * getter method for strToVal
+	 * Gets strToVal
 	 *
 	 * @return the strToVal hashmap of the Money class
 	 **/
@@ -173,7 +178,7 @@ public class Money {
 	}
 	
 	/**
-	 * getter method for valToStr
+	 * Gets valToStr
 	 *
 	 * @return the valToStr hashmap of the Money class
 	 **/

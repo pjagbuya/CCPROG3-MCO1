@@ -1,5 +1,14 @@
+/**
+ * This class is for displaying the welcome screen.
+ * 
+ */
+
 public class MainDisplay {
 
+    /**
+     * Displays the welcome screen.
+     * 
+     */
     public void displayWelcome(){
         System.out.print("\033[1;33m");
         System.out.println("\t\t\t\t    :::       ::: :::::::::: :::         ::::::::   ::::::::  ::::    ::::  :::::::::: ");
@@ -32,5 +41,4 @@ public class MainDisplay {
         System.out.println();
 
     }
-
 }

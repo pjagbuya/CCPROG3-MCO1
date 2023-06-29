@@ -1,9 +1,24 @@
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
+/**
+ * The class VM_StockedInfo represents inventory records of VM_Regular,
+ * which in this design means storing copies of VM_Slot and
+ * their corresponding stock counts
+ *
+ * @author Paul Josef P. Agbuya
+ * @author Vince Kenneth D. Rojo
+ * @version 1.0
+ */
 public class VM_StockedInfo {
 
-    
+    /**
+     * Stores a copy of the slots of vmMachine,
+     * as well as the stock counts of each slot
+     * 
+     * @param vmMachine the VM_Regular whose inventory is to be recorded
+     **/
     public VM_StockedInfo(VM_Regular vmMachine)
     {
         int i;
@@ -22,7 +37,7 @@ public class VM_StockedInfo {
         // Iterates through all slots of the vmMachine
         for(i = 0; i < vmMachine.getSlots().length; i++)
         {
-            // set defaultly that slot is empty
+            // set default that slot is empty
             slot = null;
 
             if(slots[i] != null)
@@ -40,35 +55,48 @@ public class VM_StockedInfo {
         }
 
     }
-
+	
+	
+	/**
+	 * Checks whether cash reserves and slots are either null or practically empty
+	 *
+	 * @return true if neither
+	 */
     public boolean isEmptyData()
     {
         if(money == null || itemSlotsAndStock.isEmpty())
-        {
             return true;
-        }
         for(Map.Entry<VM_Slot, Integer> stockAndSlotEntry : itemSlotsAndStock.entrySet())
-        {
             if(stockAndSlotEntry.getKey() != null && !stockAndSlotEntry.getKey().getSlotItemName().equalsIgnoreCase(""))
-            {
                 return false;
-            }
-                
-        }
 
         return true;
     }
-
+	
+	
+	/**
+     * Gets the money object of this inventory record
+     * 
+     * @return the money object of this inventory record
+     */
     public Money getMoney() {
         return money;
     }
-
+	
+	
+	/**
+     * Gets the list containing copies of the slots and their corresponding stock counts at the time of recording
+     * 
+     * 
+     * @return Gets the list containing copies of the slots and their corresponding stock counts at the time of recording
+     */
     public LinkedHashMap<VM_Slot, Integer> getItemSlotsAndStock() {
         return itemSlotsAndStock;
     }
-
-
+	
+	
+	/** the list containing copies of the slots and their corresponding stock counts at the time of recording */
     private LinkedHashMap<VM_Slot, Integer> itemSlotsAndStock;
-    
+    /** the money object, contains a record of the VM's cash reserves at the time of recording */
     private Money money;
 }
