@@ -14,7 +14,7 @@ import java.util.Map;
 public class VM_StockedInfo {
 
     /**
-     * Stores a copy of the slots of vmMachine,
+     * Stores a copy of all slots of VM,
      * as well as the stock counts of each slot
      * 
      * @param vmMachine the VM_Regular whose inventory is to be recorded
@@ -60,7 +60,7 @@ public class VM_StockedInfo {
 	/**
 	 * Checks whether cash reserves and slots are either null or practically empty
 	 *
-	 * @return true if neither
+	 * @return true if neither of the above conditions are met
 	 */
     public boolean isEmptyData()
     {
@@ -77,7 +77,7 @@ public class VM_StockedInfo {
 	/**
      * Gets the money object of this inventory record
      * 
-     * @return the money object of this inventory record
+     * @return the money tray of this inventory record
      */
     public Money getMoney() {
         return money;
@@ -88,7 +88,7 @@ public class VM_StockedInfo {
      * Gets the list containing copies of the slots and their corresponding stock counts at the time of recording
      * 
      * 
-     * @return Gets the list containing copies of the slots and their corresponding stock counts at the time of recording
+     * @return the list of slots and their stock counts
      */
     public LinkedHashMap<VM_Slot, Integer> getItemSlotsAndStock() {
         return itemSlotsAndStock;

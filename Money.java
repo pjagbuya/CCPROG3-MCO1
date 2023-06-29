@@ -1,7 +1,7 @@
 import java.util.LinkedHashMap;
 
 /** This class represents a vending machine's cash reserves.
-  * Also contains methods and attributes for working with the "cash"
+  * Contains methods and attributes for working with the "cash."
   * This program's denomination set is based
   * on the current series of Philippine coins and banknotes.
   *
@@ -130,7 +130,7 @@ public class Money {
 	
 
 	/**
-	 * Adds a specified set of denominations to the object's own set of denominations
+	 * Adds a set of denominations to the object's own set of denominations
 	 * 
 	 * @param denominations the list of bills and coins to add to the cash reserves
 	 **/
@@ -140,7 +140,7 @@ public class Money {
 	}
 	
 	/**
-	 * Adds a specified set of denominations to the cash reserves
+	 * Adds the cash reserves of another Money object to its own cash reserves
 	 * 
 	 * @param money another instance of class Money
 	 **/
@@ -160,7 +160,7 @@ public class Money {
 	}
 	
 	/**
-	 * Gets denominations
+	 * Gets cash reserves
 	 *
 	 * @return the Money object's current set of cash reserves
 	 **/
@@ -169,7 +169,8 @@ public class Money {
 	}
 	
 	/**
-	 * Gets strToVal
+	 * Gets strToVal, for converting from a denomination's
+	 * String representation to its double representation
 	 *
 	 * @return the strToVal hashmap of the Money class
 	 **/
@@ -178,7 +179,8 @@ public class Money {
 	}
 	
 	/**
-	 * Gets valToStr
+	 * Gets valToStr, converting from a denomination's
+	 * double representation to its String representation
 	 *
 	 * @return the valToStr hashmap of the Money class
 	 **/

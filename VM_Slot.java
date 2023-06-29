@@ -12,7 +12,7 @@ public class VM_Slot {
 
 
     /**
-     * Initializes a slot's item and capacity.
+     * This instructor Initializes a slot's item and capacity based on the given parameters.
      * Every slot can contain only one actual copy of the item it is set to hold
      * 
      * @param capacity the maximum no. of items that this slot can hold
@@ -34,7 +34,8 @@ public class VM_Slot {
 	
 	
 	/**
-     * Using a another VM_slot to build itself
+     * This copy constructor initializes itself with another VM_Slot and inherit
+     * its attributes and data.
      * 
      * @param copy another VM_Slot object
      * 
@@ -91,6 +92,7 @@ public class VM_Slot {
      * Checks whether this slot contains the desired number of its item or more
      * 
      * @param qty the desired number of pieces of the item
+	 * @return true if slot contain the desired quantity of items, false otherwise
      */
 	public boolean hasEnoughStock(int qty) {
 		if(slotItemStock >= 0 && qty >= 0 && qty <= slotItemStock)
@@ -105,6 +107,7 @@ public class VM_Slot {
      * contributed by the desired number of items from this slot
      * 
      * @param qty the desired quantity of items
+	 * @return the total cost of desired number of items from this slot
      */
 	public double computePartialCost(int qty) 
     {
@@ -203,7 +206,7 @@ public class VM_Slot {
      * but sets the stock count and replaces the currently held item
      * with givenItem if the two items have different names.
      * 
-	 * @param givenItems the given type of item to be added
+	 * @param givenItem the given type of item to be added
      * @param qty the quantity of objects
      */
     public void addItemStock(VM_Item givenItem, 
@@ -274,30 +277,7 @@ public class VM_Slot {
     }
 
    
-	/**
-     * Informs user of restocking conflict,
-	 * asks user to choose whether or not to replace currently stocked item(s)
-	 * with the new givenItem
-     * 
-     * @param givenItem the new item to be held by this slot
-     * @param stock the initial stock count of the new item
-     */
-    private void warnReplace(VM_Item givenItem, int stock)
-    {
 
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
-                            " with " + givenItem.getItemName() + ". (Y/N)");
-        if(sc.nextLine().equalsIgnoreCase("Y"))
-        {
-            System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
-            replaceStock(givenItem, stock);
-        }
-
-        sc.close();
-    }
-	
 	
 	/**
      * Sets the price of the item object held by this slot
@@ -339,7 +319,7 @@ public class VM_Slot {
 	 * Gets the amount of profit generated
 	 * by this slot since last restocking
 	 *
-	 *
+	 * @return the profit made by the slot thus far
 	 */
     public double getStoredProfit()
     {
@@ -358,6 +338,29 @@ public class VM_Slot {
     }
 	
 	
+    /**
+     * Informs user of restocking conflict,
+	 * asks user to choose whether or not to replace currently stocked item(s)
+	 * with the new givenItem
+     * 
+     * @param givenItem the new item to be held by this slot
+     * @param stock the initial stock count of the new item
+     */
+    private void warnReplace(VM_Item givenItem, int stock)
+    {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
+                            " with " + givenItem.getItemName() + ". (Y/N)");
+        if(sc.nextLine().equalsIgnoreCase("Y"))
+        {
+            System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
+            replaceStock(givenItem, stock);
+        }
+
+        sc.close();
+    }
 	
 
 	

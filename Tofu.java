@@ -7,14 +7,15 @@
   * @author Vince Kenneth D. Rojo
   * @version 1.0
   */
+public class Tofu extends VM_Item {
 
-public class Tofu extends VM_Item{
+    
     /**
      * This constructor initializes a Tofu's name, price and
      * calories based on the given parameters
      * 
      * @param name name of this item
-     * @param price price of the item
+     * @param price price of this item
      * @param calories  number of calories this contains
      */
     public Tofu(String name, double price, int calories)
@@ -22,4 +23,6 @@ public class Tofu extends VM_Item{
         super(name, price, calories);
 
     }
+    
 }
+

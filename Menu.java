@@ -10,13 +10,12 @@ public class Menu
     public int gotoStartScreen()
     {
 
-        MainDisplay mDisplay = new MainDisplay();
         Scanner sc = new Scanner(System.in);
 
         int userInputInt;
 
 
-		mDisplay.displayWelcome();
+
 
         userInputInt = -1;
 

@@ -1,4 +1,3 @@
-
 /**The class Cornstarch represents a sub type of VM_Item
  * that will be an option in the available items that a regular
  * vending machine can have and combinations for the special
@@ -8,8 +7,8 @@
   * @author Vince Kenneth D. Rojo
   * @version 1.0
   */
-
-public class Cornstarch extends VM_Item{
+public class Cornstarch extends VM_Item 
+{
     /**
      * This constructor initializes a Cornstarch's name, price and
      * calories based on the given parameters
@@ -22,5 +21,5 @@ public class Cornstarch extends VM_Item{
     {
         super(name, price, calories);
 
-    }
+    } 
 }
