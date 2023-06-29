@@ -176,14 +176,14 @@ public class VM_Regular {
 			else
 			{
 				if (!isCorrectInput);
-					System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
+					System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY\033[0m");
 			}
 				
 		}
 		catch (InputMismatchException e)
 		{
 			
-				System.out.println("-ERROR: NON-INTEGER INPUT");
+				System.out.println("\033[1;38;5;202m-ERROR: NON-INTEGER INPUT\033[0m");
 		}
 		if(stockIsReplaced)
 		{
@@ -337,18 +337,18 @@ public class VM_Regular {
 				
 			if( slotNum >= 1 && slotNum <= slots.length )
 				if(order.addOrder(slots[slotNum-1], qty))
-					System.out.println("-ADDED TO ORDER");
+					System.out.println("\033[1;32m-ADDED TO ORDER\033[0m");
 				else
 				{
 					order.getPendingOrder().remove(slots[slotNum-1]);
-					System.out.println("-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY");
+					System.out.println("\033[1;38;5;202m-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY\033[0m");
 				}
 			else
-				System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
+				System.out.println("\033[1;38;5;202m-ERROR: SLOT NUM OUT OF BOUNDS\033[0m");
 		}
 		catch(NumberFormatException e)
 		{
-			System.out.println("-ERROR: NOT PARSABLE TO INT, Please enter slot number");
+			System.out.println("\033[1;38;5;202m-ERROR: NOT PARSABLE TO INT, Please enter slot number\033[0m");
 		}
 		
 		/* payment */
@@ -368,7 +368,7 @@ public class VM_Regular {
 			if( Money.getValToStr().get(denom) != null )
 				payment.put(Money.getValToStr().get(denom), qty);
 			else
-				System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
+				System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
 		}
 		catch (NumberFormatException e)
 		{
@@ -439,26 +439,26 @@ public class VM_Regular {
 
 		if( !hasEnoughStock(order.getPendingOrder()) ) {
 			transactionIsValid = false;
-			System.out.println("-ERROR: INSUFFICIENT STOCK");
+			System.out.println("\033[1;38;5;202mm-ERROR: INSUFFICIENT STOCK\033[0m");
 		}
 		if( paymentTotal < orderTotal ) {
 			transactionIsValid = false;
-			System.out.println("-ERROR: INSUFFICIENT PAYMENT");
+			System.out.println("\033[1;38;5;202m-ERROR: INSUFFICIENT PAYMENT\033[0m");
 		}
 		if ( !(cashReservesTotal >= orderTotal) ) {
 			transactionIsValid = false;
-			System.out.println("-ERROR: NOT ENOUGH MONEY RESERVES");
+			System.out.println("\033[1;38;5;202m-ERROR: NOT ENOUGH MONEY RESERVES\033[0m");
 		}
 		changeIsPossible = deductChange(changeDue, duplicate);
 		if( changeDue >= 0 && !changeIsPossible ) {
 			transactionIsValid = false;
-			System.out.println("-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT");
+			System.out.println("\033[1;38;5;202m-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT\033[0m");
 		}
 		
 		/* decides whether to proceed with transaction or not */
 		if( transactionIsValid && orderConfirmed )
 		{
-			System.out.println("\nTRANSACTION PROCEEDS--------------------------");
+			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
 			releaseStock(order.getPendingOrder());
 			/* computes for the change tray values based on the original cash reserves and the subtracted cash reserve duplicate */
 			for( String s : change.keySet() )
@@ -478,7 +478,7 @@ public class VM_Regular {
 			if( !orderConfirmed )
 				System.out.println("\nTRANSACTION DISCONTINUED------------------------");
 			else if( !transactionIsValid )
-				System.out.println("\nTRANSACTION FAILS------------------------");
+				System.out.println("\n\033[1;38;5;202mTRANSACTION FAILS------------------------\033[0m");
 			/* returns payment to change tray */
 			for( String s : payment.keySet() )
 				change.put( s, payment.get(s) );
@@ -726,7 +726,7 @@ public class VM_Regular {
 			if( Money.getValToStr().get(denom) != null )
 				addBillsOrCoins(denom, qty);
 			else
-				System.out.println("-ERROR: DENOMINATION DOES NOT EXIST");	
+				System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
 		}
 		catch (NumberFormatException e)
 		{
@@ -774,7 +774,7 @@ public class VM_Regular {
 				slots[slotNum-1].addItemStock(qty);
 			}
 			else
-				System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
+				System.out.println("\033[1;38;5;202m-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
 		}
 		catch (NumberFormatException e)
 		{
@@ -821,9 +821,9 @@ public class VM_Regular {
 					slots[slotNum-1].repriceItem(amt);
 				}
 				else
-					System.out.println("-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM");		
+					System.out.println("\033[1;38;5;202m-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
 			else
-				System.out.println("-ERROR: SLOT NUM OUT OF BOUNDS");
+				System.out.println("\033[1;38;5;202m-ERROR: SLOT NUM OUT OF BOUNDS\033[0m");
 		}	
 		catch (NumberFormatException e)
 		{
@@ -968,7 +968,7 @@ public class VM_Regular {
 		}
 		else
 		{
-			System.out.println("There are no stocked Info updated!");
+			System.out.println("\033[1;38;5;202mThere are no stocked Info updated!\033[0m");
 
 			
 		}
@@ -1109,7 +1109,7 @@ public class VM_Regular {
 				if( canSubtract )
 				{
 					reserves.put( Money.getValToStr().get(denom), reserves.get(Money.getValToStr().get(denom)) - qty );
-					System.out.println("SUCCESSFULLY SUBTRACTED");
+					System.out.println("\033[1;32mSUCCESSFULLY SUBTRACTED\033[0m");
 				}
 			}
 			catch(NumberFormatException e)

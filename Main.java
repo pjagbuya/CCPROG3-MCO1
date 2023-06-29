@@ -55,7 +55,7 @@ public class Main{
     public static void main(String[] args) {
 		
 		Main mainHelp = new Main();
-		mDisplay.displayWelcome();
+		mainHelp.displayWelcome();
 		Scanner sc = new Scanner(System.in);
 		String input;
 		String userHelp;
@@ -80,12 +80,12 @@ public class Main{
 		VM_Draw vmDraw;
 		Order order = new Order();
 
-		//userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
+
 		vmDraw = null;
 		while(true) 
 		{
-			System.out.print(	"[C] Create a New Vending Machine\n" +
-								"[E] Exit\n" +
+			System.out.print(	"\t\033[1;36m[C]\033[0m Create a New Vending Machine\n" +
+								"\t\033[1;36m[E]\033[0m Exit\n" +
 								">> ");
 			input = sc.next();
 			
@@ -93,7 +93,7 @@ public class Main{
 			/* Create a Vending Machine */
 			while(true) 
 			{
-				System.out.print("[R] Regular Vending Machine\n[S] Special Vending Machine\n>> ");
+				System.out.print("\t\033[1;36m[R]\033[0m Regular Vending Machine\n\t\033[1;36m[S]\033[0m Special Vending Machine\n>> ");
 				input = sc.next();
 				if(input.equalsIgnoreCase("R"))
 				{
@@ -120,7 +120,7 @@ public class Main{
 							System.out.print("Max. items per slot (\033[1;36mmin. of 10\033[0m)\n>> ");
 							noOfItems = sc.nextInt();
 							if(noOfSlots < VM_Regular.getMinSLOTS() || noOfItems < VM_Regular.getMaxITEMS())
-								System.out.println("-ERROR: PARAMETER(S) TOO SMALL");
+								System.out.println("\033[1;38;5;202m-ERROR: PARAMETER(S) TOO SMALL\033[0m");
 							else
 							{
 								vm = new VM_Regular(vmName, noOfSlots, noOfItems);
@@ -129,7 +129,7 @@ public class Main{
 						}
 						catch (InputMismatchException e)
 						{
-							System.out.println("-ERROR: NON-INTEGER INPUT");
+							System.out.println("\033[1;38;5;202m-ERROR: NON-INTEGER INPUT\033[0m");
 						}
 					}
 						
@@ -284,7 +284,7 @@ public class Main{
 						else if(input.equalsIgnoreCase("8"))
 							break;
 						else
-							System.out.println("NOT IN OPTIONS!");
+							System.out.println("\033[1;38;5;202mNOT IN OPTIONS!\033[0m");
 					}
 				}
 				
@@ -293,7 +293,7 @@ public class Main{
 					break;
 				/* catcher for non-options */
 				else
-					System.out.println("NOT IN OPTIONS!");
+					System.out.println("\033[1;38;5;202mNOT IN OPTIONS!\033[0m");
 			}
 		}
 		
