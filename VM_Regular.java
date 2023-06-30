@@ -562,7 +562,7 @@ public class VM_Regular {
 				isThereItem = true;
 			}
 		if(!isThereItem)
-			System.out.prinlnt("No item stock/label is available to display");
+			System.out.println("No item stock/label is available to display");
 				
 	}
 	
