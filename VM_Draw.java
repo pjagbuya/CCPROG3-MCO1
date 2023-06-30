@@ -19,7 +19,6 @@ public class VM_Draw {
     public VM_Draw(VM_Regular vmMachine){
 
         int i;
-        int alternatingNum;
         String temp;
 
         double price;
@@ -62,7 +61,7 @@ public class VM_Draw {
             else
             {   
 
-                // Sets a default brand XXX for slots that are empty
+                // Sets a default brand "XXX" for slots that are empty
                 stringLabels.add(i, "\033[1;31m" + "XXX" + "\033[0m");
 
                 temp = DEFAULT_PRICE;
@@ -105,9 +104,8 @@ public class VM_Draw {
     {
         VM_Slot[] slots = vmMachine.getSlots();
         String subName;
-        String temp;
         int i;
-        int alternatingNum;
+
 
         // Checks downwards of all items
         for (i = 0; i < slots.length; i++)
@@ -175,7 +173,6 @@ public class VM_Draw {
         int priceInd;
         int spaceCnt;
         int slotInd;
-        int slotAllowance;
         int i;
         int j;
 
@@ -196,7 +193,7 @@ public class VM_Draw {
 
         System.out.println();
         System.out.println("Vending Machine: \033[1;33m" + vmName + "\033[0m");
-        slotAllowance = 0;
+
         // Below would consist a five layer patterned ASCII art
         // Draws based on the amount of labels, 3 labels gives one row, 6 labels gives an additional row, and so on
         for ( i = 0; i < (int)(Math.ceil(stringLabels.size()/3.0))*BOX_HEIGHT; i++) 

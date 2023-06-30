@@ -326,7 +326,7 @@ public class Main{
 			vm.displayAllItems();
 		}
 		
-		sc.close();
+		sc = null;
     }
 	
 	
@@ -391,8 +391,7 @@ public class Main{
 	
 	
 	
-	/* the prompt for user to use "Y" when they want to proceed to next section */
-	private String userHelp;
+
 	/* a list of all possible items in the program */
 	private static LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
 }

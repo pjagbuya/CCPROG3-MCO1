@@ -148,6 +148,9 @@ public class VM_Regular {
 		boolean stockIsReplaced = false; // initially false
 		boolean sameNameExists = false; // initially false
 		
+
+		input = "";
+		inputQty = "";
 		while(true)
 		try
 		{
@@ -155,6 +158,7 @@ public class VM_Regular {
 
 			System.out.println("Replace/Fill in with these(\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<name> <qty>\033[0m");
 			if(input.equalsIgnoreCase("Y"))
+				break;
 			inputQty = sc.next();
 			
 			/* asking for which slot to replace/fill in */
@@ -302,7 +306,7 @@ public class VM_Regular {
 
 		String input;
 		String inputQty;
-		int j;
+
 
 		boolean orderConfirmed = true; // intially true
 	
@@ -344,7 +348,7 @@ public class VM_Regular {
 					System.out.println("\033[1;32m-ADDED TO ORDER\033[0m");
 				else
 				{
-					order.getPendingOrder().remove(slots[slotNum-1]);
+					order.getPendingOrder().remove(slots[slotNum-1].getSlotItemName());
 					System.out.println("\033[1;38;5;202m-ERROR: ORDERED ITEM NOT IN SUFFICENT STOCK/ITEM NAME DOES NOT MATCH. ENTER A DIFF. ITEM/QUANTITY\033[0m");
 				}
 			else
@@ -530,7 +534,7 @@ public class VM_Regular {
 		/* display change */
 		System.out.println();
 		System.out.println("CHANGE RETURNED:");
-		for(Map.Entry m : change.entrySet() )
+		for(Map.Entry<String, Integer> m : change.entrySet() )
 		System.out.println(" " + m.getValue() + " " + m.getKey());
 		System.out.println("\n");
 		
@@ -913,15 +917,14 @@ public class VM_Regular {
 	public void displayAllStockInfo()
 	{
 		int i;	// index for slot start
-		boolean isThereNew;
 		double profit;
 		String profitLabel;
 
 		VM_StockedInfo tempStockInfo;
 		LinkedHashMap<VM_Slot, Integer> slotAndStock;
 
-		isThereNew = false;
 		profit = 0;
+		profitLabel = "";
 		if(recordCurrInd > 0 && !(stockedInfos.get(recordCurrInd-1).isEmptyData()))
 		{
 			tempStockInfo = stockedInfos.get(recordCurrInd-1);
@@ -951,7 +954,6 @@ public class VM_Regular {
 						getSlot(i).getItem() != null && 														// Checks if the slot is empty
 						tempEntry.getKey().getSlotItemName()	!= null &&										// Checks if no name was initialized
 						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
-					isThereNew = true;
 
 				profitLabel = profit + "";
 				if(profitLabel.substring(profitLabel.indexOf(".")).length() < 3)
@@ -980,14 +982,15 @@ public class VM_Regular {
 			if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())
 			{
 
-				// Display differences only if they are not equal
-				if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())																	  
+				System.out.printf("Current money in stock: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
+
+				for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
 				{
 					String denomination = tempEntry2.getKey();
 					int count = tempEntry2.getValue();
 					System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
 				}
-				i++;
+
 				
 			}
 
@@ -1149,6 +1152,7 @@ public class VM_Regular {
 				break;
 		}
 		
+		sc = null;
 	}
 	
 	

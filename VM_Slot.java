@@ -250,7 +250,7 @@ public class VM_Slot {
         else
             warnReplace(givenItem, qty);
         
-        
+        sc = null;
 
     }
 		
@@ -269,6 +269,7 @@ public class VM_Slot {
         if(qty <= 0 || item == null)
 		{
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
+            sc = null;
 			return false;
 		}
         else if(qty + slotItemStock > MAX)
@@ -280,7 +281,11 @@ public class VM_Slot {
         }
 		else
 			slotItemStock += qty;
+
+        sc = null;
 		return true;
+
+        
     }
 
    
@@ -367,7 +372,7 @@ public class VM_Slot {
             replaceStock(givenItem, stock);
         }
 
-        
+        sc = null;
     }
 	
 
