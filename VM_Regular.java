@@ -274,23 +274,26 @@ public class VM_Regular {
 		LinkedHashMap<String, Integer> change,
 		Order order )
 		{
-		
+		boolean transactionIsValid = true; // initially true
+		boolean changeIsPossible;
+
 		Scanner sc = new Scanner(System.in);
 		double paymentTotal = 0;
 		double orderTotal = 0;
 		double cashReservesTotal = 0;
 		double changeDue = 0;
+		double denom;
 		int calorieTotal = 0;
-		boolean transactionIsValid = true; // initially true
-		boolean changeIsPossible;
-
 		int i;
+		int qty;
+		int slotNum;
+		int currAmt;
+
 
 		String input;
 		String inputQty;
-		double denom;
-		int qty;
-		int slotNum;
+
+
 		boolean orderConfirmed = true; // intially true
 	
 
@@ -416,7 +419,7 @@ public class VM_Regular {
 		/* asks user to confirm order */
 		System.out.print("Continue with order (\033[1;33mEnter Y to confirm, any other key to discontinue order\033[0m)? : ");
 		input = sc.next();
-		if( input.equalsIgnoreCase("Y") )
+		if( input.equalsIgnoreCase("Y") && orderTotal != 0)
 			orderConfirmed = true;
 		else
 			orderConfirmed = false;
@@ -450,6 +453,17 @@ public class VM_Regular {
 		if( transactionIsValid && orderConfirmed )
 		{
 			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
+			for(String s : order.getPendingOrder().keySet()) {
+				for(i = 0; i < slots.length; i++)
+					if( s.equals( slots[i].getSlotItemName() ) )
+					{
+						currAmt = order.getPendingOrder().get(s);
+						if(currAmt > slots[i].getMAX())
+							System.out.println("Dispensing: " +  slots[i].getMAX() + "\033[1;33m" + slots[i].getSlotItemName() "\033[0m");
+						else
+							System.out.println("Dispensing: " +  currAmt + "\033[1;33m" + slots[i].getSlotItemName() "\033[0m");
+					}
+						
 			releaseStock(order.getPendingOrder());
 	
 
@@ -531,6 +545,8 @@ public class VM_Regular {
 	 */
 	public void displayAllItems() {
 		int i;
+		System.out.println();
+		System.out.println("Item Info: ");
 		System.out.println();
 		for(i = 0; i < slots.length; i++)
 			if(slots[i] != null && slots[i].getItem() != null)
