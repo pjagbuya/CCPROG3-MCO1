@@ -141,9 +141,13 @@ public class Main{
 					{
 						try
 						{
+							//stops when there is too much inputs
+							if(vm.getSlots().length == initialStock.size())
+								break;
+
 							System.out.print("Specify initial stocks, \033[1;32m<name> <number>\033[0m "+ userHelp + "\n>> ");
 							input = sc.next();
-							if( input.equalsIgnoreCase("Y") )
+							if( input.equalsIgnoreCase("Y" )) 
 								break;
 							inputQty = sc.next();
 									
@@ -170,9 +174,10 @@ public class Main{
 					{
 						try
 						{
+							
 							System.out.print("Specify initial cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
 							input = sc.next();
-							if( input.equalsIgnoreCase("Y") )
+							if( input.equalsIgnoreCase("Y"))
 								break;
 							inputQty = sc.next();	
 								
