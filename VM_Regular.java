@@ -152,14 +152,14 @@ public class VM_Regular {
 		try
 		{
 			/* asking for item(s) to add */
-			System.out.println("Replace/Fill in with these: ");
+			System.out.println("Replace/Fill in with these:(\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<name> <qty>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
 			inputQty = sc.next();
 			
 			/* asking for which slot to replace/fill in */
-			System.out.println("in Stock of Slot No: ");
+			System.out.println("in Stock of Slot No: \033[1;32m<num>\033[0m");
 			inputSlotNum = sc.next();
 			
 			/* converting String input into numerical values */
@@ -183,7 +183,7 @@ public class VM_Regular {
 				addItemStock(input, slotNum-1, qty);
 			}
 			else
-				System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
+				System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY\033[0m");
 				
 		}
 		catch(NumberFormatException e)
@@ -286,23 +286,21 @@ public class VM_Regular {
 		LinkedHashMap<String, Integer> change,
 		Order order )
 		{
-		
+		boolean transactionIsValid = true; // initially true
+		boolean changeIsPossible;
 		Scanner sc = new Scanner(System.in);
 		double paymentTotal = 0;
 		double orderTotal = 0;
 		double cashReservesTotal = 0;
 		double changeDue = 0;
+		double denom;
 		int calorieTotal = 0;
-		boolean transactionIsValid = true; // initially true
-		boolean changeIsPossible;
-
 		int i;
 		int j;
 		String input;
 		String inputQty;
-		double denom;
-		int qty;
 		int slotNum;
+		int qty;
 		boolean orderConfirmed = true; // intially true
 	
 
@@ -329,7 +327,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.print("What would you like to order?\n>> ");
+			System.out.print("What would you like to order (\033[1;33mEnter 'Y' to confirm/finish\033[0m)? \033[1;32m<slot num> <qty>\033[0m\n>> ");
 			input = sc.next();
 			if( input.equalsIgnoreCase("Y") )
 				break;
@@ -360,7 +358,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.print("Insert payment\n>> ");
+			System.out.print("Insert payment (\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<bill/coin num> <qty>\033[0m\n>> ");
 			input = sc.next();
 			if( input.equalsIgnoreCase("Y") )
 				break;
@@ -427,9 +425,9 @@ public class VM_Regular {
 		
 		
 		/* asks user to confirm order */
-		System.out.print("Continue with order? : ");
+		System.out.print("Continue with order (\033[1;33mEnter Y to confirm, any other key to discontinue order\033[0m)? : ");
 		input = sc.next();
-		if( input.equalsIgnoreCase("Y") )
+		if( input.equalsIgnoreCase("Y") && orderTotal != 0 )
 			orderConfirmed = true;
 		else
 			orderConfirmed = false;
@@ -540,16 +538,27 @@ public class VM_Regular {
 	
 	
 	/**
-	 * Displays item descriptions on terminal
+	 * Displays item descriptions on terminal, else displays that there is no items stocked
 	 *
 	 *
 	 */
 	public void displayAllItems() {
 		int i;
+		boolean isThereItem;
 		System.out.println();
+		System.out.println("Item Info: ");
+		System.out.println();
+
+		isThereItem = false;
 		for(i = 0; i < slots.length; i++)
 			if(slots[i] != null && slots[i].getItem() != null)
+			{
 				slots[i].displayAllItems();
+				isThereItem = true;
+			}
+		if(!isThereItem)
+			System.out.println("No item stock/label is available to display");
+				
 	}
 	
 	/**
@@ -763,7 +772,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.println("Restock item: ");
+			System.out.println("Restock item: \033[1;32m<slot num> <qty>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
@@ -805,7 +814,6 @@ public class VM_Regular {
 	 *
 	 */
 	public void repriceItems() {
-		int j;
 		double amt;
 		Scanner sc = new Scanner(System.in);
 		String input;
@@ -816,7 +824,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.println("Reprice item: ");
+			System.out.println("Reprice item (\033[1;33mEnter Y to confirm/finish\033[0m): \033[1;32m<slot num> <new price>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
@@ -920,7 +928,7 @@ public class VM_Regular {
 
 				else if(getSlot(i) != null &&																	// Checks if there is no slot
 						getSlot(i).getItem() != null && 														// Checks if the slot is empty
-						tempEntry.getKey().getSlotItemName()	!= null &&
+						tempEntry.getKey().getSlotItemName()	!= null &&										// Checks if no name was initialized
 						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
 					isThereNew = true;
 
@@ -932,7 +940,9 @@ public class VM_Regular {
 				System.out.printf("                                                                                           |Profit: \033[1;32mPHP %10s\033[0m|\n", profitLabel);
 				
 				i++;
-				System.out.printf("Prev Money: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
+
+				System.out.printf("Prev Money from prev stock: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
+
 
 				// For each entry in the Stock info, get every denomination and count
 				for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
@@ -943,49 +953,24 @@ public class VM_Regular {
 				}
 				System.out.println("_____________________________________________________________________________________________________");
 
-				// For each entry in the stock info, get current money and add
-				System.out.printf("Current Money: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
-				for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
+				// Display differences only if they are not equal
+				if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())																	  
 				{
-					String denomination = tempEntry2.getKey();
-					int count = tempEntry2.getValue();
-					System.out.println(denomination + ": " + count);
-				}
-				i++;
-			}
-			if(isThereNew)
-			{
-				System.out.println();
-				System.out.println("NEWLY ADDED");
-				i = 0;
-				//checks new items
-
-				System.out.printf("\t| %20s | %20s | %11s  |\n", " Item Name ", " Items in Stock", "Profit Collected");
-				for(Map.Entry<VM_Slot, Integer> tempEntry : slotAndStock.entrySet())
-				{
-					if(getSlot(i) != null &&
-					getSlot(i).getItem() != null && 															// Checks if the slot is empty
-					tempEntry.getKey().getSlotItemName() != null &&
-					!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
+					// For each entry in the stock info, get current money and add
+					System.out.printf("Current Money: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
+					for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())																											
 					{
-
-						System.out.printf("\t| %20s | %20s | %11s  |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",
-																				getSlot(i).getSlotItemStock()*getSlot(i).getItem().getItemPrice());
-						System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
-
+						String denomination = tempEntry2.getKey();
+						int count = tempEntry2.getValue();												   
+						System.out.println(denomination + ": " + count);
 					}
 					i++;
-				}	
-
+				}
 			}
-
-			
 		}
 		else
 		{
 			System.out.println("\033[1;38;5;202mThere are no stocked Info updated!\033[0m");
-
-			
 		}
 		
 	}
