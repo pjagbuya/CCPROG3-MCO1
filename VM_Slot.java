@@ -78,7 +78,8 @@ public class VM_Slot {
      * @param givenItem the new item replacing the slot's original item
      * @param qty the initial stock count of the new item
      */
-    public void replaceStock(VM_Item givenItem, int qty)
+    public void replaceStock(VM_Item givenItem, 
+                             int qty)
     {	
         if(givenItem != null) 
         {
@@ -352,7 +353,8 @@ public class VM_Slot {
      * @param givenItem the new item to be held by this slot
      * @param stock the initial stock count of the new item
      */
-    private void warnReplace(VM_Item givenItem, int stock)
+    private void warnReplace(VM_Item givenItem, 
+                             int stock)
     {
 
         Scanner sc = new Scanner(System.in);
