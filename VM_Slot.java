@@ -45,18 +45,24 @@ public class VM_Slot {
         slotItemSold = copy.getSlotItemSold();
         storedProfit = copy.getStoredProfit();
 		
+        // Sets the item as a new item copy to be assigned as the attribute of this slot
 		if(copy.getItem() != null)
 			item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+        // When the given copy is nothing set it as just null named item
 		else
 			item = new VM_Item(copy.getSlotItemName(), 0, 0);
 
+        // when this slot has no item in, set the new item as this slot's name
         if(item != null)
             slotItemName = item.getItemName();
+        // Not available name will be the slot name
         else
             slotItemName = "N/A";
-	
+        
+
         slotItemStock = copy.getSlotItemStock();
 
+        // At minimum, it should have at least 10 capacity of items
         if(copy.getMAX() >= 10)
             MAX = copy.getMAX();
         else
@@ -77,8 +83,8 @@ public class VM_Slot {
         if(givenItem != null) 
         {
 			item = givenItem;
-            if(slotItemStock+qty <= MAX)
-			    slotItemStock += qty;
+            if(qty <= MAX)
+			    slotItemStock = qty;
             else
                 slotItemStock = MAX;
 			slotItemName = new String(givenItem.getItemName());
@@ -233,14 +239,11 @@ public class VM_Slot {
             replaceStock(givenItem, qty);
 		// Skips conditional construct if restocker is empty
 		else if(givenItem == null && qty <= 0 );
-        // Check if the slot was empty
-        else if(slotItemStock <= 0)
-            replaceStock(givenItem, qty);
         // If the slot is not empty, then proceed to add the stock
         else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) <= MAX)
             slotItemStock += qty;
-        
-        else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) >= MAX)
+        // If qty is full, just set MAX as current stock
+        else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) > MAX)
             slotItemStock = MAX;
         // if this slot already has an item, but has a different name
         else
