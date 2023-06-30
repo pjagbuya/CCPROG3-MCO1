@@ -824,7 +824,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.println("Reprice item (\033[1;33mEnter Y to confirm, any other key to discontinue order\033[0m): \033[1;32m<slot num> <new price>\033[0m");
+			System.out.println("Reprice item (\033[1;33mEnter Y to confirm/finish\033[0m): \033[1;32m<slot num> <new price>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
