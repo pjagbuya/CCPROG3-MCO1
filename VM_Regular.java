@@ -453,14 +453,17 @@ public class VM_Regular {
 		if( transactionIsValid && orderConfirmed )
 		{
 			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
-			
+
 			for(String itemName : order.getPendingOrder().keySet())
 				for(i = 0; i < slots.length; i++)
 					if( itemName.equals( slots[i].getSlotItemName() ) )
 					{
 						currAmt = order.getPendingOrder().get(itemName);
+
+						// Check max amount should be dispensed if order was greater than 10
 						if(currAmt > slots[i].getMAX())
 							System.out.println("Dispensing: " +  slots[i].getMAX() + " \033[1;33m" + slots[i].getSlotItemName() + "\033[0m");
+						// Dispenses the item amount wished
 						else
 							System.out.println("Dispensing: " +  currAmt + " \033[1;33m" + slots[i].getSlotItemName() + "\033[0m");
 					}
