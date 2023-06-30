@@ -427,7 +427,7 @@ public class VM_Regular {
 		/* checks whether transaction is valid */
 		
 		System.out.println();
-
+		changeIsPossible = deductChange(changeDue, duplicate);		
 		if( !hasEnoughStock(order.getPendingOrder()) ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202mm-ERROR: INSUFFICIENT STOCK\033[0m");
@@ -436,11 +436,11 @@ public class VM_Regular {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: INSUFFICIENT PAYMENT\033[0m");
 		}
-		if ( !(cashReservesTotal >= orderTotal) ) {
+		if ( !(cashReservesTotal >= orderTotal) && !changeIsPossible) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: NOT ENOUGH MONEY RESERVES\033[0m");
 		}
-		changeIsPossible = deductChange(changeDue, duplicate);
+		
 		if( changeDue >= 0 && !changeIsPossible ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT\033[0m");
