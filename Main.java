@@ -112,6 +112,7 @@ public class Main{
 						/* Setting VM's No. of Slots and Max No. of Items per Slot */
 						try
 						{
+							System.out.println();
 							System.out.println("\033[1;33mPlease indicate the details below: \033[0m" );
 							System.out.print("Name of this regular vending machine: \n>> ");
 							vmName = sc.next();
@@ -254,6 +255,7 @@ public class Main{
 				{
 					while(true)
 					{
+
 						System.out.print(	"\t\033[1;36m[1]\033[0m Restock Items\n" +
 											"\t\033[1;36m[2]\033[0m Replace/Fill with Items\n" +
 											"\t\033[1;36m[3]\033[0m Replenish Money\n" +
@@ -266,15 +268,27 @@ public class Main{
 						input = sc.next();
 						if(input.equalsIgnoreCase("1"))
 						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.emptyOrderHistory();
 							vm.restockItems();
 						}
 						else if(input.equalsIgnoreCase("2"))
+						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.replaceItemStock();
+						}
+							
 						else if(input.equalsIgnoreCase("3"))
 							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("4"))
+						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.repriceItems();
+						}
+							
 						else if(input.equalsIgnoreCase("5"))
 							vm.collectCashReserves();
 						else if(input.equalsIgnoreCase("6"))

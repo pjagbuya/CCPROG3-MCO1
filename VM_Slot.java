@@ -216,9 +216,12 @@ public class VM_Slot {
 
         Scanner sc = new Scanner(System.in);
         
+        // Error that there was no stock added
         if(givenItem == null && qty <= 0)
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
-        else if(qty + slotItemStock > MAX) {
+        
+        // State and excess and return it
+        else if(qty + slotItemStock > MAX && givenItem.getItemName().equalsIgnoreCase(slotItemName)) {
             System.out.println("You have an excess of " + (qty+slotItemStock- MAX) + " " +givenItem.getItemName() + " while we were stocking. Returning...");
             System.out.println("\033[1;33m" + "Press and Enter Any Key To Continue..." + "\033[0m");
             sc.nextLine();
@@ -226,7 +229,7 @@ public class VM_Slot {
         }
 
         // If slot was initialized empty, proceed to put in stock
-		if(item == null)
+		if(item == null || slotItemStock == 0)
             replaceStock(givenItem, qty);
 		// Skips conditional construct if restocker is empty
 		else if(givenItem == null && qty <= 0 );
@@ -359,7 +362,7 @@ public class VM_Slot {
             replaceStock(givenItem, stock);
         }
 
-        sc.close();
+        
     }
 	
 
