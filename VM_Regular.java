@@ -145,19 +145,20 @@ public class VM_Regular {
 		String inputQty;
 		String inputSlotNum;
 		boolean stockIsReplaced = false; // initially false
+	
 		
 		while(true)
 		try
 		{
 			/* asking for item(s) to add */
-			System.out.println("Replace/Fill in with these: ");
+			System.out.println("Replace/Fill in with these(\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<name> <qty>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
 			inputQty = sc.next();
 			
 			/* asking for which slot to replace/fill in */
-			System.out.println("in Stock of Slot No: ");
+			System.out.println("in Stock of Slot No: \033[1;32m<num>\033[0m");
 			inputSlotNum = sc.next();
 			
 			
@@ -171,7 +172,7 @@ public class VM_Regular {
 				addItemStock(input, i-1, qty);
 			}
 			else
-				System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
+				System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY\033[0m");
 				
 		}
 		catch(NumberFormatException e)
@@ -314,7 +315,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.print("What would you like to order?\n>> ");
+			System.out.print("What would you like to order (\033[1;33mEnter 'Y' to confirm/finish\033[0m)? \033[1;32m<slot num> <qty>\033[0m\n>> ");
 			input = sc.next();
 			if( input.equalsIgnoreCase("Y") )
 				break;
@@ -345,7 +346,7 @@ public class VM_Regular {
 		while(true)
 		try
 		{
-			System.out.print("Insert payment\n>> ");
+			System.out.print("Insert payment (\033[1;33mEnter 'Y' to confirm/finish\033[0m): \032[1;33m<bill/coin num> <qty>\033[0m\n>> ");
 			input = sc.next();
 			if( input.equalsIgnoreCase("Y") )
 				break;
@@ -449,7 +450,7 @@ public class VM_Regular {
 		{
 			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
 			releaseStock(order.getPendingOrder());
-			for(order.getPendingOrder())
+	
 
 			/* computes for the change tray values based on the original cash reserves and the subtracted cash reserve duplicate */
 			for( String s : change.keySet() )
