@@ -50,7 +50,7 @@ public class VM_Regular {
 
 
 	/**
-	 * Adds more of a specified item to the specified slot
+	 * Adds more of a certain item to slot specified by index
 	 *
 	 * @param givenItem the item to be added to the specified slot
 	 * @param qty the number indicating how many pieces
@@ -63,7 +63,7 @@ public class VM_Regular {
 	}
 	
 	/**
-	 * Adds more of a specified item to the appropriate slot
+	 * Adds more of a certain item to slot with the same name
 	 *
 	 * @param itemName the name of the item to be added
 	 * @param qty the number indicating how many pieces of the specified item should be added
@@ -140,11 +140,13 @@ public class VM_Regular {
 	{
 		int i;
 		int qty;
+		int slotNum;
 		Scanner sc = new Scanner(System.in);
 		String input;
 		String inputQty;
 		String inputSlotNum;
 		boolean stockIsReplaced = false; // initially false
+		boolean sameNameExists = false; // initially false
 		
 		while(true)
 		try
@@ -160,15 +162,25 @@ public class VM_Regular {
 			System.out.println("in Stock of Slot No: ");
 			inputSlotNum = sc.next();
 			
-			
+			/* converting String input into numerical values */
 			qty = Integer.parseInt(inputQty);
-			i = Integer.parseInt(inputSlotNum);
+			slotNum = Integer.parseInt(inputSlotNum);
+			
+			for(i = 0; i < slots.length; i++)
+				if(	slots[i].getSlotItemName() != null &&
+					slots[i].getSlotItemName().equalsIgnoreCase(input))
+				{
+					System.out.println("-ERROR: SLOT WITH SAME NAME EXISTS");
+					sameNameExists = true;
+				}
 			
 			
-			if(Main.getPossibleItems().get(input.toUpperCase()) != null && qty > 0)
+			if(	Main.getPossibleItems().get(input.toUpperCase()) != null 	// If indicated item name corresponds to one of the item classes
+				&& qty > 0							
+				&& !sameNameExists)
 			{
 				stockIsReplaced = true;
-				addItemStock(input, i-1, qty);
+				addItemStock(input, slotNum-1, qty);
 			}
 			else
 				System.out.println("-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY");
@@ -179,9 +191,9 @@ public class VM_Regular {
 			System.out.println("\033[1;38;5;202m-ERROR: INPUT MUST BE <DOUBLE> <INTEGER>\033[0m");
 		}
 		
-		
 		if(stockIsReplaced)
 			updateStockedInfos();
+		
 		sc = null;
 	}
 	
@@ -220,14 +232,16 @@ public class VM_Regular {
 		
 		boolean stockHasRequiredQuantities = true; // initially true
 		for( String s : order.keySet() )
+		{
 			for(i = 0; i < slots.length; i++)
 				if( s.equals( slots[i].getSlotItemName() ) )
-					
-					// if the current slot does not hold the required quantity of its item
-					if( !( slots[i].hasEnoughStock( order.get(s) ) ) ) {
-					stockHasRequiredQuantities = false;
-					break;
+					/* if the current slot does not hold the required quantity of its item */
+					if( !( slots[i].hasEnoughStock( order.get(s) ) ) )
+					{
+						stockHasRequiredQuantities = false;
+						break;
 					}
+		}		
 		
 		return stockHasRequiredQuantities;
 	}
@@ -245,7 +259,8 @@ public class VM_Regular {
 		
 		for( String s : order.keySet() )
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) ) {
+				if( s.equals( slots[i].getSlotItemName() ) )
+				{
 					totalCost += slots[i].computePartialCost( order.get(s) );
 					break;
 				}
@@ -423,9 +438,12 @@ public class VM_Regular {
 		
 		
 		/* checks whether transaction is valid */
-		
 		System.out.println();
-
+		
+		/*checks whether a set of denominations can be released to meet a certain change amount */
+		changeIsPossible = deductChange(changeDue, duplicate);
+		
+		/* transaction validation */
 		if( !hasEnoughStock(order.getPendingOrder()) ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202mm-ERROR: INSUFFICIENT STOCK\033[0m");
@@ -434,15 +452,16 @@ public class VM_Regular {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: INSUFFICIENT PAYMENT\033[0m");
 		}
-		if ( !(cashReservesTotal >= orderTotal) ) {
+		if ( cashReservesTotal < orderTotal || !changeIsPossible ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: NOT ENOUGH MONEY RESERVES\033[0m");
 		}
-		changeIsPossible = deductChange(changeDue, duplicate);
+		
 		if( changeDue >= 0 && !changeIsPossible ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT\033[0m");
 		}
+		
 		
 		/* decides whether to proceed with transaction or not */
 		if( transactionIsValid && orderConfirmed )
@@ -590,7 +609,7 @@ public class VM_Regular {
 	 * @return the desired slot
 	 */
 	public VM_Slot getSlot(int ind) {
-		if(ind >= 0)
+		if(ind >= 0 && ind < slots.length)
 			return slots[ind];
 		return null;
 	}
@@ -708,7 +727,7 @@ public class VM_Regular {
 				break;
 			inputQty = sc.next();
 				
-				
+			/* conversion of String input into numerical data types */
 			qty = Integer.parseInt(inputQty);
 			denom = Double.parseDouble(input);
 						
@@ -738,6 +757,7 @@ public class VM_Regular {
 		String inputQty;
 		int slotNum;
 		boolean anItemIsRestocked = false; // initially false
+		boolean slotNumOutOfBounds = false; // intially false
 
 
 		while(true)
@@ -749,21 +769,27 @@ public class VM_Regular {
 				break;
 			inputQty = sc.next();
 				
-				
+			/* converts String input into numerical data types */
 			slotNum = Integer.parseInt(input);
 			qty = Integer.parseInt(inputQty);
 				
-			if( slots[slotNum-1].getSlotItemName() != null )
+			if(slotNum < 1 || slotNum > slots.length)
+			{
+				System.out.println("\033[1;38;5;202m-ERROR: SLOT NUM IS OUT OF BOUNDS\033[0m");
+				slotNumOutOfBounds = true;
+			}
+				
+			if( !slotNumOutOfBounds && slots[slotNum-1].getSlotItemName() != null )
 			{
 				if ( !anItemIsRestocked )
 				{
-					updateStockedInfos();
+					updateStockedInfos(); /* creates a new inventory record */
 					anItemIsRestocked = true;
 				}
 				slots[slotNum-1].addItemStock(qty);
 			}
 			else
-				System.out.println("\033[1;38;5;202m-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
+				System.out.println("\033[1;38;5;202m-ERROR: SLOT HAS NO ASSIGNED ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
 		}
 		catch (NumberFormatException e)
 		{
@@ -786,7 +812,6 @@ public class VM_Regular {
 		String inputAmt;
 		boolean itemIsRepriced = false; // initially false
 		int slotNum;
-		
 
 		while(true)
 		try
@@ -797,9 +822,10 @@ public class VM_Regular {
 				break;
 			inputAmt = sc.next();
 		
-			
+			/* conversion of String input into numerical data types */
 			slotNum = Integer.parseInt(input);
 			amt = Double.parseDouble(inputAmt);
+			
 			
 			if(slotNum >= 1 && slotNum <= slots.length)
 				if( slots[slotNum-1].getSlotItemName() != null ) {
