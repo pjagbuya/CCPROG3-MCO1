@@ -299,8 +299,8 @@ public class VM_Slot {
      *         if new item price is less than 0.5,
      *         then the item price is set to 0.5)
      */
-	public boolean repriceItem(double amt) {
-		return item.setPrice(amt);
+	public void repriceItem(double amt) {
+		item.setPrice(amt);
 	}
 	
 	 

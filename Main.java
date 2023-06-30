@@ -326,7 +326,7 @@ public class Main{
 			vm.displayAllItems();
 		}
 		
-		sc = null;
+		sc.close();
     }
 	
 	

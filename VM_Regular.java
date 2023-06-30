@@ -147,16 +147,15 @@ public class VM_Regular {
 		String inputSlotNum;
 		boolean stockIsReplaced = false; // initially false
 		boolean sameNameExists = false; // initially false
-		
 
-		input = "";
-		inputQty = "";
+
 		while(true)
 		try
 		{
 			/* asking for item(s) to add */
 
-			System.out.println("Replace/Fill in with these(\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<name> <qty>\033[0m");
+			System.out.println("Replace/Fill in with these" + userHelp + ": \033[1;32m<name> <qty>\033[0m");
+			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
 			inputQty = sc.next();
@@ -457,7 +456,7 @@ public class VM_Regular {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: INSUFFICIENT PAYMENT\033[0m");
 		}
-		if ( cashReservesTotal < orderTotal || !changeIsPossible ) {
+		if ( cashReservesTotal < orderTotal && !changeIsPossible ) {
 			transactionIsValid = false;
 			System.out.println("\033[1;38;5;202m-ERROR: NOT ENOUGH MONEY RESERVES\033[0m");
 		}
@@ -747,14 +746,24 @@ public class VM_Regular {
 		Scanner sc = new Scanner(System.in);
 		String input = null;
 		String inputQty = null;
+		double origMoney;
+
 		double denom;
 		int qty;
 		
+		origMoney = currentMoney.getTotalMoney();
+		System.out.println("Current Denominations");
+		for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
+		{
+			String denomination = tempEntry2.getKey();
+			int count = tempEntry2.getValue();
+			System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
+		}
 		/* inserting  bills/coins */
 		while(true)
 		try
 		{
-			System.out.print("Replenish Denominations: ");
+			System.out.print("Replenish Denominations: \033[1;32m<bill/coin value> <quantity>\033[0m");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
@@ -773,6 +782,20 @@ public class VM_Regular {
 		{
 			e.printStackTrace();
 		}
+
+
+		//Show denominations only if there are changes
+		if(currentMoney.getTotalMoney() != origMoney)
+		{
+			System.out.println("Resulting Denominations");
+			for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
+			{
+				String denomination = tempEntry2.getKey();
+				int count = tempEntry2.getValue();
+				System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
+			}
+		}
+
 		
 		sc = null;
 	}
@@ -843,7 +866,7 @@ public class VM_Regular {
 		Scanner sc = new Scanner(System.in);
 		String input;
 		String inputAmt;
-		boolean itemIsRepriced = false; // initially false
+
 		int slotNum;
 		System.out.println("Our minimum price for an item is \033[1;33m50 cents (0.5)\033[0m");
 		while(true)
@@ -862,10 +885,7 @@ public class VM_Regular {
 			
 			if(slotNum >= 1 && slotNum <= slots.length)
 				if( slots[slotNum-1].getSlotItemName() != null ) {
-					if( !itemIsRepriced ) {
 
-					itemIsRepriced = true;	
-					}
 					slots[slotNum-1].repriceItem(amt);
 				}
 				else
@@ -916,64 +936,67 @@ public class VM_Regular {
 	 */
 	public void displayAllStockInfo()
 	{
-		int i;	// index for slot start
+
 		double profit;
 		String profitLabel;
+		String denomination;
+		int count;
 
 		VM_StockedInfo tempStockInfo;
+		VM_Slot tempSlot;
 		LinkedHashMap<VM_Slot, Integer> slotAndStock;
 
 		profit = 0;
 		profitLabel = "";
+
+		// Only triggers if the data is not empty
 		if(recordCurrInd > 0 && !(stockedInfos.get(recordCurrInd-1).isEmptyData()))
 		{
 			tempStockInfo = stockedInfos.get(recordCurrInd-1);
 			slotAndStock = tempStockInfo.getItemSlotsAndStock();
-			i = 0;
+			
 			
 			System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", " Item Name ", "Item Prev Stock ", "Items Sold", " Items in Stock", "Profit Collected");
 			System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 			for(Map.Entry<VM_Slot, Integer> tempEntry : slotAndStock.entrySet())
 			{
-				if( getSlot(i) != null &&																	// Checks if there is no slot
-					getSlot(i).getItem() != null &&  														// Checks if the slot is empty
+				tempSlot = findSlot(tempEntry.getKey().getSlotItemName());
+				if( tempSlot != null &&																	// Checks if there is no slot
+					tempSlot.getItem() != null &&  														// Checks if the slot is empty
 					tempEntry.getKey().getSlotItemName()	!= null &&	
-				   	tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))		//Compares if the original item is equal to the new item
+				   	tempEntry.getKey().getSlotItemName().equalsIgnoreCase(tempSlot.getSlotItemName()))		//Compares if the original item is equal to the new item
 				{
-
-					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",					// Item name, stock previous
-																						 getSlot(i).getSlotItemSold() + "", getSlot(i).getSlotItemStock(),					// Sold, stock of current
-																						"+" + "Php " + getSlot(i).getStoredProfit());										// profit
+					// Represents them in the order, name, prev stock, Sold, Current Stock, Profit
+					System.out.printf("\t| %20s | %20s | %11s | %20s | %20s |\n", tempEntry.getKey().getSlotItemName(), tempEntry.getValue()+ "",				// Item name, stock previous
+																						 tempSlot.getSlotItemSold() + "", tempSlot.getSlotItemStock() + "",				// Sold, stock of current
+																						"+" + "Php " + FORMAT.format(tempSlot.getStoredProfit()));						// profit
 					System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 					
-					profit += getSlot(i).getStoredProfit();
+					profit += tempSlot.getStoredProfit();
 				}
 
 
-				else if(getSlot(i) != null &&																	// Checks if there is no slot
-						getSlot(i).getItem() != null && 														// Checks if the slot is empty
-						tempEntry.getKey().getSlotItemName()	!= null &&										// Checks if no name was initialized
-						!tempEntry.getKey().getSlotItemName().equalsIgnoreCase(getSlot(i).getSlotItemName()))	//Compares if the original item is equal to the new item
+	
 
-				profitLabel = profit + "";
-				if(profitLabel.substring(profitLabel.indexOf(".")).length() < 3)
-					profitLabel = profitLabel + "0";
-				
-				
-				System.out.printf("                                                                                           |Profit: \033[1;32mPHP %10s\033[0m|\n", profitLabel);
-				
-				i++;
 
 				
 			}
+
+			profitLabel = profit + "";
+			if(profit != 0 && profitLabel.indexOf(".") != -1 && 			// Makes sure that the label has a decimal i.e. greater than 0
+			profitLabel.substring(profitLabel.indexOf(".")).length() < 3)	// Checks if the appended string is greater
+				profitLabel = profitLabel + "0";
+			
+			
+			System.out.printf("                                                                                           |Profit: \033[1;32mPHP %10s\033[0m|\n", profitLabel);
 			System.out.printf("Prev Money from prev stock: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
 
 
 			// For each entry in the Stock info, get every denomination and count
 			for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
 			{
-				String denomination = tempEntry2.getKey();
-				int count = tempEntry2.getValue();
+				denomination = tempEntry2.getKey();
+				count = tempEntry2.getValue();
 				System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
 			}
 			System.out.println("_____________________________________________________________________________________________________");
@@ -984,10 +1007,11 @@ public class VM_Regular {
 
 				System.out.printf("Current money in stock: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
 
-				for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
+				// get the string denomination and how many they are
+				for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
 				{
-					String denomination = tempEntry2.getKey();
-					int count = tempEntry2.getValue();
+					denomination = tempEntry2.getKey();
+					count = tempEntry2.getValue();
 					System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
 				}
 
@@ -1155,6 +1179,22 @@ public class VM_Regular {
 		sc = null;
 	}
 	
+	/**
+	 * This method returns a VM_Slot based on the parameters given
+	 * 
+	 * @param slotName name of the slot
+	 * @return the VM_Slot object that the name pertains to
+	 */
+	private VM_Slot findSlot(String slotName)
+	{
+		int i;
+		for(i = 0; i < slots.length; i++)
+		{
+			if(slots[i].getSlotItemName().equalsIgnoreCase(slotName))
+				return slots[i];
+		}
+		return null;
+	}
 	
 	/** the array of VM slots */
 	private VM_Slot[] slots;
