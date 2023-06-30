@@ -940,34 +940,34 @@ public class VM_Regular {
 				
 				i++;
 
-				System.out.printf("Prev Money from prev stock: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
+				
+			}
+			System.out.printf("Prev Money from prev stock: \033[1;32mPHP %.2f\033[0m\n", tempStockInfo.getMoney().getTotalMoney());
 
 
-				// For each entry in the Stock info, get every denomination and count
-				for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
+			// For each entry in the Stock info, get every denomination and count
+			for(Map.Entry<String,Integer> tempEntry2 : tempStockInfo.getMoney().getDenominations().entrySet())
+			{
+				String denomination = tempEntry2.getKey();
+				int count = tempEntry2.getValue();
+				System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
+			}
+			System.out.println("_____________________________________________________________________________________________________");
+
+			// Display differences only if they are not equal
+			if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())
+			{
+
+				// For each entry in the stock info, get current money and add
+				System.out.printf("Current Money: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
+				for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
 				{
 					String denomination = tempEntry2.getKey();
 					int count = tempEntry2.getValue();
-					System.out.println(denomination + ": " + count);
+					System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
 				}
-				System.out.println("_____________________________________________________________________________________________________");
-
-				// Display differences only if they are not equal
-				if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())
-				{
-
-					// For each entry in the stock info, get current money and add
-					System.out.printf("Current Money: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
-					for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
-					{
-						String denomination = tempEntry2.getKey();
-						int count = tempEntry2.getValue();
-						System.out.println(denomination + ": " + count);
-					}
-					i++;
-					
-				}
-
+				i++;
+				
 			}
 
 
@@ -975,7 +975,7 @@ public class VM_Regular {
 		}
 		else
 		{
-			System.out.println("\033[1;38;5;202mThere are no stocked Info updated!\033[0m");
+			System.out.println("\033[1;38;5;202mThere are no stocked Info updated/ item stocks are empty!\033[0m");
 
 			
 		}
