@@ -134,7 +134,7 @@ public class VM_Slot {
     public void releaseStock(int qty)
     {
 
-		
+		// Only release sto
         if(qty > 0 && hasEnoughStock(qty) && item != null)
         {
             slotItemStock -= qty;

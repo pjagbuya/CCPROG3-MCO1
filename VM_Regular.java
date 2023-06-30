@@ -543,18 +543,27 @@ public class VM_Regular {
 	
 	
 	/**
-	 * Displays item descriptions on terminal
+	 * Displays item descriptions on terminal, else displays that there is no items stocked
 	 *
 	 *
 	 */
 	public void displayAllItems() {
 		int i;
+		boolean isThereItem;
 		System.out.println();
 		System.out.println("Item Info: ");
 		System.out.println();
+
+		isThereItem = false;
 		for(i = 0; i < slots.length; i++)
 			if(slots[i] != null && slots[i].getItem() != null)
+			{
 				slots[i].displayAllItems();
+				isThereItem = true;
+			}
+		if(!isThereItem)
+			System.out.prinlnt("No item stock/label is available to display");
+				
 	}
 	
 	/**
