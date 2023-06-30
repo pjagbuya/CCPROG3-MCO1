@@ -12,7 +12,7 @@ public class VM_Slot {
 
 
     /**
-     * Initializes a slot's item and capacity
+     * This instructor Initializes a slot's item and capacity based on the given parameters.
      * Every slot can contain only one actual copy of the item it is set to hold
      * 
      * @param capacity the maximum no. of items that this slot can hold
@@ -34,7 +34,8 @@ public class VM_Slot {
 	
 	
 	/**
-     * Using a another VM_slot to build itself
+     * This copy constructor initializes itself with another VM_Slot and inherit
+     * its attributes and data.
      * 
      * @param copy another VM_Slot object
      * 
@@ -276,30 +277,7 @@ public class VM_Slot {
     }
 
    
-	/**
-     * Informs user of restocking conflict,
-	 * asks user to choose whether or not to replace currently stocked item(s)
-	 * with the new givenItem
-     * 
-     * @param givenItem the new item to be held by this slot
-     * @param stock the initial stock count of the new item
-     */
-    private void warnReplace(VM_Item givenItem, int stock)
-    {
 
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
-                            " with " + givenItem.getItemName() + ". (Y/N)");
-        if(sc.nextLine().equalsIgnoreCase("Y"))
-        {
-            System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
-            replaceStock(givenItem, stock);
-        }
-
-        sc.close();
-    }
-	
 	
 	/**
      * Sets the price of the item object held by this slot
@@ -360,6 +338,29 @@ public class VM_Slot {
     }
 	
 	
+    /**
+     * Informs user of restocking conflict,
+	 * asks user to choose whether or not to replace currently stocked item(s)
+	 * with the new givenItem
+     * 
+     * @param givenItem the new item to be held by this slot
+     * @param stock the initial stock count of the new item
+     */
+    private void warnReplace(VM_Item givenItem, int stock)
+    {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
+                            " with " + givenItem.getItemName() + ". (Y/N)");
+        if(sc.nextLine().equalsIgnoreCase("Y"))
+        {
+            System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());
+            replaceStock(givenItem, stock);
+        }
+
+        sc.close();
+    }
 	
 
 	

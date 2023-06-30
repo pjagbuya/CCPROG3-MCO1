@@ -20,12 +20,13 @@ public class Order
         pendingOrder = new LinkedHashMap<String, Integer>();
         totalCostOfOrder = 0;
 
+
     }
 
 
 	/**
-     * 1.) Adds a new item to the order and records the required quantity, or
-	 * 2.) Replaces the original desired quantity with a newer itemQty.
+     * This method Adds a new item to the order and records the required quantity, or
+	 * replaces the original desired quantity with a newer itemQty.
      * 
      * @param slot the slot whose item is being bought
      * @param itemQty the number of items to be bought
@@ -41,6 +42,7 @@ public class Order
         {
             pendingOrder.put(slot.getSlotItemName(), itemQty);
             totalCostOfOrder += slot.getItem().getItemPrice() * itemQty;
+
             return true;
         }
     }
@@ -67,7 +69,8 @@ public class Order
         return totalCostOfOrder;
 
     }
-	
+
+
 	
 	/**
      * Sets the recorded total cost of all items
@@ -96,4 +99,5 @@ public class Order
     private LinkedHashMap<String, Integer> pendingOrder;
 	/* total cost of all items in the order, based on their selling prices */
     private double totalCostOfOrder;
+ 
 }

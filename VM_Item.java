@@ -59,7 +59,23 @@ public class VM_Item {
         return itemCalories;
     }
 
-    
+    /**
+     * Sets the price of this item based on the given parameters
+     * 
+     * @param amt the new price to be assigned to this item
+     * @return true always, since the item price will
+	 *				always be set to a valid value,
+	 *				even when it differs from amt
+     */
+	public boolean setPrice(double amt) {
+		if(amt > 0.5)
+			itemPrice = amt;
+		else
+			itemPrice = 0.5; // minimum price of an item is 50 Cents
+		
+		return true;
+	}
+
 
     /**
      * Overrides the toString() method to return name, price,
@@ -107,22 +123,6 @@ public class VM_Item {
     }
 	
 	
-	/**
-     * Sets the price of this item
-     * 
-     * @param amt the new price to be assigned to this item
-     * @return true always, since the item price will
-	 *				always be set to a valid value,
-	 *				even when it differs from amt
-     */
-	public boolean setPrice(double amt) {
-		if(amt > 0.5)
-			itemPrice = amt;
-		else
-			itemPrice = 0.5; // minimum price of an item is 50 Cents
-		
-		return true;
-	}
 
     /** name of the item */
     private String itemName;
