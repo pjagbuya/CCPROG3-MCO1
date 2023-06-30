@@ -68,7 +68,7 @@ public class VM_Item {
 	 *				even when it differs from amt
      */
 	public boolean setPrice(double amt) {
-		if(amt > 0.5)
+		if(amt >= 0.5)
 			itemPrice = amt;
 		else
 			itemPrice = 0.5; // minimum price of an item is 50 Cents

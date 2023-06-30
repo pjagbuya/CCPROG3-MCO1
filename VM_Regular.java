@@ -845,7 +845,7 @@ public class VM_Regular {
 		String inputAmt;
 		boolean itemIsRepriced = false; // initially false
 		int slotNum;
-
+		System.out.println("Our minimum price for an item is \033[1;33m50 cents (0.5)\033[0m");
 		while(true)
 		try
 		{
