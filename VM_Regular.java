@@ -453,15 +453,16 @@ public class VM_Regular {
 		if( transactionIsValid && orderConfirmed )
 		{
 			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
-			for(String s : order.getPendingOrder().keySet()) {
+			
+			for(String itemName : order.getPendingOrder().keySet())
 				for(i = 0; i < slots.length; i++)
-					if( s.equals( slots[i].getSlotItemName() ) )
+					if( itemName.equals( slots[i].getSlotItemName() ) )
 					{
-						currAmt = order.getPendingOrder().get(s);
+						currAmt = order.getPendingOrder().get(itemName);
 						if(currAmt > slots[i].getMAX())
-							System.out.println("Dispensing: " +  slots[i].getMAX() + "\033[1;33m" + slots[i].getSlotItemName() "\033[0m");
+							System.out.println("Dispensing: " +  slots[i].getMAX() + " \033[1;33m" + slots[i].getSlotItemName() + "\033[0m");
 						else
-							System.out.println("Dispensing: " +  currAmt + "\033[1;33m" + slots[i].getSlotItemName() "\033[0m");
+							System.out.println("Dispensing: " +  currAmt + " \033[1;33m" + slots[i].getSlotItemName() + "\033[0m");
 					}
 						
 			releaseStock(order.getPendingOrder());
