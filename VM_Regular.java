@@ -145,12 +145,15 @@ public class VM_Regular {
 		String input;
 		String inputQty;
 		String inputSlotNum;
-		boolean stockIsReplaced = false; // initially false
+		boolean stockIsReplaced = false; // initially false /* true means at least one replacement happened *?
 		boolean sameNameExists = false; // initially false
+		boolean canReplace = true; // initially true
 		
 		while(true)
 		try
 		{
+			canReplace = true;
+			sameNameExists = false;
 			/* asking for item(s) to add */
 			System.out.println("Replace/Fill in with these:(\033[1;33mEnter 'Y' to confirm/finish\033[0m): \033[1;32m<name> <qty>\033[0m");
 			input = sc.next();
@@ -166,24 +169,38 @@ public class VM_Regular {
 			qty = Integer.parseInt(inputQty);
 			slotNum = Integer.parseInt(inputSlotNum);
 			
+			/* searches for slot with same name as replacement item */
 			for(i = 0; i < slots.length; i++)
 				if(	slots[i].getSlotItemName() != null &&
 					slots[i].getSlotItemName().equalsIgnoreCase(input))
 				{
-					System.out.println("-ERROR: SLOT WITH SAME NAME EXISTS");
+					
 					sameNameExists = true;
 				}
 			
+			/* replacement validity checks */
+			if( Main.getPossibleItems().get(input.toUpperCase()) == null )
+			{
+				canReplace = false;
+				System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS\033[0m");
+			}
+			if( qty <= 0 )
+			{
+				canReplace = false;
+				System.out.println("\033[1;38;5;202m-ERROR: NON-POSITIVE QUANTITY\033[0m");
+			}
+			if( sameNameExists )
+			{
+				canReplace = false;
+				System.out.println("-ERROR: SLOT WITH SAME NAME EXISTS");
+			}
 			
-			if(	Main.getPossibleItems().get(input.toUpperCase()) != null 	// If indicated item name corresponds to one of the item classes
-				&& qty > 0							
-				&& !sameNameExists)
+			/* actual replacement */
+			if( canReplace )
 			{
 				stockIsReplaced = true;
 				addItemStock(input, slotNum-1, qty);
 			}
-			else
-				System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY\033[0m");
 				
 		}
 		catch(NumberFormatException e)
@@ -229,20 +246,28 @@ public class VM_Regular {
 	 */
 	public boolean hasEnoughStock(LinkedHashMap<String, Integer> order) {
 		int i;
-		
+		boolean allNullStock = true; //initially true
 		boolean stockHasRequiredQuantities = true; // initially true
+		
 		for( String s : order.keySet() )
 		{
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) )
+				if( slots[i] != null && s.equals( slots[i].getSlotItemName() ) )
 					/* if the current slot does not hold the required quantity of its item */
 					if( !( slots[i].hasEnoughStock( order.get(s) ) ) )
 					{
 						stockHasRequiredQuantities = false;
 						break;
 					}
-		}		
+		}
 		
+		for(i = 0; i < slots.length; i++)
+			if(slots[i] != null && slots[i].getSlotItemName() != null)
+				allNullStock = false;
+		
+		if(allNullStock)
+			stockHasRequiredQuantities = false;
+	
 		return stockHasRequiredQuantities;
 	}
 	
@@ -1121,6 +1146,7 @@ public class VM_Regular {
 				break;
 		}
 		
+		sc = null;	
 	}
 	
 	
