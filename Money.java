@@ -75,14 +75,13 @@ public class Money {
 	public void addBillsOrCoins(double givenValue, int qty)
 	{
 		for(double tempVal : valToStr.keySet())
-		{
-			if(givenValue == tempVal)
+			if(	givenValue == tempVal &&
+				qty > 0 )
 			{
 				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
 				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
 				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) + qty);
 			}	
-		}
 	}
 	
 	/**
@@ -100,17 +99,15 @@ public class Money {
 	public boolean subtractBillsOrCoins(double givenValue, int qty)
 	{
 		for(double tempVal : valToStr.keySet())
-		{
-			if(givenValue == tempVal)
+			if(	givenValue == tempVal &&
+				qty > 0 &&
+				(denominations.get(valToStr.get(tempVal)) - qty) >= 0)
 			{
 				// valToStr.get(tempVal) - converts value to string word equivalent, thus used as key for denominations
 				//denominations.get(valToStr.get(tempVal)) - gets the amount currently in denominations
 				denominations.put(valToStr.get(tempVal), denominations.get(valToStr.get(tempVal)) - qty);
 				return true;
 			}
-			
-			
-		}
 		return false;
 
 	}
@@ -145,8 +142,7 @@ public class Money {
 	 * @param money another instance of class Money
 	 **/
 	public void acceptDenominations(Money money) {
-		for(String s : money.getDenominations().keySet())
-			this.denominations.put(s , this.denominations.get(s) + money.getDenominations().get(s));
+		acceptDenominations(money.getDenominations());
 	}
 	
 	/**
