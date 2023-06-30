@@ -11,14 +11,14 @@ import java.util.ArrayList;
 public class VM_Draw {
 
     /**
-     * This constructor builds and draws an ASCII art of a vending machine
-     * based on the given type of Vending Machine in the parameters
+     * This constructor builds the data ASCII art of a vending machine
+     * based on the given type of Vending Machine in the parameters. It 
+     * also stores the name
      * @param vmMachine a built vending machine
      */
     public VM_Draw(VM_Regular vmMachine){
 
         int i;
-        int alternatingNum;
         String temp;
 
         double price;
@@ -28,7 +28,7 @@ public class VM_Draw {
         VM_Slot[] slots = vmMachine.getSlots(); // gets all the slots along with the status
         stringLabels = new ArrayList<String>(); 
         priceLabels = new ArrayList<String>();
-
+        vmName = vmMachine.getName();
 
 
         // The margin for adjustment in the drawing once exceeding the minimum height and width
@@ -61,7 +61,7 @@ public class VM_Draw {
             else
             {   
 
-                // Sets a default brand XXX for slots that are empty
+                // Sets a default brand "XXX" for slots that are empty
                 stringLabels.add(i, "\033[1;31m" + "XXX" + "\033[0m");
 
                 temp = DEFAULT_PRICE;
@@ -104,9 +104,8 @@ public class VM_Draw {
     {
         VM_Slot[] slots = vmMachine.getSlots();
         String subName;
-        String temp;
         int i;
-        int alternatingNum;
+
 
         // Checks downwards of all items
         for (i = 0; i < slots.length; i++)
@@ -174,7 +173,6 @@ public class VM_Draw {
         int priceInd;
         int spaceCnt;
         int slotInd;
-        int slotAllowance;
         int i;
         int j;
 
@@ -193,8 +191,9 @@ public class VM_Draw {
         System.out.println("In stock means \033[1;32mGREEN\033[0m");
 
 
-        
-        slotAllowance = 0;
+        System.out.println();
+        System.out.println("Vending Machine: \033[1;33m" + vmName + "\033[0m");
+
         // Below would consist a five layer patterned ASCII art
         // Draws based on the amount of labels, 3 labels gives one row, 6 labels gives an additional row, and so on
         for ( i = 0; i < (int)(Math.ceil(stringLabels.size()/3.0))*BOX_HEIGHT; i++) 
@@ -469,6 +468,8 @@ public class VM_Draw {
         }
     }
 
+    /**This text will be shown as the name of the vending machien */
+    private String vmName;
     /**Labels of identified items in the vending machine */
     private ArrayList<String> stringLabels;
     /**Price labels of identified items in the vending machine*/

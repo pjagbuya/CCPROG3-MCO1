@@ -45,18 +45,24 @@ public class VM_Slot {
         slotItemSold = copy.getSlotItemSold();
         storedProfit = copy.getStoredProfit();
 		
+        // Sets the item as a new item copy to be assigned as the attribute of this slot
 		if(copy.getItem() != null)
 			item = new VM_Item(copy.getSlotItemName(), copy.getItem().getItemPrice(), copy.getItem().getItemCalories());
+        // When the given copy is nothing set it as just null named item
 		else
 			item = new VM_Item(copy.getSlotItemName(), 0, 0);
 
+        // when this slot has no item in, set the new item as this slot's name
         if(item != null)
             slotItemName = item.getItemName();
+        // Not available name will be the slot name
         else
             slotItemName = "N/A";
-	
+        
+
         slotItemStock = copy.getSlotItemStock();
 
+        // At minimum, it should have at least 10 capacity of items
         if(copy.getMAX() >= 10)
             MAX = copy.getMAX();
         else
@@ -72,13 +78,14 @@ public class VM_Slot {
      * @param givenItem the new item replacing the slot's original item
      * @param qty the initial stock count of the new item
      */
-    public void replaceStock(VM_Item givenItem, int qty)
+    public void replaceStock(VM_Item givenItem, 
+                             int qty)
     {	
         if(givenItem != null) 
         {
 			item = givenItem;
-            if(slotItemStock+qty <= MAX)
-			    slotItemStock += qty;
+            if(qty <= MAX)
+			    slotItemStock = qty;
             else
                 slotItemStock = MAX;
 			slotItemName = new String(givenItem.getItemName());
@@ -128,7 +135,7 @@ public class VM_Slot {
     public void releaseStock(int qty)
     {
 
-		
+		// Only release sto
         if(qty > 0 && hasEnoughStock(qty) && item != null)
         {
             slotItemStock -= qty;
@@ -216,9 +223,12 @@ public class VM_Slot {
 
         Scanner sc = new Scanner(System.in);
         
+        // Error that there was no stock added
         if(givenItem == null && qty <= 0)
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
-        else if(qty + slotItemStock > MAX) {
+        
+        // State and excess and return it
+        else if(qty + slotItemStock > MAX && givenItem.getItemName().equalsIgnoreCase(slotItemName)) {
             System.out.println("You have an excess of " + (qty+slotItemStock- MAX) + " " +givenItem.getItemName() + " while we were stocking. Returning...");
             System.out.println("\033[1;33m" + "Press and Enter Any Key To Continue..." + "\033[0m");
             sc.nextLine();
@@ -226,24 +236,21 @@ public class VM_Slot {
         }
 
         // If slot was initialized empty, proceed to put in stock
-		if(item == null)
+		if(item == null || slotItemStock == 0)
             replaceStock(givenItem, qty);
 		// Skips conditional construct if restocker is empty
 		else if(givenItem == null && qty <= 0 );
-        // Check if the slot was empty
-        else if(slotItemStock <= 0)
-            replaceStock(givenItem, qty);
         // If the slot is not empty, then proceed to add the stock
         else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) <= MAX)
             slotItemStock += qty;
-        
-        else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) >= MAX)
+        // If qty is full, just set MAX as current stock
+        else if(givenItem.getItemName().equalsIgnoreCase(slotItemName) && (slotItemStock+qty) > MAX)
             slotItemStock = MAX;
         // if this slot already has an item, but has a different name
         else
             warnReplace(givenItem, qty);
         
-        
+        sc = null;
 
     }
 		
@@ -262,6 +269,7 @@ public class VM_Slot {
         if(qty <= 0 || item == null)
 		{
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
+            sc = null;
 			return false;
 		}
         else if(qty + slotItemStock > MAX)
@@ -273,7 +281,11 @@ public class VM_Slot {
         }
 		else
 			slotItemStock += qty;
+
+        sc = null;
 		return true;
+
+        
     }
 
    
@@ -287,8 +299,8 @@ public class VM_Slot {
      *         if new item price is less than 0.5,
      *         then the item price is set to 0.5)
      */
-	public boolean repriceItem(double amt) {
-		return item.setPrice(amt);
+	public void repriceItem(double amt) {
+		item.setPrice(amt);
 	}
 	
 	 
@@ -346,7 +358,8 @@ public class VM_Slot {
      * @param givenItem the new item to be held by this slot
      * @param stock the initial stock count of the new item
      */
-    private void warnReplace(VM_Item givenItem, int stock)
+    private void warnReplace(VM_Item givenItem, 
+                             int stock)
     {
 
         Scanner sc = new Scanner(System.in);
@@ -359,7 +372,7 @@ public class VM_Slot {
             replaceStock(givenItem, stock);
         }
 
-        sc.close();
+        sc = null;
     }
 	
 

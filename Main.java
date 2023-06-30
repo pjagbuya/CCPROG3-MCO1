@@ -112,6 +112,7 @@ public class Main{
 						/* Setting VM's No. of Slots and Max No. of Items per Slot */
 						try
 						{
+							System.out.println();
 							System.out.println("\033[1;33mPlease indicate the details below: \033[0m" );
 							System.out.print("Name of this regular vending machine: \n>> ");
 							vmName = sc.next();
@@ -140,9 +141,13 @@ public class Main{
 					{
 						try
 						{
+							//stops when there is too much inputs
+							if(vm.getSlots().length == initialStock.size())
+								break;
+
 							System.out.print("Specify initial stocks, \033[1;32m<name> <number>\033[0m "+ userHelp + "\n>> ");
 							input = sc.next();
-							if( input.equalsIgnoreCase("Y") )
+							if( input.equalsIgnoreCase("Y" )) 
 								break;
 							inputQty = sc.next();
 									
@@ -169,9 +174,10 @@ public class Main{
 					{
 						try
 						{
+							
 							System.out.print("Specify initial cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
 							input = sc.next();
-							if( input.equalsIgnoreCase("Y") )
+							if( input.equalsIgnoreCase("Y"))
 								break;
 							inputQty = sc.next();	
 								
@@ -236,7 +242,7 @@ public class Main{
 			if(vm != null)
 			while(true) 
 			{	
-				System.out.print("[V] Vending Features\n[M] Maintenance Features\n[C] Create a New Vending Machine\n>> ");
+				System.out.print("\t\033[1;36m[V]\033[0m Vending Features\n\t\033[1;36m[M]\033[0m Maintenance Features\n\t\033[1;36m[C]\033[0m Create a New Vending Machine\n>> ");
 				input = sc.next();
 				
 				/* Vending Features */
@@ -254,6 +260,7 @@ public class Main{
 				{
 					while(true)
 					{
+
 						System.out.print(	"\t\033[1;36m[1]\033[0m Restock Items\n" +
 											"\t\033[1;36m[2]\033[0m Replace/Fill with Items\n" +
 											"\t\033[1;36m[3]\033[0m Replenish Money\n" +
@@ -266,15 +273,27 @@ public class Main{
 						input = sc.next();
 						if(input.equalsIgnoreCase("1"))
 						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.emptyOrderHistory();
 							vm.restockItems();
 						}
 						else if(input.equalsIgnoreCase("2"))
+						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.replaceItemStock();
+						}
+							
 						else if(input.equalsIgnoreCase("3"))
 							vm.replenishDenominations();
 						else if(input.equalsIgnoreCase("4"))
+						{
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 							vm.repriceItems();
+						}
+							
 						else if(input.equalsIgnoreCase("5"))
 							vm.collectCashReserves();
 						else if(input.equalsIgnoreCase("6"))
@@ -372,8 +391,7 @@ public class Main{
 	
 	
 	
-	/* the prompt for user to use "Y" when they want to proceed to next section */
-	private String userHelp;
+
 	/* a list of all possible items in the program */
 	private static LinkedHashMap<String, Integer> possibleItems = new LinkedHashMap<String, Integer>();
 }

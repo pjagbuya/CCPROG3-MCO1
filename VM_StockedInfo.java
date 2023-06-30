@@ -32,7 +32,7 @@ public class VM_StockedInfo {
         itemSlotsAndStock = new LinkedHashMap<VM_Slot, Integer>(); 
 
 
-        
+        // Makes the default a negative int
         stock = -1;
         // Iterates through all slots of the vmMachine
         for(i = 0; i < vmMachine.getSlots().length; i++)
