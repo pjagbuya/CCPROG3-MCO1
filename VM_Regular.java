@@ -449,6 +449,8 @@ public class VM_Regular {
 		{
 			System.out.println("\n\033[1;32mTRANSACTION PROCEEDS--------------------------\033[0m");
 			releaseStock(order.getPendingOrder());
+			for(order.getPendingOrder())
+
 			/* computes for the change tray values based on the original cash reserves and the subtracted cash reserve duplicate */
 			for( String s : change.keySet() )
 				change.put( s, getDenominations().get(s) - duplicate.get(s) );

@@ -236,7 +236,7 @@ public class Main{
 			if(vm != null)
 			while(true) 
 			{	
-				System.out.print("[V] Vending Features\n[M] Maintenance Features\n[C] Create a New Vending Machine\n>> ");
+				System.out.print("\t\033[1;36m[V]\033[0m Vending Features\n\t\033[1;36m[M]\033[0m Maintenance Features\n\t\033[1;36m[C]\033[0m Create a New Vending Machine\n>> ");
 				input = sc.next();
 				
 				/* Vending Features */
