@@ -214,7 +214,7 @@ public class Maintenance
     /**
 	 * Provides console based prompting replacing the items in a slot, or for filling up a slot with a null name
 	 *
-     * @param is the target VM_Regular for replacing item in stock
+     * @param vm the target VM_Regular for replacing item in stock
 	 */
 	public void replaceItemStock(VM_Regular vm)
 	{
@@ -308,7 +308,7 @@ public class Maintenance
 	/**
 	 * This method provides a simple collection of cash reserves from VM
      * via console prompts
-	 *
+	 * @param vm the target vending machine to collect reserves from
 	 */
 	public void collectCashReserves(VM_Regular vm)
 	{
