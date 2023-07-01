@@ -174,7 +174,7 @@ public class Maintenance
 		while(true)
 		try
 		{
-			System.out.print("Replenish Denominations: \033[1;32m<bill/coin value> <quantity>\033[0m");
+			System.out.print("Replenish Denominations: \033[1;32m<bill/coin value> <quantity>\033[0m\n >>");
 			input = sc.next();
 			if(input.equalsIgnoreCase("Y"))
 				break;
@@ -250,7 +250,8 @@ public class Maintenance
 			
 			for(i = 0; i < slots.length; i++)
 				if(	slots[i].getSlotItemName() != null &&
-					slots[i].getSlotItemName().equalsIgnoreCase(input))
+					slots[i].getSlotItemName().equalsIgnoreCase(input) &&
+					slots[i].getSlotItemStock() != 0)
 				{
 					System.out.println("-ERROR: SLOT WITH SAME NAME EXISTS");
 					sameNameExists = true;
