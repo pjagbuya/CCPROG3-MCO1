@@ -19,7 +19,7 @@ public class Order
     {
         pendingOrder = new LinkedHashMap<String, Integer>();
         totalCostOfOrder = 0;
-
+        totalCalories = 0;
 
     }
 
@@ -43,6 +43,7 @@ public class Order
         {
             pendingOrder.put(slot.getSlotItemName(), itemQty);
             totalCostOfOrder += slot.getItem().getItemPrice() * itemQty;
+            totalCalories += slot.getItem().getItemCalories() * itemQty;
 
             return true;
         }
@@ -71,34 +72,34 @@ public class Order
 
     }
 
-
-	
-	/**
-     * Sets the recorded total cost of all items
-     * based on prices at the time of computation
-     * 
-     * @param totalCost the total cost the ordered items
+    /**
+     * This method gets the total calories that this order contains
      */
-	public void setTotalCost(double totalCost)
-    {  
-		totalCostOfOrder = totalCost;
+    public int getTotalCalories() {
+        return totalCalories;
     }
 	
-	
 	/**
-     * Creates a new order list and resets totalCostOfOrder back to zero
+     * Clears the current order list and resets totalCostOfOrder back to zero and Calories back to 0
      * 
      */
     public void clearOrder()
     {
         pendingOrder.clear();
         totalCostOfOrder = 0;
+        totalCalories = 0;
     }
+
+  
+
+   
 
 
 	/* the list of item types in the order, and the desired quantity of each */
     private LinkedHashMap<String, Integer> pendingOrder;
 	/* total cost of all items in the order, based on their selling prices */
     private double totalCostOfOrder;
+    /* total calories of order, based on the initialized kCal */
+    private int totalCalories;
  
 }

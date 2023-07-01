@@ -179,7 +179,7 @@ public class Maintenance
 			denom = Double.parseDouble(input);
 						
 			if( Money.getValToStr().get(denom) != null )
-				vm.addBillsOrCoins(denom, qty);
+				vm.getCurrentMoney().addBillsOrCoins(denom, qty);
 			else
 				System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
 		}

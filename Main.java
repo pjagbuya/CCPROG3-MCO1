@@ -47,8 +47,10 @@ public class Main{
 		
 		Main mainHelp = new Main();
 		Maintenance maintenance = new Maintenance(possibleItems);
+		SellingOperator sellingOperator;
 
-		mainHelp.displayWelcome();
+
+		
 		Scanner sc = new Scanner(System.in);
 		String input;
 		String userHelp;
@@ -60,7 +62,7 @@ public class Main{
 		int qty;
 		double amt;
 		int i;
-		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
+		
 
 		
 		/* hashmaps, might remove or keep in MCO2 */
@@ -74,6 +76,8 @@ public class Main{
 		Order order = new Order();
 
 
+		userHelp = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
+		mainHelp.displayWelcome();
 		vmDraw = null;
 		while(true) 
 		{
@@ -206,7 +210,7 @@ public class Main{
 					/* Initializing Vending Machine Cash Reserves */
 					if(vm != null)
 					for( Double d : initialCash.keySet() )
-						vm.addBillsOrCoins(d, initialCash.get(d)); 
+						vm.getCurrentMoney().addBillsOrCoins(d, initialCash.get(d)); 
 					
 					
 					break;
@@ -245,8 +249,9 @@ public class Main{
 					{
 						vmDraw.updateVM(vm);
 						vmDraw.drawAndSetVM();
-					}	
-					vm.sellingOperation(duplicate, payment, change, order);
+					}
+					sellingOperator = new SellingOperator(vm);
+					sellingOperator.sellingOperation(duplicate, payment, change, order);
 				}
 				/* Maintenance Features */
 				else if(input.equalsIgnoreCase("M"))
