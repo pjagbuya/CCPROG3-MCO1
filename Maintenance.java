@@ -283,7 +283,7 @@ public class Maintenance
 	 * This method updates the stocked infos by instantiating a new Stocked info
      * It will also reset all slot stored Profit and Items sold
 	 *
-	 *
+	 * @param vm the target Vending machine to update stocked Infos from
 	 */
 	public void updateStockedInfos(VM_Regular vm) {
 		int i;

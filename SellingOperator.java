@@ -204,7 +204,7 @@ public class SellingOperator
 					including how many of each should be released
 	 * @return true if VM's stock contains all required items, false otherwise
 	 */
-	public boolean hasEnoughStock(Order order) {
+	private boolean hasEnoughStock(Order order) {
 		int i;
 		VM_Slot[] slots = vm.getSlots();
 		LinkedHashMap<String, Integer> orders;
@@ -367,7 +367,7 @@ public class SellingOperator
 	 * 
 	 * @param payment the payment where the user would store his/her denominations as payment
 	 */
-	public void promptPayment(LinkedHashMap<String, Integer> payment)
+	private void promptPayment(LinkedHashMap<String, Integer> payment)
 	{
 		String input;
 		String inputQty;
