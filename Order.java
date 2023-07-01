@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 public class Order
 {
 	/**
-     * Intializes pendingOrder and totalCostOfOrder
+     * Intializes pendingOrder, totalCostOfOrder, and Calories to be 0
      * 
      */
     public Order()
@@ -74,6 +74,8 @@ public class Order
 
     /**
      * This method gets the total calories that this order contains
+     * 
+     * @return the number of calories that are contained within this order
      */
     public int getTotalCalories() {
         return totalCalories;

@@ -13,9 +13,6 @@ import java.text.DecimalFormat;
 public class VM_Regular {
 
 		
-
-
-	
 	/**
 	 * Creates VM_Regular object and inititializes the array of slots,
 	 * the array list containing order history, and stock information
@@ -181,8 +178,6 @@ public class VM_Regular {
 					break;
 				}
 	}
-
-	
 
 	/**
 	 * Gets VM's slot array

@@ -3,10 +3,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.InputMismatchException;
 /**
- * The class Order represents a Maintenance feature that allows the user to restock,
+ * The class Maintenance represents a Maintenance feature that bridges the user to restock,
  * replensih, reprice, add/replace items, and update stock information of a Vending Machine
  *
- * If transaction was successful, then the order contains a list of bought items.
+ * 
  *
  * @author Paul Josef P. Agbuya
  * @author Vince Kenneth D. Rojo
@@ -14,9 +14,15 @@ import java.util.InputMismatchException;
  */
 public class Maintenance
 {
-    public Maintenance(LinkedHashMap<String, Integer> possibleItems)
+	/**
+	 * This constructor initializes a Maintenance object. This class
+	 * Merely bridges the user to be able to restock, add, reprice, replenish,
+	 * and replace items in thisa vending Machine
+	 * 
+	 */
+    public Maintenance()
     {
-        ITEM_OPTIONS = possibleItems;
+       
 
     }
 
@@ -365,8 +371,7 @@ public class Maintenance
 		
 		sc = null;
 	}
-    /**This contains informations on items that can be allowed to be added in the Vending Machine */
-    private final LinkedHashMap<String, Integer> ITEM_OPTIONS;
+
 	/** the prompt for user to use "Y" when they want to proceed to next section */
 	private static final String USER_HELP = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
 }

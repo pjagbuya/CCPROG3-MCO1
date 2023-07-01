@@ -4,15 +4,30 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/** This class represents a Selling Operator
+  * which bridges the user to interact with the Vending Machine Features
+  * through the use of text based prompt
+  *
+  * @author Paul Josef P. Agbuya
+  * @author Vince Kenneth D. Rojo
+  */
 public class SellingOperator
 {
+
+	/**
+	 * This constructor represent a Selling Operator that manages how
+	 * the flow of prompts and how the Vending machine would get affected
+	 * by such prompts
+	 * 
+	 * @param vm the target vending machine for results and effects of this class
+	 */
     public SellingOperator(VM_Regular vm)
     {
         this.vm = vm;
     }
 
-    	/**
-	 * Takes user's order and accepts their payment,
+    /**
+	 * This method takes user's order and accepts their payment,
 	 * validates inputs,
 	 * and decides whether to proceed with transaction or not.
 	 * 
@@ -24,12 +39,11 @@ public class SellingOperator
      * @param order			the order object, contains the user's order
 	 */
 	public void sellingOperation(
-		LinkedHashMap<String, Integer> duplicate,
-		LinkedHashMap<String, Integer> payment,
-		LinkedHashMap<String, Integer> change,
+		Money duplicate,
+		Money payment,
+		Money change,
 		Order order )
 	{
-
 
 		String input;
 
@@ -66,21 +80,21 @@ public class SellingOperator
 		promptOrder(order);
 
 		// Prompt user payment for this order
-		promptPayment(payment);
+		promptPayment(payment.getDenominations());
 		
 		
 		/* duplicating denomination hashmap of VM, while setting change denominations to zero */
 		for(String s : vm.getCurrentMoney().getDenominations().keySet()) {
-			duplicate.put(s, vm.getCurrentMoney().getDenominations().get(s));
-			change.put(s, 0);
+			duplicate.getDenominations().put(s, vm.getCurrentMoney().getDenominations().get(s));
+			change.getDenominations().put(s, 0);
 		}
 		
 		cashReservesTotal = vm.getCurrentMoney().getTotalMoney();
 		System.out.println("\nCash Reserves Total: " + FORMAT.format(cashReservesTotal) + " PHP");
 		
 		/* calculating payment total */
-		for(String s : payment.keySet())
-			paymentTotal += payment.get(s)*Money.getStrToVal().get(s);
+		for(String s : payment.getDenominations().keySet())
+			paymentTotal += payment.getDenominations().get(s)*Money.getStrToVal().get(s);
 		
 		/* calculating order total */
         orderTotal = order.getTotalCost();
@@ -95,6 +109,8 @@ public class SellingOperator
 		/* calculating change due */
 		changeDue = paymentTotal - orderTotal;
 		
+
+
 		/* display total of order, total of payment received, and change due */
 		System.out.println();
 		System.out.println("Order Total: " + orderTotal + " PHP");
@@ -120,7 +136,7 @@ public class SellingOperator
 
 		
 		/*checks whether a set of denominations can be released to meet a certain change amount */
-		changeIsPossible = deductChange(changeDue, duplicate);
+		changeIsPossible = deductChange(changeDue, duplicate.getDenominations());
 		
 		/* transaction validation */
         if( !hasEnoughStock(order) ) {
@@ -141,14 +157,16 @@ public class SellingOperator
 			System.out.println("\033[1;38;5;202m-ERROR: CANNOT RETURN CHANGE, INSERT EXACT AMOUNT\033[0m");
 		}
 		
+		if(orderTotal == 0)
+			transactionIsValid = true;
 		/* decides whether to proceed with transaction or not */
 		if( transactionIsValid && orderConfirmed )
 		{
-			displayTransactionProceed(duplicate, payment, change, order);
+			displayTransactionProceed(duplicate.getDenominations(), payment.getDenominations(), change.getDenominations(), order);
 		}
 		else
 		{
-            displayFailedOrDiscontinue(orderConfirmed, transactionIsValid, change, payment);
+            displayFailedOrDiscontinue(orderConfirmed, transactionIsValid, payment.getDenominations(), change.getDenominations());
 		}
 		
 		
@@ -162,13 +180,14 @@ public class SellingOperator
 		
 		
 		/* clearing payment tray */
-		for( String s : payment.keySet() )
-			payment.put(s, 0);
+		for( String s : payment.getDenominations().keySet() )
+			payment.getDenominations().put(s, 0);
 		
+
 		/* display change */
 		System.out.println();
 		System.out.println("CHANGE RETURNED:");
-		for(Map.Entry<String, Integer> m : change.entrySet() )
+		for(Map.Entry<String, Integer> m : change.getDenominations().entrySet() )
 		System.out.println(" " + m.getValue() + " " + m.getKey());
 		System.out.println("\n");
 		
@@ -290,7 +309,12 @@ public class SellingOperator
 		return true;
 	}
     
-	
+	/**
+	 * This helper method sets up the console based interaction with the user.
+	 * It would then setup his/her order depending on his/her comments
+	 * 
+	 * @param
+	 */
 	private void promptOrder(Order order)
 	{	
 		String input;
@@ -316,7 +340,8 @@ public class SellingOperator
 				
 			slotNum = Integer.parseInt(input);
 			qty = Integer.parseInt(inputQty);
-				
+			
+			// only when selected slot num is within range, this will trigger to add that order
 			if( slotNum >= 1 && slotNum <= slots.length )
 				if(order.addOrder(slots[slotNum-1], qty))
 					System.out.println("\033[1;32m-ADDED TO ORDER\033[0m");
@@ -337,6 +362,11 @@ public class SellingOperator
 	}
 
 
+	/**
+	 * This helper method would help prompt the payment the user wishes to give to the machine
+	 * 
+	 * @param payment the payment where the user would store his/her denominations as payment
+	 */
 	public void promptPayment(LinkedHashMap<String, Integer> payment)
 	{
 		String input;
@@ -442,8 +472,14 @@ public class SellingOperator
 
         /* computes for the change tray values based on the original cash reserves and the subtracted cash reserve duplicate */
         for( String s : change.keySet() )
-            change.put( s, vm.getCurrentMoney().getDenominations().get(s) - duplicate.get(s) );
+        {
+			if(order.getTotalCost() == 0 || vm.getCurrentMoney().getDenominations().get(s) - duplicate.get(s) < 0)
+				change.put( s, duplicate.get(s) );
+			else
+				change.put( s, vm.getCurrentMoney().getDenominations().get(s) - duplicate.get(s) );
+		}    
         
+		
         /* updates the cash reserves */
         vm.getCurrentMoney().setDenominations(duplicate);
         vm.getCurrentMoney().acceptDenominations(payment);

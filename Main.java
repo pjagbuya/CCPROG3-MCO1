@@ -5,7 +5,8 @@ import java.util.InputMismatchException;
 
 /** This class is a driver that simulates running the MCO1 project
  *  which involves creating a vending machine, ordering from said vending machine,
- *  restocking the vending machine, and purchasing items in the vending machine
+ *  restocking the vending machine, and purchasing items in the vending machine. There is
+ *  also a seperate maintenance feature as such to restock/reprice/replace
   *
   * @author Paul Josef P. Agbuya
   * @author Vince Kenneth D. Rojo
@@ -46,7 +47,7 @@ public class Main{
     public static void main(String[] args) {
 		
 		Main mainHelp = new Main();
-		Maintenance maintenance = new Maintenance(possibleItems);
+		Maintenance maintenance = new Maintenance();
 		SellingOperator sellingOperator;
 
 
@@ -66,9 +67,10 @@ public class Main{
 
 		
 		/* hashmaps, might remove or keep in MCO2 */
-		LinkedHashMap<String, Integer> duplicate = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> payment = new LinkedHashMap<String, Integer>();
-		LinkedHashMap<String, Integer> change = new LinkedHashMap<String, Integer>();
+		Money duplicate = new Money();
+		Money payment = new Money();
+		Money change = new Money();
+
 		LinkedHashMap<String, Integer> initialStock = null;
 		LinkedHashMap<Double, Integer> initialCash = null;
 		
@@ -275,12 +277,16 @@ public class Main{
 							vmDraw.drawAndSetVM();
 							vm.emptyOrderHistory();
 							maintenance.restockItems(vm);
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 						}
 						else if(input.equalsIgnoreCase("2"))
 						{
 							vmDraw.updateVM(vm);
 							vmDraw.drawAndSetVM();
 							maintenance.replaceItemStock(vm);
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 						}
 							
 						else if(input.equalsIgnoreCase("3"))
@@ -290,6 +296,8 @@ public class Main{
 							vmDraw.updateVM(vm);
 							vmDraw.drawAndSetVM();
 							maintenance.repriceItems(vm);
+							vmDraw.updateVM(vm);
+							vmDraw.drawAndSetVM();
 						}
 							
 						else if(input.equalsIgnoreCase("5"))
