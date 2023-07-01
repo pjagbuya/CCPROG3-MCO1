@@ -25,7 +25,9 @@ public class VM_Regular {
 	 * @param nOfSlots the number of slots in VM
 	 * @param item_max the maximum capacity of each slot in VM
 	 */
-	public VM_Regular(String name, int nOfSlots, int item_max) {
+	public VM_Regular(String name, 
+					  int nOfSlots, 
+					  int item_max) {
 		this.name = name;
 		if(nOfSlots >= 8)
 			slots = new VM_Slot[nOfSlots];
@@ -44,8 +46,7 @@ public class VM_Regular {
 		orderHistory = new ArrayList<Order>();
 		stockedInfos = new ArrayList<VM_StockedInfo>();
 		recordCurrInd = 0;
-		
-		userHelp = new String("(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)");
+
 	}
 
 
@@ -57,30 +58,14 @@ public class VM_Regular {
 				  of the specified item should be added to the specified slot
 	 * @param i the index of the specified slot in the slots array
 	 */
-	public void addItemStock(VM_Item givenItem, int qty, int i)
+	public void addItemStock(VM_Item givenItem, 
+							 int qty, 
+							 int i)
 	{
 		slots[i].addItemStock(givenItem, qty);
 	}
 	
-	/**
-	 * Adds more of a certain item to slot with the same name
-	 *
-	 * @param itemName the name of the item to be added
-	 * @param qty the number indicating how many pieces of the specified item should be added
-	 */
-	public void addItemStock(String itemName, int qty)
-	{
-		int i;
-		for(i = 0; i < slots.length; i++)
-			if(slots[i].getSlotItemName().equalsIgnoreCase(itemName)) {
-				if(slots[i].addItemStock(qty))
-					recordCurrInd++;
-				break;
-			}
-			
-		if(i >= slots.length)
-			System.out.println("Slot Name Not Found -------------");
-	}
+
 	
 	/**
 	 * Adds more of a specified item to the specified slot
@@ -89,7 +74,9 @@ public class VM_Regular {
 	 * @param i the index of the slot that will receive the additional items
 	 * @param qty the number indicating how many pieces of the specified item should be added
 	 */
-	public void addItemStock(String s, int i, int qty)
+	public void addItemStock(String s, 
+							 int i, 
+							 int qty)
 	{
 		if( s.equalsIgnoreCase("Cheese") )
 			addItemStock(new Cheese("Cheese", 20.00, 42), qty, i);
@@ -132,73 +119,7 @@ public class VM_Regular {
 	}
 	
 	
-	/**
-	 * Provides for replacing the items in a slot, or for filling up a slot with a null name
-	 *
-	 */
-	public void replaceItemStock()
-	{
-		int i;
-		int qty;
-		int slotNum;
-		Scanner sc = new Scanner(System.in);
-		String input;
-		String inputQty;
-		String inputSlotNum;
-		boolean stockIsReplaced = false; // initially false
-		boolean sameNameExists = false; // initially false
 
-
-		while(true)
-		try
-		{
-			/* asking for item(s) to add */
-
-			System.out.println("Replace/Fill in with these" + userHelp + ": \033[1;32m<name> <qty>\033[0m");
-			input = sc.next();
-			if(input.equalsIgnoreCase("Y"))
-				break;
-			inputQty = sc.next();
-			
-			/* asking for which slot to replace/fill in */
-			System.out.println("in Stock of Slot No: \033[1;32m<num>\033[0m");
-			inputSlotNum = sc.next();
-			
-			/* converting String input into numerical values */
-			qty = Integer.parseInt(inputQty);
-			slotNum = Integer.parseInt(inputSlotNum);
-			
-			for(i = 0; i < slots.length; i++)
-				if(	slots[i].getSlotItemName() != null &&
-					slots[i].getSlotItemName().equalsIgnoreCase(input))
-				{
-					System.out.println("-ERROR: SLOT WITH SAME NAME EXISTS");
-					sameNameExists = true;
-				}
-			
-			
-			if(	Main.getPossibleItems().get(input.toUpperCase()) != null 	// If indicated item name corresponds to one of the item classes
-				&& qty > 0							
-				&& !sameNameExists)
-			{
-				stockIsReplaced = true;
-				addItemStock(input, slotNum-1, qty);
-			}
-			else
-				System.out.println("\033[1;38;5;202m-ERROR: NON-EXISTENT CLASS/NON-POSITIVE QUANTITY\033[0m");
-				
-		}
-		catch(NumberFormatException e)
-		{
-			System.out.println("\033[1;38;5;202m-ERROR: INPUT MUST BE <DOUBLE> <INTEGER>\033[0m");
-		}
-		
-		if(stockIsReplaced)
-			updateStockedInfos();
-		
-		sc = null;
-	}
-	
 
 	/**
 	 * Looks for a slot associated with the specified item name,
@@ -215,7 +136,7 @@ public class VM_Regular {
 		int i;
 		for( String s : order.keySet() )
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) ) {
+				if( s.equalsIgnoreCase( slots[i].getSlotItemName() ) ) {
 					slots[i].releaseStock( order.get(s) );
 					break;
 				}
@@ -236,7 +157,7 @@ public class VM_Regular {
 		for( String s : order.keySet() )
 		{
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) )
+				if( s.equalsIgnoreCase( slots[i].getSlotItemName() ) )
 					/* if the current slot does not hold the required quantity of its item */
 					if( !( slots[i].hasEnoughStock( order.get(s) ) ) )
 					{
@@ -261,7 +182,7 @@ public class VM_Regular {
 		
 		for( String s : order.keySet() )
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) )
+				if( s.equalsIgnoreCase( slots[i].getSlotItemName() ) )
 				{
 					totalCost += slots[i].computePartialCost( order.get(s) );
 					break;
@@ -278,9 +199,9 @@ public class VM_Regular {
 	 * Uses text-based interface.
 	 *
 	 * @param duplicate		a duplicate set of the VM's current denominations	 
-	 * @param payment		the types of denominations inserted into the VM, and their corresponding quantities(>= 0)
+	 * @param payment		the types of denominations inserted into the VM, and their corresponding quantities greater than or equal to 0
 	 * @param order			the order object, contains the user's order
-	 * @param change		the types of denominations returned by the VM as change, and their corresponding quantities (>= 0)
+	 * @param change		the types of denominations returned by the VM as change, and their corresponding quantities greater than or equal to 0
 	 */
 	public void sellingOperation(
 		LinkedHashMap<String, Integer> duplicate,
@@ -384,8 +305,8 @@ public class VM_Regular {
 		
 		
 		/* duplicating denomination hashmap of VM, while setting change denominations to zero */
-		for(String s : getDenominations().keySet()) {
-			duplicate.put(s, getDenominations().get(s));
+		for(String s : currentMoney.getDenominations().keySet()) {
+			duplicate.put(s, currentMoney.getDenominations().get(s));
 			change.put(s, 0);
 		}
 		
@@ -399,7 +320,7 @@ public class VM_Regular {
 		/* calculating order total */
 		for(String s : order.getPendingOrder().keySet()) {
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) )
+				if( s.equalsIgnoreCase( slots[i].getSlotItemName() ) )
 					break;
 			orderTotal += order.getPendingOrder().get(s)*slots[i].getItem().getItemPrice();
 		}
@@ -408,7 +329,7 @@ public class VM_Regular {
 		/* calculating calorie total */
 		for(String s : order.getPendingOrder().keySet())
 			for(i = 0; i < slots.length; i++)
-				if( s.equals( slots[i].getSlotItemName() ) ) {
+				if( s.equalsIgnoreCase( slots[i].getSlotItemName() ) ) {
 					calorieTotal = order.getPendingOrder().get(s)*slots[i].getItem().getItemCalories();
 					break;
 				}
@@ -474,7 +395,7 @@ public class VM_Regular {
 
 			for(String itemName : order.getPendingOrder().keySet())
 				for(i = 0; i < slots.length; i++)
-					if( itemName.equals( slots[i].getSlotItemName() ) )
+					if( itemName.equalsIgnoreCase( slots[i].getSlotItemName() ) )
 					{
 						currAmt = order.getPendingOrder().get(itemName);
 
@@ -491,7 +412,7 @@ public class VM_Regular {
 
 			/* computes for the change tray values based on the original cash reserves and the subtracted cash reserve duplicate */
 			for( String s : change.keySet() )
-				change.put( s, getDenominations().get(s) - duplicate.get(s) );
+				change.put( s, currentMoney.getDenominations().get(s) - duplicate.get(s) );
 			
 			/* updates the cash reserves */
 			setDenominations(duplicate);
@@ -592,18 +513,11 @@ public class VM_Regular {
 	 * @param amt the number indicating how many pieces of the specified denomination should be added
 	 *
 	 */
-	public void addBillsOrCoins(double givenValue, int amt) {
+	public void addBillsOrCoins(double givenValue, 
+								int amt) {
 		currentMoney.addBillsOrCoins(givenValue, amt);
 	}
-	
-	/**
-	 * Tells currentMoney to return its LinkedHashMap of cash denominations
-	 *
-	 * @return the LinkedHashMap representing VM's current cash reserves
-	 */
-	public LinkedHashMap<String, Integer> getDenominations() {
-		return currentMoney.getDenominations();
-	}
+
 	
 	/**
 	 * Tells currentMoney to add a set of cash denominations to its own
@@ -667,8 +581,8 @@ public class VM_Regular {
 	{
 
 		amt = Math.round(amt*100)/100.0;
-		//System.out.println("Change Due in machine: " + amt + " PHP");
-		
+
+		// Loop repeats until it is exactly zero, indicating sufficient change
 		while(amt != 0)
 		{
 			if(amt >= 1000.0 && duplicate.get("One Thousand Bill") > 0) {
@@ -725,6 +639,7 @@ public class VM_Regular {
 				duplicate.put("One Cent", duplicate.get("One Cent") - 1);
 				amt -= 0.01;
 			}
+			// Case where the program arrives into undeterminable amt due to floating point addition, that could not ever lead to zero but close, exit loop
 			else if(amt >= -0.000001907348633 && amt <= 0.000001907348633) {    /*  0.0.000001907348633 == (1/2)^19   */
  				break;
 			}
@@ -737,173 +652,12 @@ public class VM_Regular {
 	}
 
 
-	/**
-	 * Provides for manual replenishing of the VM's cash reserves
-	 *
-	 *
-	 */
-	public void replenishDenominations() {
-		Scanner sc = new Scanner(System.in);
-		String input = null;
-		String inputQty = null;
-		double origMoney;
 
-		double denom;
-		int qty;
-		
-		origMoney = currentMoney.getTotalMoney();
-		System.out.println("Current Denominations");
-		for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
-		{
-			String denomination = tempEntry2.getKey();
-			int count = tempEntry2.getValue();
-			System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
-		}
-		/* inserting  bills/coins */
-		while(true)
-		try
-		{
-			System.out.print("Replenish Denominations: \033[1;32m<bill/coin value> <quantity>\033[0m");
-			input = sc.next();
-			if(input.equalsIgnoreCase("Y"))
-				break;
-			inputQty = sc.next();
-				
-			/* conversion of String input into numerical data types */
-			qty = Integer.parseInt(inputQty);
-			denom = Double.parseDouble(input);
-						
-			if( Money.getValToStr().get(denom) != null )
-				addBillsOrCoins(denom, qty);
-			else
-				System.out.println("\033[1;38;5;202m-ERROR: DENOMINATION DOES NOT EXIST\033[0m");	
-		}
-		catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		}
-
-
-		//Show denominations only if there are changes
-		if(currentMoney.getTotalMoney() != origMoney)
-		{
-			System.out.println("Resulting Denominations");
-			for(Map.Entry<String,Integer> tempEntry2 : currentMoney.getDenominations().entrySet())
-			{
-				String denomination = tempEntry2.getKey();
-				int count = tempEntry2.getValue();
-				System.out.println(denomination + ": \033[1;33m" + count + "\033[0m");
-			}
-		}
-
-		
-		sc = null;
-	}
 	
-	/**
-	 * Provides for manual restocking of the VM's sellable items
-	 *
-	 *
-	 */
-	public void restockItems() {
-		
-		int qty;
-		Scanner sc = new Scanner(System.in);
-		String input;
-		String inputQty;
-		int slotNum;
-		boolean anItemIsRestocked = false; // initially false
-		boolean slotNumOutOfBounds = false; // intially false
 
 
-		while(true)
-		try
-		{
-			System.out.println("Restock item: \033[1;32m<slot num> <qty>\033[0m");
-			input = sc.next();
-			if(input.equalsIgnoreCase("Y"))
-				break;
-			inputQty = sc.next();
-				
-			/* converts String input into numerical data types */
-			slotNum = Integer.parseInt(input);
-			qty = Integer.parseInt(inputQty);
-				
-			if(slotNum < 1 || slotNum > slots.length)
-			{
-				System.out.println("\033[1;38;5;202m-ERROR: SLOT NUM IS OUT OF BOUNDS\033[0m");
-				slotNumOutOfBounds = true;
-			}
-				
-			if( !slotNumOutOfBounds && slots[slotNum-1].getSlotItemName() != null )
-			{
-				if ( !anItemIsRestocked )
-				{
-					updateStockedInfos(); /* creates a new inventory record */
-					anItemIsRestocked = true;
-				}
-				slots[slotNum-1].addItemStock(qty);
-			}
-			else
-				System.out.println("\033[1;38;5;202m-ERROR: SLOT HAS NO ASSIGNED ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
-		}
-		catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		}
-		
-		sc = null;
-	}
 	
-	/**
-	 * Provides for repricing of the VM's items
-	 *
-	 *
-	 */
-	public void repriceItems() 
-	{
-		double amt;
-		Scanner sc = new Scanner(System.in);
-		String input;
-		String inputAmt;
-
-		int slotNum;
-		System.out.println("Our minimum price for an item is \033[1;33m50 cents (0.5)\033[0m");
-		while(true)
-		try
-		{
-			System.out.println("Reprice item (\033[1;33mEnter Y to confirm/finish\033[0m): \033[1;32m<slot num> <new price>\033[0m");
-			input = sc.next();
-			if(input.equalsIgnoreCase("Y"))
-				break;
-			inputAmt = sc.next();
-		
-			/* conversion of String input into numerical data types */
-			slotNum = Integer.parseInt(input);
-			amt = Double.parseDouble(inputAmt);
-			
-			
-			if(slotNum >= 1 && slotNum <= slots.length)
-				if( slots[slotNum-1].getSlotItemName() != null ) {
-
-					slots[slotNum-1].repriceItem(amt);
-				}
-				else
-					System.out.println("\033[1;38;5;202m-ERROR: SLOT DOES NOT HOLD THIS ITEM. ENTER A DIFF. SLOT NUM\033[0m");		
-			else
-				System.out.println("\033[1;38;5;202m-ERROR: SLOT NUM OUT OF BOUNDS\033[0m");
-		}	
-		catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InputMismatchException e)
-		{
-			e.printStackTrace();
-		}
-		
-		sc = null;
-	}
+	
 	
 	/**
 	 * Display's the VM's transaction history (not including failed transactions)
@@ -963,7 +717,7 @@ public class VM_Regular {
 				tempSlot = findSlot(tempEntry.getKey().getSlotItemName());
 				if( tempSlot != null &&																	// Checks if there is no slot
 					tempSlot.getItem() != null &&  														// Checks if the slot is empty
-					tempEntry.getKey().getSlotItemName()	!= null &&	
+					tempEntry.getKey().getSlotItemName()	!= null &&									// Check if slot has a name
 				   	tempEntry.getKey().getSlotItemName().equalsIgnoreCase(tempSlot.getSlotItemName()))		//Compares if the original item is equal to the new item
 				{
 					// Represents them in the order, name, prev stock, Sold, Current Stock, Profit
@@ -972,6 +726,7 @@ public class VM_Regular {
 																						"+" + "Php " + FORMAT.format(tempSlot.getStoredProfit()));						// profit
 					System.out.println("        |______________________|______________________|_____________|______________________|______________________|");
 					
+					// continuously add total profit
 					profit += tempSlot.getStoredProfit();
 				}
 
@@ -984,7 +739,7 @@ public class VM_Regular {
 
 			profitLabel = profit + "";
 			if(profit != 0 && profitLabel.indexOf(".") != -1 && 			// Makes sure that the label has a decimal i.e. greater than 0
-			profitLabel.substring(profitLabel.indexOf(".")).length() < 3)	// Checks if the appended string is greater
+			profitLabel.substring(profitLabel.indexOf(".")).length() < 3)	// Checks if the string starting at '.' is less than ".0"
 				profitLabel = profitLabel + "0";
 			
 			
@@ -1004,7 +759,7 @@ public class VM_Regular {
 			// Display differences only if they are not equal
 			if(tempStockInfo.getMoney().getTotalMoney() != currentMoney.getTotalMoney())
 			{
-
+				// Display current money
 				System.out.printf("Current money in stock: \033[1;32mPHP %.2f\033[0m\n", currentMoney.getTotalMoney());
 
 				// get the string denomination and how many they are
@@ -1045,28 +800,6 @@ public class VM_Regular {
 		return slotsCopy;
 	}
 
-	/**
-	 * Updates the Stocked Infos
-	 *
-	 *
-	 */
-	public void updateStockedInfos() {
-		int i;
-		
-		stockedInfos.add(new VM_StockedInfo(this));
-		
-		for(i = 0; i < slots.length; i++)
-			if(slots[i] != null)
-			{
-				// Clear all storedProfit 
-				slots[i].clearStoredProfit();
-
-				// resets no. of sold items per slot back to
-				slots[i].setSlotItemSold(0); 
-			}
-				
-		recordCurrInd += 1;
-	}
 
 	
 	/**
@@ -1111,76 +844,22 @@ public class VM_Regular {
 		else
 			this.name = new String("defaultName");
 	}
-	
-	
+
 	/**
-	 * Provides for simple collection of cash reserves from VM
-	 *
+	 * Method increments the stock ind to be at a new index. Meaning
+	 * The original previous will be overwritten with this current
 	 */
-	public void collectCashReserves()
+	public void addStockInd()
 	{
-		String input;
-		String inputQty;
-		double denom;
-		int qty;
-		Scanner sc = new Scanner(System.in);
-		LinkedHashMap<String, Integer> reserves = currentMoney.getDenominations();
-		boolean canSubtract;
-		
-		
-		while(true)
-		{
-			/* Displays denominations currently in cash reserves */
-			System.out.println("\nDENOMINATIONS IN STOCK:");
-			for(Map.Entry<String, Integer> m : reserves.entrySet() )
-				System.out.println( m.getValue() + " pc(s). " + m.getKey() );
-		
-			/* asks user to collect denominations from VM */
-			while(true)
-			try
-			{
-				canSubtract = true; // initially true
-				System.out.print("\nSubtract from cash reserves \033[1;32m<cash> <number>\033[0m"+ userHelp + "\n>> ");
-				input = sc.next();
-				if(input.equalsIgnoreCase("Y"))
-					break;
-				inputQty = sc.next();
-				
-				denom = Double.parseDouble(input);
-				qty = Integer.parseInt(inputQty);
-				
-				/* input validation */ 	
-				if( Money.getValToStr().get(denom) == null ) {																		/* if denomination does not exist in the standard set */
-					System.out.println("\033[1;38;5;202m-ERROR: INVALID DENOMINATION\033[0m");
-					canSubtract = false;
-				} if( qty < 0 ) {																									/* if no. of pieces to subtract is negative */
-					System.out.println("\033[1;38;5;202m-ERROR: NEGATIVE SUBTRACTION NOT ALLOWED\033[0m");
-					canSubtract = false;
-				} if( Money.getValToStr().get(denom) != null && reserves.get(Money.getValToStr().get(denom)) - qty < 0 ) {			/* if VM cannot release that number of pieces of the denomination */
-					System.out.println("\033[1;38;5;202m-ERROR: SUBTRACTION RESULTS IN NEGATIVE DENOMINATIONS\033[0m");
-					canSubtract = false;
-				}
-				
-				if( canSubtract )
-				{
-					reserves.put( Money.getValToStr().get(denom), reserves.get(Money.getValToStr().get(denom)) - qty );
-					System.out.println("\033[1;32mSUCCESSFULLY SUBTRACTED\033[0m");
-				}
-			}
-			catch(NumberFormatException e)
-			{
-				System.out.println("\033[1;38;5;202m-ERROR: INPUT MUST BE <DOUBLE> <INTEGER>\033[0m");
-			}
-			
-			if(input.equalsIgnoreCase("Y"))
-				break;
-		}
-		
-		sc = null;
+		stockedInfos.add(new VM_StockedInfo(this));
+		recordCurrInd++;
 	}
 	
+	
+
+	
 	/**
-	 * This method returns a VM_Slot based on the parameters given
+	 * This helper method returns a VM_Slot based on the parameters given
 	 * 
 	 * @param slotName name of the slot
 	 * @return the VM_Slot object that the name pertains to
@@ -1215,5 +894,5 @@ public class VM_Regular {
 	/** the maximum number of items a slot can hold */
 	private static final int MAX_ITEMS = 10;
 	/** the prompt for user to use "Y" when they want to proceed to next section */
-	private String userHelp;
+	private static final String USER_HELP = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
 }

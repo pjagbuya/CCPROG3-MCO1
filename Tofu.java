@@ -18,7 +18,9 @@ public class Tofu extends VM_Item {
      * @param price price of this item
      * @param calories  number of calories this contains
      */
-    public Tofu(String name, double price, int calories)
+    public Tofu(String name, 
+                double price, 
+                int calories)
     {
         super(name, price, calories);
 

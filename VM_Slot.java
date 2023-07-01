@@ -266,12 +266,15 @@ public class VM_Slot {
 
         Scanner sc = new Scanner(System.in);
 
-        if(qty <= 0 || item == null)
+        // Add item only if this slot contains no item
+        if(item == null)
 		{
             System.out.println("\033[1;38;5;202mERROR! no stocks/item is detected\033[0m");
             sc = null;
 			return false;
 		}
+
+        // Set stock to max if there was an excess
         else if(qty + slotItemStock > MAX)
 		{
             System.out.println("You have an excess of " + (qty+slotItemStock- MAX) + " " + slotItemName + " while we were stocking. Returning...");
@@ -279,6 +282,8 @@ public class VM_Slot {
             sc.nextLine();
             slotItemStock = MAX;
         }
+
+        // Add item
 		else
 			slotItemStock += qty;
 
@@ -292,12 +297,10 @@ public class VM_Slot {
 
 	
 	/**
-     * Sets the price of the item object held by this slot
+     * This method Sets the price of the item object held by this slot
      * 
      * @param amt the new price of the item
-     * @return true always (at the moment,
-     *         if new item price is less than 0.5,
-     *         then the item price is set to 0.5)
+
      */
 	public void repriceItem(double amt) {
 		item.setPrice(amt);
@@ -340,7 +343,7 @@ public class VM_Slot {
 	
 	
 	/**
-	 * Resets profit counter back to 0.0
+	 * This method resets the stored profit back to 0.0
 	 *
 	 *
 	 */
@@ -366,6 +369,8 @@ public class VM_Slot {
 
         System.out.println("\033[1;33mConflict with another type of item\033[0m, will you be replacing this stock of " + slotItemName + 
                             " with " + givenItem.getItemName() + ". (Y/N)");
+        
+        // Only proceed to replace when user agrees
         if(sc.nextLine().equalsIgnoreCase("Y"))
         {
             System.out.println("Replaced " + slotItemName + " with " + givenItem.getItemName());

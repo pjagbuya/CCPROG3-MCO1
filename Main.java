@@ -3,25 +3,16 @@ import java.util.LinkedHashMap;
 
 import java.util.InputMismatchException;
 
-/*
-	javac Main.java && javac Money.java && javac VM_Slot.java && javac VM_Regular.java && javac VM_Item.java && javac VM_StockedInfo.java
-	javac MainDisplay.java && javac Order.java && javac VM_Draw.java
-	javac Cream.java && javac Egg.java && javac Kangkong.java && javac Cornstarch.java
-	javac Milk.java && javac Tofu.java && javac Salt.java && javac Sugar.java
-	javac Chicken.java && javac BBQ.java && javac Flour.java
-	
- */
+/** This class is a driver that simulates running the MCO1 project
+ *  which involves creating a vending machine, ordering from said vending machine,
+ *  restocking the vending machine, and purchasing items in the vending machine
+  *
+  * @author Paul Josef P. Agbuya
+  * @author Vince Kenneth D. Rojo
+*/
 
-/**
- * Citations:
- * https://ascii-generator.site/t/
- */
 
-/**
- * This class is the driver class of the Vending Machine Project
- *
- *
- */
+
 public class Main{
 	
 	
@@ -55,6 +46,8 @@ public class Main{
     public static void main(String[] args) {
 		
 		Main mainHelp = new Main();
+		Maintenance maintenance = new Maintenance(possibleItems);
+
 		mainHelp.displayWelcome();
 		Scanner sc = new Scanner(System.in);
 		String input;
@@ -234,7 +227,7 @@ public class Main{
 			{
 				vmDraw = new VM_Draw(vm);
 				vmDraw.drawAndSetVM();
-				vm.updateStockedInfos();
+				maintenance.updateStockedInfos(vm);
 				System.out.println("\033[1;32mVENDING MACHINE CREATION SUCCESSFUL!\033[0m\n");
 			}
 			
@@ -276,26 +269,26 @@ public class Main{
 							vmDraw.updateVM(vm);
 							vmDraw.drawAndSetVM();
 							vm.emptyOrderHistory();
-							vm.restockItems();
+							maintenance.restockItems(vm);
 						}
 						else if(input.equalsIgnoreCase("2"))
 						{
 							vmDraw.updateVM(vm);
 							vmDraw.drawAndSetVM();
-							vm.replaceItemStock();
+							maintenance.replaceItemStock(vm);
 						}
 							
 						else if(input.equalsIgnoreCase("3"))
-							vm.replenishDenominations();
+							maintenance.replenishDenominations(vm);
 						else if(input.equalsIgnoreCase("4"))
 						{
 							vmDraw.updateVM(vm);
 							vmDraw.drawAndSetVM();
-							vm.repriceItems();
+							maintenance.repriceItems(vm);
 						}
 							
 						else if(input.equalsIgnoreCase("5"))
-							vm.collectCashReserves();
+							maintenance.collectCashReserves(vm);
 						else if(input.equalsIgnoreCase("6"))
 							vm.displayOrderHistory();
 						else if(input.equalsIgnoreCase("7"))
@@ -344,6 +337,9 @@ public class Main{
 
 	}
 
+	/**
+	 * Displays an ASCII art of the Welcome message for initial start of the program
+	 */
 	private void displayWelcome()
 	{
         System.out.print("\033[1;33m");

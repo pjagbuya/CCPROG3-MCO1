@@ -19,7 +19,9 @@ public class Salt extends VM_Item
      * @param price price of the item
      * @param calories  number of calories this contains
      */
-    public Salt(String name, double price, int calories)
+    public Salt(String name, 
+                double price, 
+                int calories)
     {
         super(name, price, calories);
 

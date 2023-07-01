@@ -19,7 +19,9 @@ public class VM_Item {
      * @param price - price or cost of this item
      * @param calories - amount of calories of this item
      */
-    public VM_Item(String name, double price, int calories)
+    public VM_Item(String name, 
+                   double price, 
+                   int calories)
     {
         itemName = name;
         itemPrice = price;
@@ -63,9 +65,7 @@ public class VM_Item {
      * Sets the price of this item based on the given parameters
      * 
      * @param amt the new price to be assigned to this item
-     * @return true always, since the item price will
-	 *				always be set to a valid value,
-	 *				even when it differs from amt
+
      */
 	public void setPrice(double amt) {
 		if(amt >= 0.5)
@@ -91,36 +91,7 @@ public class VM_Item {
                
     }
 
-    /**
-     * Overrides the equals method
-	 * to return true if this item, not referring to itself,
-	 * has the same name, price, and calories as the given item.
-     * 
-     * @return true if this item, not referring to itself,
-	 *				has the same name, price, and no. of calories as another item,
-	 *				false otherwise
-     */
-    @Override
-    public boolean equals(Object item)
-    {
-        if(item != null)
-        {
-            VM_Item tempItem = (VM_Item) item;
 
-            if(this != tempItem && this.itemName.equalsIgnoreCase(tempItem.getItemName()) 
-               && this.itemPrice == tempItem.getItemPrice() && this.itemCalories == tempItem.getItemCalories())
-               return true;
-            else
-               return false;
-        }
-        else
-        {
-            return false;
-        }
-        
-               
-    }
-	
 	
 
     /** name of the item */

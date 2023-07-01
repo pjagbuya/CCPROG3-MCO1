@@ -18,7 +18,9 @@ public class BBQ extends VM_Item
      * @param price price of this item
      * @param calories  number of calories this contains
      */
-    public BBQ(String name, double price, int calories)
+    public BBQ(String name, 
+               double price, 
+               int calories)
     {
         super(name, price, calories);
 

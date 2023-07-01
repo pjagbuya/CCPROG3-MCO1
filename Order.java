@@ -32,7 +32,8 @@ public class Order
      * @param itemQty the number of items to be bought
      * @return true if order list was modified in any manner, false otherwise
      */
-    public boolean addOrder(VM_Slot slot, int itemQty)
+    public boolean addOrder(VM_Slot slot, 
+                            int itemQty)
     {
         if(slot == null)
             return false;
