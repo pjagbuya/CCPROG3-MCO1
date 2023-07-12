@@ -3,8 +3,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.InputMismatchException;
 /**
- * The class Maintenance represents a Maintenance feature that bridges the user to restock,
- * replensih, reprice, add/replace items, and update stock information of a Vending Machine
+ * The class Maintenance represents a Maintenance feature that allows the user to restock,
+ * replenish, reprice, add/replace items, and update stock information of a Vending Machine
  *
  * 
  *
@@ -15,15 +15,14 @@ import java.util.InputMismatchException;
 public class Maintenance
 {
 	/**
-	 * This constructor initializes a Maintenance object. This class
-	 * Merely bridges the user to be able to restock, add, reprice, replenish,
-	 * and replace items in thisa vending Machine
-	 * 
+	 * Takes note of the list of possible items in the program
+	 *
+	 * @param possibleItems list of names of all item classes in the program, excluding VM_Item
+	
 	 */
-    public Maintenance()
+    public Maintenance(LinkedHashMap<String, Integer> possibleItems)
     {
-       
-
+        ITEM_OPTIONS = possibleItems;
     }
 
 
@@ -31,7 +30,7 @@ public class Maintenance
 	 * Provides for manual restocking of the VM's sellable items. Keeps looping
      * and prompting the user of which item slot and how much of such would be restocked
 	 * 
-	 * @param vm is the target VM_Regular for restocking items
+	 * @param vm the VM to restock
 	 */
     public void restockItems(VM_Regular vm)
     {
@@ -91,7 +90,7 @@ public class Maintenance
     /**
 	 * Provides for repricing of the VM's items, via console prompting
 	 *
-	 * @param vm the VM_Regular hat is the target for repricing items
+	 * @param vm the VM whose items are to be replaced
 	 */
 	public void repriceItems(VM_Regular vm) 
 	{
@@ -145,7 +144,7 @@ public class Maintenance
     /**
 	 * Provides for manual replenishing of the VM's cash reserves
 	 *
-	 * @param vm is the VM_Regular object that is target of replenishing denominations
+	 * @param vm is the VM that will receive more cash reserves
 	 */
 	public void replenishDenominations(VM_Regular vm) {
 		Scanner sc = new Scanner(System.in);
@@ -214,7 +213,7 @@ public class Maintenance
     /**
 	 * Provides console based prompting replacing the items in a slot, or for filling up a slot with a null name
 	 *
-     * @param vm the target VM_Regular for replacing item in stock
+     * @param vm the VM whose slots are to be replaced/filled in
 	 */
 	public void replaceItemStock(VM_Regular vm)
 	{
@@ -283,7 +282,7 @@ public class Maintenance
 	 * This method updates the stocked infos by instantiating a new Stocked info
      * It will also reset all slot stored Profit and Items sold
 	 *
-	 * @param vm the target Vending machine to update stocked Infos from
+	 * @param vm the VM that will save a copy of its current inventory (as a VM_StockedInfo object)
 	 */
 	public void updateStockedInfos(VM_Regular vm) {
 		int i;
@@ -308,7 +307,8 @@ public class Maintenance
 	/**
 	 * This method provides a simple collection of cash reserves from VM
      * via console prompts
-	 * @param vm the target vending machine to collect reserves from
+	 *
+	 * @param vm the VM from which to collect (subtract) reserves														  
 	 */
 	public void collectCashReserves(VM_Regular vm)
 	{
@@ -372,7 +372,9 @@ public class Maintenance
 		
 		sc = null;
 	}
-
+	
+	/** the list of items that exist in the universe of the program */
+	private final LinkedHashMap<String, Integer> ITEM_OPTIONS;	
 	/** the prompt for user to use "Y" when they want to proceed to next section */
 	private static final String USER_HELP = "(\033[1;33m" + "Enter 'Y' to confirm prompt" + "\033[0m)";
 }
